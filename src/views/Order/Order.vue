@@ -8,7 +8,7 @@
           <p class="mb-5">校级社团，专业团队，提供最优质的服务！</p>
           <div class="flex items-center flex-col">
             <button class="btn btn-primary my-1 w-48">立即预约</button>
-            <a @click="clickSilder" class="btn btn-primary my-1 w-48">预约历史</a>
+            <a @click="clickHistory" class="btn btn-primary my-1 w-48">预约历史</a>
           </div>
         </div>
       </div>
@@ -22,22 +22,24 @@
       </div>
       <input type="checkbox" class="toggle toggle-md" checked />
     </div>
-    <!-- 使用grid布局-->
+    <!-- 使用grid布局  -->
     <div id="orderHistory" class="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 w-11/12">
       <!-- 信息卡片： -->
-      <OrderCard class="transition duration-500 ease-in-out hover:bg-primary transform hover:-translate-y-1 hover:scale-100" v-for="n in 11" ></OrderCard>
+      <OrderCard class="transition duration-500 ease-in-out hover:bg-primary transform hover:-translate-y-1 hover:scale-100"
+                 v-for="(cardInfo,index) of cardList" :cardInfo="cardInfo" :index="index">
+      </OrderCard>
     </div>
-    <!-- 使用flex布局-->
-<!--    <div id="orderHistory" class="flex flex-wrap">-->
-<!--      &lt;!&ndash; 信息卡片： &ndash;&gt;-->
-<!--      <OrderCard v-for="n in 11" ></OrderCard>-->
-<!--    </div>-->
   </div>
 </template>
 
 <script setup>
 import OrderCard from '../components/OrderCard.vue'
-const clickSilder = () => {
+import { useStore } from 'vuex'
+import {computed} from "vue";
+
+const store = useStore()
+// 使页面滚动到history锚点
+const clickHistory = () => {
   // 获取DOM元素
   console.log("获取DOM元素")
   let target = document.querySelector('#orderHistory');
@@ -47,8 +49,8 @@ const clickSilder = () => {
     })
   }
 };
+
+const whichToShow = "已完成"
+const cardList = computed(() => store.state.order.orderList)
+console.log(cardList.value)
 </script>
-
-<style scoped>
-
-</style>
