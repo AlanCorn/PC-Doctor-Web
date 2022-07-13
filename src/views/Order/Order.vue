@@ -14,15 +14,15 @@
       </div>
     </div>
 
-
-    <div class="align-center">
-      <div class="h-8 leading-8 inline">
-        显示已完成预约：
-      </div>
-      <input type="checkbox" class="toggle toggle-md" checked />
-    </div>
+<!--    @todo 筛选功能-->
+<!--    <div class="align-center">-->
+<!--      <div class="h-8 leading-8 inline">-->
+<!--        显示已完成预约：-->
+<!--      </div>-->
+<!--      <input type="checkbox" class="toggle toggle-md" checked />-->
+<!--    </div>-->
     <!-- 使用grid布局  -->
-    <div id="orderHistory" class="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 w-11/12">
+    <div id="orderHistory" class="grid grid-cols-1 my-5 lg:grid-cols-2 2xl:grid-cols-3 w-11/12">
       <!-- 信息卡片： -->
       <OrderCard class="transition duration-500 ease-in-out hover:bg-primary transform hover:-translate-y-1 hover:scale-100"
                  v-for="(cardInfo,index) of cardList" :cardInfo="cardInfo" :index="index">
@@ -34,13 +34,14 @@
 <script setup>
 import OrderCard from '../../components/OrderCard.vue'
 import { useStore } from 'vuex'
-import {computed} from "vue";
+import {computed,onMounted} from "vue";
+import axios from "axios"
 
 const store = useStore()
 // 使页面滚动到history锚点
 const clickHistory = () => {
   // 获取DOM元素
-  console.log("获取DOM元素")
+  console.log("使页面滚动到history锚点")
   let target = document.querySelector('#orderHistory');
   if (target) {
     target.scrollIntoView({
@@ -51,5 +52,10 @@ const clickHistory = () => {
 
 const whichToShow = "已完成"
 const cardList = computed(() => store.state.order.orderList)
-console.log(cardList.value)
+
+onMounted(() => {
+  store.dispatch('getUserOrderList',{
+    page:1
+  })
+})
 </script>
