@@ -8,7 +8,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@kyvg/vue3-notification": "^2.3.4",
+    "axios": "^0.27.2",
     "daisyui": "^2.17.0",
+    "element-plus": "^2.2.9",
     "vue": "^3.2.25",
     "vue-router": "4",
     "vuex": "^4.0.2"

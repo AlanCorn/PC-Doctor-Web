@@ -16,7 +16,13 @@ const routes = [
                 // 预约页面
                 path: '/order',
                 name: 'Order',
-                component: () => import('../views/Order.vue'),
+                component: () => import('../views/Order/Order.vue'),
+            },
+            {
+                // 预约页面
+                path: '/addOrder',
+                name: 'AddOrder',
+                component: () => import('../views/Order/OrderAdd.vue'),
             },
             {
                 // 文档页面
@@ -50,6 +56,11 @@ const router = createRouter({
     // history: createWebHashHistory(),     // url中带井号
     history: createWebHistory(),            // url中不带井号
     routes
+})
+
+//todo 全局路由守卫，内部做一些登录验证处理
+router.beforeEach((to,from) =>{
+
 })
 
 export default router

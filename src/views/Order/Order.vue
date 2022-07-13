@@ -7,13 +7,12 @@
           <h1 class="mb-5 text-5xl font-bold hover:animate-bounce">欢迎使用电医预约！</h1>
           <p class="mb-5">校级社团，专业团队，提供最优质的服务！</p>
           <div class="flex items-center flex-col">
-            <button class="btn btn-primary my-1 w-48">立即预约</button>
+            <router-link class="btn btn-primary my-1 w-48" to="addOrder">立即预约</router-link>
             <a @click="clickHistory" class="btn btn-primary my-1 w-48">预约历史</a>
           </div>
         </div>
       </div>
     </div>
-
 
 
     <div class="align-center">
@@ -33,7 +32,7 @@
 </template>
 
 <script setup>
-import OrderCard from '../components/OrderCard.vue'
+import OrderCard from '../../components/OrderCard.vue'
 import { useStore } from 'vuex'
 import {computed} from "vue";
 
