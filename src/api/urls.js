@@ -1,5 +1,5 @@
 const baseUrl = {
-    testUrl: "http://273f9fd6.cpolar.cn"
+    testUrl: "https://2da05ae0.cpolar.cn"
 }
 
 export default baseUrl;
