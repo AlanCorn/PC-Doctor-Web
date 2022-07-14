@@ -1,4 +1,5 @@
 <template>
+  <!--  步骤条-->
   <div class="flex items-center flex-col ">
       <ul class="steps steps-horizontal my-10 w-11/12 md:w-1/2">
         <li v-for="(each,index) in steps" key="index"
@@ -28,6 +29,7 @@
             v-model="formData.problem_description"
             :rows="2"
             type="textarea"
+            autosize
             placeholder="描述你遇到的问题，并留下希望电脑医生帮助你解决问题的时间、地点。"
         />
       </div>
@@ -43,17 +45,18 @@
           <el-upload
               v-model:file-list="pictureWall.fileList"
               :action="url"
-              accept="image"
+              :accept="acceptFiletype"
               list-type="picture-card"
+              :before-upload="beforeUploadFile"
               :http-request="uploadFile"
               :on-preview="handlePictureCardPreview"
               :on-remove="handleRemove"
               :on-success="handlePictureUploadSuccess"
+              :on-exceed="handleCountExceed"
               :limit="10"
           >
             <el-icon><Plus /></el-icon>
           </el-upload>
-
           <el-dialog v-model="pictureWall.dialogVisible">
             <img :src="pictureWall.dialogImageUrl" alt="Preview Image"/>
           </el-dialog>
@@ -61,8 +64,19 @@
       </div>
     </div>
     <div class="my-5 px-4 py-3  text-right sm:px-6">
-      <button class="btn mx-1" @click="submitForm">提交</button>
+      <label for="my-modal" class="btn modal-button mx-1" >提交</label>
       <button class="btn mx-1 btn-accent" @click="pushRouter('/order')">取消</button>
+    </div>
+  </div>
+  <input type="checkbox" id="my-modal" class="modal-toggle" />
+  <div class="modal">
+    <div class="modal-box">
+      <h3 class="font-bold text-2xl">是否确认提交预约表单？</h3>
+
+      <div class="modal-action">
+        <label for="my-modal" class="btn" @click="submitForm">确认</label>
+        <label for="my-modal" class="btn btn-accent">取消</label>
+      </div>
     </div>
   </div>
 </template>
@@ -74,19 +88,39 @@ import { notify } from "@kyvg/vue3-notification";
 import { Plus } from '@element-plus/icons-vue'
 import baseUrl from "@/api/urls"
 import fileApi from "@/api/file"
+import userApi from "@/api/order"
 import {useRouter} from "vue-router";
 
 const store  = useStore()
 const router = useRouter()
 
 function pushRouter(path) {
-  router.push(path)
+  notify({
+    title: "上传失败",
+    text:"请上传jpg/jpeg/png/gif/bmp格式的文件"
+  })
+  notify({
+    type:'warn',
+    title: "上传失败",
+    text:"请上传jpg/jpeg/png/gif/bmp格式的文件"
+  })
+  notify({
+    type:'success',
+    title: "上传失败",
+    text:"请上传jpg/jpeg/png/gif/bmp格式的文件"
+  })
+  notify({
+    type:'error',
+    title: "上传失败",
+    text:"请上传jpg/jpeg/png/gif/bmp格式的文件"
+  })
+  // router.push(path)
 }
 // 进度条
-const steps = ['填写表单','提交表单','正在处理','已完成']
-const onStep = 1
+const steps = ['填写表单','正在处理','已完成']
+const onStep = 0
 const isActive = (index) => {
-  return index < onStep;
+  return index <= onStep;
 }
 
 // 表单数据
@@ -97,18 +131,38 @@ let formData = reactive({
   problem_description:'',
   problem_category:[],
   problem_picture:[],
-  problem_video:[]
 })
 
 // store里的类别表
 const  cateList = computed(() => store.state.order.cateList)
 // 提交预约表单方法
 const submitForm = () => {
-  notify({
-    type:'warn',
-    title: "Vue 3 notification",
-    text:"hhhhhhhhhhhhhhh"
-  });
+  console.log(formData)
+  // 判空处理
+  const showInfo = (text) => {
+    notify({
+      type:'warn',
+      title:text
+    });
+  }
+  if (!formData.name) showInfo('请输入姓名')
+  else if (!formData.contact_details) showInfo('请输入联系方式')
+  else if (!formData.problem_description) showInfo('请输入问题描述')
+  else if (formData.problem_category.length === 0) showInfo('请选择问题类别')
+  else if (formData.name.length > 20) showInfo('姓名长度大于20！')
+  else if (formData.contact_details.length > 20) showInfo('联系方式长度大于20！')
+  else if (formData.problem_description.length > 250) showInfo('问题描述长度大于250！')
+  else {
+    // 通过非空判断，提交表单
+    userApi.submitOrder(formData).then(res => {
+      console.log()
+      notify({
+        type:'success',
+        title:"提交成功🎉",
+        text:'已成功提交，请耐心等待'
+      })
+    }).catch()
+  }
 }
 
 // Element Plus 照片墙数据
@@ -119,6 +173,7 @@ const pictureWall = reactive({
 })
 
 // 照片墙钩子
+const acceptFiletype = '.jpg,.jpeg,.png,.gif,.JPG,.JPEG,.PBG,.GIF'
 const url = baseUrl.testUrl + '/upload'
 const handleRemove = (uploadFile, uploadFiles) => {
   console.log(uploadFile, uploadFiles)
@@ -128,21 +183,54 @@ const handlePictureCardPreview = (file) => {
   console.log(pictureWall.dialogImageUrl)
   pictureWall.dialogVisible = true
 }
+const beforeUploadFile = (file) => {
+  const fileSuffix = file.name.substring(file.name.lastIndexOf(".") + 1);
+  const whiteList = ["jpg", "jpeg", "png", "gif"];
+
+  if (whiteList.indexOf(fileSuffix) === -1) {
+    notify({
+      type:'warn',
+      title: "上传失败",
+      text:"请上传jpg/jpeg/png/gif/bmp格式的文件"
+    })
+    return false;
+  }
+
+  const isLt10M = file.size / 1024 / 1024 < 10;
+
+  if (!isLt10M) {
+    notify({
+      type:'warn',
+      title: "上传失败",
+      text:"文件大小不能超过 10MB"
+    })
+    return false;
+  }
+}
 const uploadFile = (options) => {
   return new Promise((resolve,reject) => {
-    console.log(options)
+    // 文件类型检验
     fileApi.uploadFile(options).then(res => {
       resolve(res)
     }).catch(err => {
-      reject(err)
+      console.log(err)
+      notify({
+        type:'error',
+        title: "上传失败！",
+        text: "请联系管理员解决"
+      });
     })
   }).then(res => {
-    notify({
-      type:'success',
-      title: "上传成功🎉",
-    });
-    console.log(res)
+    // 成功上传到服务器
+    formData.problem_picture.push(res.data);
   })
+}
+const handleCountExceed = () => {
+  notify({
+    type:'warn',
+    title: "上传失败",
+    text:"图片上限为10张"
+  });
 }
 const handlePictureUploadSuccess = (uploadFile, uploadFiles) => {
   console.log(uploadFile, uploadFiles)
