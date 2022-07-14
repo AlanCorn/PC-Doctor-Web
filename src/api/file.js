@@ -8,7 +8,6 @@ const headers = {
 
 const fileApi = {
     uploadFile(options){
-        console.log()
         const form = new FormData();
         form.append('file',options.file)
         return request.post("/upload", form, {
