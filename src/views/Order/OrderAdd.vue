@@ -1,21 +1,14 @@
 <template>
   <!--  步骤条-->
-  <div class="flex items-center flex-col ">
-      <ul class="steps steps-horizontal my-10 w-11/12 md:w-1/2">
-        <li v-for="(each,index) in steps" key="index"
-            :class="{'step':true,'step-primary':isActive(index)}">
-          {{ each }}
-        </li>
-      </ul>
-  </div>
+  <OrderSteps :onStep="0"></OrderSteps>
   <div class="flex items-center flex-col">
-    <div class="px-4 py-5 space-y-6 sm:p-6">
+    <div class="py-5 space-y-6 w-11/12 lg:w-3/4 xl:w-1/2">
       <div>
-        <label class="block text-2xl font-medium "> 姓名 </label>
+        <label class="block text-2xl font-bold "> 姓名 </label>
         <el-input v-model="formData.name" placeholder="请输入姓名" />
       </div>
       <div>
-        <label class="block text-2xl font-medium "> 联系方式 </label>
+        <label class="block text-2xl font-bold "> 联系方式 </label>
         <el-radio-group style="display:block" v-model="formData.radio">
           <el-radio label="QQ">QQ</el-radio>
           <el-radio label="WeChat">WeChat</el-radio>
@@ -24,7 +17,7 @@
         <el-input v-model="formData.contact_details" placeholder="请输入联系方式(QQ/微信/手机号)" />
       </div>
       <div>
-        <label class="block text-2xl font-medium "> 问题描述 </label>
+        <label class="block text-2xl font-bold "> 问题描述 </label>
         <el-input
             v-model="formData.problem_description"
             :rows="2"
@@ -34,14 +27,14 @@
         />
       </div>
       <div>
-        <label class="block text-2xl font-medium"> 问题分类 </label>
+        <label class="block text-2xl font-bold"> 问题分类 </label>
         <el-checkbox-group v-model="formData.problem_category" >
-          <el-checkbox v-for="(each,index) in cateList" key="index" :label="each" />
+          <el-checkbox v-for="(each) in cateList" key="index" :label="each" />
         </el-checkbox-group>
       </div>
       <div>
-        <label class="block text-2xl font-medium"> 图片 </label>
-        <div class="">
+        <label class="block text-2xl font-bold"> 图片 </label>
+        <div>
           <el-upload
               v-model:file-list="pictureWall.fileList"
               :action="url"
@@ -72,7 +65,6 @@
   <div class="modal">
     <div class="modal-box">
       <h3 class="font-bold text-2xl">是否确认提交预约表单？</h3>
-
       <div class="modal-action">
         <label for="my-modal" class="btn" @click="submitForm">确认</label>
         <label for="my-modal" class="btn btn-accent">取消</label>
@@ -82,45 +74,24 @@
 </template>
 
 <script setup>
-import { computed, reactive, ref } from "vue";
-import { useStore } from "vuex";
+import { computed, reactive } from "vue";
 import { notify } from "@kyvg/vue3-notification";
 import { Plus } from '@element-plus/icons-vue'
+// axios请求接口
 import baseUrl from "@/api/urls"
 import fileApi from "@/api/file"
 import userApi from "@/api/order"
-import {useRouter} from "vue-router";
+
+import { useStore } from "vuex";
+import { useRouter } from "vue-router";
+
+import OrderSteps from "./OrderSteps.vue"
 
 const store  = useStore()
 const router = useRouter()
 
 function pushRouter(path) {
-  notify({
-    title: "上传失败",
-    text:"请上传jpg/jpeg/png/gif/bmp格式的文件"
-  })
-  notify({
-    type:'warn',
-    title: "上传失败",
-    text:"请上传jpg/jpeg/png/gif/bmp格式的文件"
-  })
-  notify({
-    type:'success',
-    title: "上传失败",
-    text:"请上传jpg/jpeg/png/gif/bmp格式的文件"
-  })
-  notify({
-    type:'error',
-    title: "上传失败",
-    text:"请上传jpg/jpeg/png/gif/bmp格式的文件"
-  })
-  // router.push(path)
-}
-// 进度条
-const steps = ['填写表单','正在处理','已完成']
-const onStep = 0
-const isActive = (index) => {
-  return index <= onStep;
+  router.push(path)
 }
 
 // 表单数据
@@ -155,13 +126,17 @@ const submitForm = () => {
   else {
     // 通过非空判断，提交表单
     userApi.submitOrder(formData).then(res => {
-      console.log()
+      console.log(res)
+      store.commit('updateOrderFormData',formData)
+      router.push('/orderInfo')
       notify({
         type:'success',
         title:"提交成功🎉",
         text:'已成功提交，请耐心等待'
       })
-    }).catch()
+    }).catch(err => {
+      console.log(err)
+    })
   }
 }
 
@@ -186,7 +161,7 @@ const handlePictureCardPreview = (file) => {
 const beforeUploadFile = (file) => {
   const fileSuffix = file.name.substring(file.name.lastIndexOf(".") + 1);
   const whiteList = ["jpg", "jpeg", "png", "gif"];
-
+  // 文件类型检验
   if (whiteList.indexOf(fileSuffix) === -1) {
     notify({
       type:'warn',
@@ -208,8 +183,7 @@ const beforeUploadFile = (file) => {
   }
 }
 const uploadFile = (options) => {
-  return new Promise((resolve,reject) => {
-    // 文件类型检验
+  return new Promise((resolve) => {
     fileApi.uploadFile(options).then(res => {
       resolve(res)
     }).catch(err => {
