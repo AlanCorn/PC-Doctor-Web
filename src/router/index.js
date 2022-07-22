@@ -25,6 +25,12 @@ const routes = [
                 component: () => import('../views/Order/OrderAdd.vue'),
             },
             {
+                // 预约页面
+                path: '/orderInfo',
+                name: 'OrderInfo',
+                component: () => import('../views/Order/OrderInfo.vue'),
+            },
+            {
                 // 文档页面
                 path: '/document',
                 name: 'Document',
