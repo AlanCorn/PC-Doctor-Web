@@ -1,6 +1,5 @@
 import request from './request'
 import FormData from 'form-data'
-import resolve from "resolve";
 
 const headers = {
     'Content-Type':'multipart/form-data'
