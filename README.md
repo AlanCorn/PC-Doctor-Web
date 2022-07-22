@@ -5,12 +5,18 @@
 1. 安装依赖
 ```
 npm install 
+// or
+yarn
 ```
 2. 运行
 ```
-npm run serve
+npm run dev
+// or
+yarn run dev
 ```
 3. 构建
 ```
 npm run build
+// or
+yarn run build
 ```
