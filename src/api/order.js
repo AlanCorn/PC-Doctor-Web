@@ -22,6 +22,14 @@ const user = {
             headers
         })
     },
+    // 撤销预约
+    withdrawOrder(orderId){
+        const form = new FormData();
+        form.append('id',orderId);
+        return request.post("/delete", form, {
+            headers
+        })
+    }
 }
 
 
