@@ -4,11 +4,11 @@
   <div class="flex items-center flex-col">
     <div class="py-5 space-y-6 w-11/12 lg:w-3/4 xl:w-1/2">
       <div>
-        <label class="block text-2xl font-bold "> 姓名 </label>
+        <label class="title-info"> 姓名 </label>
         <el-input v-model="formData.name" placeholder="请输入姓名" />
       </div>
       <div>
-        <label class="block text-2xl font-bold "> 联系方式 </label>
+        <label class="title-info"> 联系方式 </label>
         <el-radio-group style="display:block" v-model="formData.radio">
           <el-radio label="QQ">QQ</el-radio>
           <el-radio label="WeChat">WeChat</el-radio>
@@ -17,7 +17,7 @@
         <el-input v-model="formData.contact_details" placeholder="请输入联系方式(QQ/微信/手机号)" />
       </div>
       <div>
-        <label class="block text-2xl font-bold "> 问题描述 </label>
+        <label class="title-info"> 问题描述 </label>
         <el-input
             v-model="formData.problem_description"
             :rows="2"
@@ -27,13 +27,13 @@
         />
       </div>
       <div>
-        <label class="block text-2xl font-bold"> 问题分类 </label>
+        <label class="title-info"> 问题分类 </label>
         <el-checkbox-group v-model="formData.problem_category" >
           <el-checkbox v-for="(each) in cateList" key="index" :label="each" />
         </el-checkbox-group>
       </div>
       <div>
-        <label class="block text-2xl font-bold"> 图片 </label>
+        <label class="title-info"> 图片 </label>
         <div>
           <el-upload
               v-model:file-list="pictureWall.fileList"
@@ -43,8 +43,8 @@
               :before-upload="beforeUploadFile"
               :http-request="uploadFile"
               :on-preview="handlePictureCardPreview"
+              :before-remove="handleBeforeRemove"
               :on-remove="handleRemove"
-              :on-success="handlePictureUploadSuccess"
               :on-exceed="handleCountExceed"
               :limit="10"
           >
@@ -126,8 +126,7 @@ const submitForm = () => {
   else {
     // 通过非空判断，提交表单
     userApi.submitOrder(formData).then(res => {
-      console.log(res)
-      store.commit('updateOrderFormData',formData)
+      store.commit('setOrderFormData',res.data[0])
       router.push('/orderInfo')
       notify({
         type:'success',
@@ -150,6 +149,12 @@ const pictureWall = reactive({
 // 照片墙钩子
 const acceptFiletype = '.jpg,.jpeg,.png,.gif,.JPG,.JPEG,.PBG,.GIF'
 const url = baseUrl.testUrl + '/upload'
+const handleBeforeRemove = (uploadFile,uploadFiles) => {
+  // 删除某张图片
+  const deleteIndex = pictureWall.fileList.findIndex((checkItem) => checkItem.name === uploadFile.name)
+  console.log('uploadFile在fileList中的index',deleteIndex)
+  formData.problem_picture = formData.problem_picture.filter((checkItem,index) => index !== deleteIndex)
+}
 const handleRemove = (uploadFile, uploadFiles) => {
   console.log(uploadFile, uploadFiles)
 }
@@ -205,9 +210,6 @@ const handleCountExceed = () => {
     title: "上传失败",
     text:"图片上限为10张"
   });
-}
-const handlePictureUploadSuccess = (uploadFile, uploadFiles) => {
-  console.log(uploadFile, uploadFiles)
 }
 </script>
 

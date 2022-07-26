@@ -4,7 +4,7 @@
       <div class="hero-overlay bg-opacity-60"></div>
       <div class="hero-content text-center text-neutral-content">
         <div class="max-w-md">
-          <h1 class="mb-5 text-5xl font-bold hover:animate-bounce">欢迎使用电医预约！</h1>
+          <h1 class="mb-5 text-5xl font-bold animate-bounce">欢迎使用电医预约！</h1>
           <p class="mb-5">校级社团，专业团队，提供最优质的服务！</p>
           <div class="flex items-center flex-col">
             <a @click="pushRouter('/addOrder')" class="btn btn-primary my-1 w-48">立即预约</a>
@@ -22,17 +22,23 @@
 <!--      <input type="checkbox" class="toggle toggle-md" checked />-->
 <!--    </div>-->
     <!-- 使用grid布局  -->
-    <div id="orderHistory" class="grid grid-cols-1 my-5 lg:grid-cols-2 2xl:grid-cols-3 w-11/12">
+    <div class="w-11/12" id="orderHistory">
+      <h1 class="mt-20 text-primary">
+        预约历史
+      </h1>
+    </div>
+    <div  class="grid grid-cols-1 my-5 lg:grid-cols-2 2xl:grid-cols-3 w-11/12">
       <!-- 信息卡片： -->
       <OrderCard class="transition duration-500 ease-in-out hover:bg-primary transform hover:-translate-y-1 hover:scale-100"
-                 v-for="(cardInfo,index) of cardList"
-                 :cardInfo="cardInfo"
-                 :index="index">
+                v-for="(cardInfo,index) of cardList"
+                :key="index"
+                :cardInfo="cardInfo"
+                :index="index">
       </OrderCard>
     </div>
 <!--    @todo 加载动画-->
     <div class="flex items-center min-h-screen text-5xl font-bold justify-center"
-         v-if="!isOrderListLoaded">
+        v-if="!isOrderListLoaded">
       <div class="flex items-center">
         <img
             src="../../assets/image/SVG/Rolling-1s-200px.svg"
@@ -50,7 +56,7 @@
 import OrderCard from '../../components/OrderCard.vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
-import {computed,onMounted} from "vue";
+import {computed, onBeforeMount, onBeforeUpdate, onMounted} from "vue";
 
 const store = useStore()
 const router = useRouter()
@@ -74,7 +80,7 @@ const clickHistory = () => {
 const cardList = computed(() => store.state.order.orderList)
 const isOrderListLoaded = computed(() => store.getters.isOrderListLoaded)
 
-onMounted(() => {
+onBeforeMount(() => {
   store.dispatch('getUserOrderList',{
     page:1
   })

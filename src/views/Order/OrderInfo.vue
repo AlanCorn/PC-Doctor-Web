@@ -1,25 +1,56 @@
 <template>
   <!--  步骤条-->
-  <OrderSteps :onStep="1"></OrderSteps>
+  <OrderSteps :onStep="formData.status + 1"></OrderSteps>
   <div class="flex items-center flex-col">
     <div class="py-5 space-y-6 w-11/12 lg:w-3/4 xl:w-1/2">
+      <div class="alert shadow-lg bg-base-200"
+           v-if="formData.status === 0">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-info flex-shrink-0 w-6 h-6 text-neutral"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          <span>已创建预约，请耐心等待</span>
+        </div>
+        <div class="flex-none">
+          <button class="btn btn-sm btn-ghost" @click="withdrawThisOrder">撤销预约</button>
+        </div>
+      </div>
+      <!-- 预约已完成的提示 -->
+      <div class="flex items-center justify-center flex-col"
+           v-if="formData.status === 2">
+        <div class="flex items-center">
+          <el-image style="width: 200px; height: 200px"
+                    :src="getImageUrl('icon-5.6s-250px.png')"
+                    fit="fill" />
+          <div class="text-5xl font-bold ">
+            已完成！
+          </div>
+        </div>
+        <div class="flex my-5">
+          <div class="text-2xl font-bold mx-5">
+            评分
+          </div>
+          <div class="rating gap-1">
+            <input type="radio" name="rating-3" class="mask mask-heart bg-red-400" />
+            <input type="radio" name="rating-3" class="mask mask-heart bg-red-400" checked />
+            <input type="radio" name="rating-3" class="mask mask-heart bg-red-400" />
+            <input type="radio" name="rating-3" class="mask mask-heart bg-red-400" />
+            <input type="radio" name="rating-3" class="mask mask-heart bg-red-400" />
+          </div>
+        </div>
+
+      </div>
       <!-- 预约信息 -->
       <div class="flex flex-col">
-        <div class="block text-2xl font-bold "> 预约信息 </div>
+        <div class="title-info"> 预约信息 </div>
         <div>
-          <div class="ml-2 text-2xl">{{ formData.problem_description }}</div>
-          <div class="ml-2 badge mx-0.5" v-for="(each,index) in cateList" :key="index">{{ each }}</div>
-          <div class="flex px-1">
-            <svg class="fill-current w-6 h-6 text-neutral" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4284" width="128" height="128"><path d="M722.678 524.908c-59.267-46.975-132.445-74.779-211.678-74.78 106.324-0.003 192.516-86.196 192.516-192.521 0-106.327-86.195-192.521-192.522-192.521s-192.521 86.194-192.521 192.52c0 106.325 86.191 192.518 192.515 192.521-197.461 0.004-357.534 172.391-357.534 385.043h366.899c-1.404-11.512-2.348-23.161-2.348-35.053 0-129.959 86.298-239.655 204.673-275.209z" p-id="4285"></path><path d="M792.598 581.627c-105.659 0-191.313 85.654-191.313 191.313s85.654 191.313 191.313 191.313S983.911 878.6 983.911 772.94s-85.654-191.313-191.313-191.313z m73.582 230.672h-80.94c-17.673 0-32-14.327-32-32V662.567c0-17.673 14.327-32 32-32s32 14.327 32 32v85.731h48.939c17.673 0 32 14.327 32 32s-14.326 32.001-31.999 32.001z" p-id="4286"></path></svg>
-            <div>{{ status }}</div>
-          </div>
+          <div class="ml-2 text-lg lg:text-xl">{{ formData.problem_description }}</div>
+          <div class="ml-2 badge badge-lg mx-0.5 my-3" v-for="(each,index) in cateList" :key="index">{{ each }}</div>
           <div class="flex px-1">
             <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path></svg>
             <div>{{ createTime }} </div>
           </div>
         </div>
         <!-- 图片 -->
-        <div class="pictures grid gap-2 grid-cols-3 lg:grid-cols-4">
+        <div class="pictures grid gap-2 grid-cols-4 lg:grid-cols-5 mt-5">
           <el-image
               v-for="(each,index) in imageUrls"
               :src="each"
@@ -35,18 +66,18 @@
         </div>
       </div>
       <!-- 接单电医信息 -->
-      <div class="flex flex-col">
-        <div class="block text-2xl font-bold "> 接单电医 </div>
+      <div class="flex flex-col"
+           v-if="formData.status > 0">
+        <div class="title-info"> 接单电医 </div>
         <div>
-            todo:是否要为电医制作名片？还是仅展示基本信息
-        </div>
-        <div>
-          暂无
+          todo:电医名片:接单数量，回复消息条数和及时程度，评价等
+<!--            @todo:是否要为电医制作名片？还是仅展示基本信息-->
         </div>
       </div>
       <!-- 状态消息 -->
-      <div class="flex flex-col">
-        <div class="block text-2xl font-bold "> 状态消息 </div>
+      <div class="flex flex-col"
+           v-if="formData.status > 0">
+        <div class="title-info"> 状态消息 </div>
         <ul class="steps steps-vertical">
           <li class="step">
             <div>
@@ -57,13 +88,12 @@
           <li class="step">
             <div>
               <div class="text-left font-bold">委托人</div>
-              <div>上传了一张照片 <button class="btn btn-ghost border-base-200">点击查看</button></div>
+              <div>上传了一张照片 <button class="btn btn-ghost border-base-200 btn-sm">点击查看</button></div>
             </div>
           </li>
           <li class="step" data-content="">
             <div>
-              <label for="addMessageDialog" class="btn btn-ghost border-base-200 mx-1">添加消息</label>
-              <label for="addImageDialog" class="btn btn-ghost border-base-200 mx-1">上传图片</label>
+              <label for="addMessageDialog" class="btn border-base-200 mx-1">添加消息</label>
             </div>
           </li>
         </ul>
@@ -75,24 +105,15 @@
   <div class="modal">
     <div class="modal-box p-5">
       <div class="font-bold text-2xl">添加消息</div>
-      <el-input
-          v-model="inputMessage"
-          :rows="2"
-          type="textarea"
-          autosize
-          placeholder="请输入要发送的消息！"
-      />
-      <div class="modal-action">
-        <label for="addMessageDialog" class="btn">确认</label>
-        <label for="addMessageDialog" class="btn">取消</label>
+      <div class="my-3">
+        <el-input
+            v-model="statusMessage.message"
+            :rows="2"
+            type="textarea"
+            autosize
+            placeholder="请输入要发送的消息！"
+        />
       </div>
-    </div>
-  </div>
-  <!-- 对话框-上传图片 -->
-  <input type="checkbox" id="addImageDialog" class="modal-toggle" />
-  <div class="modal">
-    <div class="modal-box">
-      <div class="font-bold text-2xl">上传图片</div>
       <div>
         <el-upload
             v-model:file-list="pictureWall.fileList"
@@ -102,6 +123,7 @@
             :before-upload="beforeUploadFile"
             :http-request="uploadFile"
             :on-preview="handlePictureCardPreview"
+            :before-remove="handleBeforeRemove"
             :on-remove="handleRemove"
             :on-success="handlePictureUploadSuccess"
             :on-exceed="handleCountExceed"
@@ -111,8 +133,8 @@
         </el-upload>
       </div>
       <div class="modal-action">
-        <label for="addImageDialog" class="btn">确认</label>
-        <label for="addImageDialog" class="btn">取消</label>
+        <label for="addMessageDialog" class="btn">确认</label>
+        <label for="addMessageDialog" class="btn">取消</label>
       </div>
     </div>
   </div>
@@ -134,13 +156,10 @@ import { Plus } from '@element-plus/icons-vue'
 import baseUrl from "@/api/urls"
 import fileApi from "@/api/file"
 import userApi from "@/api/order"
-import { timeFormatter } from "@/utils"
-
+import { timeFormatter,getImageUrl } from "@/utils"
+import OrderSteps from "./OrderSteps.vue"
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
-
-import OrderSteps from "./OrderSteps.vue"
-import {rule} from "postcss";
 
 const store  = useStore()
 const router = useRouter()
@@ -148,21 +167,10 @@ const router = useRouter()
 function pushRouter(path) {
   router.push(path)
 }
-
 // 1. 预约详情信息
 let formData = computed(() => store.state.order.orderFormData)
 const cateList = computed(() => {
   return formData.value.problem_category.split(',')
-})
-const status = computed(() => {
-  switch (formData.value.status) {
-    case 0:
-      return "待受理"
-    case 1:
-      return "已受理"
-    case 2:
-      return "已完成"
-  }
 })
 const createTime = computed(() => timeFormatter(formData.value.create_time))
 // @todo：测试url数据
@@ -171,11 +179,10 @@ const imageUrls = computed(() => store.getters.getOrderFormDataImagesUrls)
 
 
 // 2. 发送消息的对话框
-const inputMessage = ref()
-const sendMessage = ref()
-
-// 3. 发送图片的对话框
-// Element Plus 照片墙数据
+const statusMessage = reactive({
+  message:'',
+  pictures:[]
+})
 const pictureWall = reactive({
   fileList:[],
   dialogImageUrl :'',
@@ -185,6 +192,12 @@ const pictureWall = reactive({
 // 照片墙钩子
 const acceptFiletype = '.jpg,.jpeg,.png,.gif,.JPG,.JPEG,.PBG,.GIF'
 const url = baseUrl.testUrl + '/upload'
+const handleBeforeRemove = (uploadFile,uploadFiles) => {
+  // 删除某张图片
+  const deleteIndex = pictureWall.fileList.findIndex((checkItem) => checkItem.name === uploadFile.name)
+  console.log('uploadFile在fileList中的index',deleteIndex)
+  formData.problem_picture = formData.problem_picture.filter((checkItem,index) => index !== deleteIndex)
+}
 const handleRemove = (uploadFile, uploadFiles) => {
   console.log(uploadFile, uploadFiles)
 }
@@ -219,19 +232,18 @@ const beforeUploadFile = (file) => {
 }
 const uploadFile = (options) => {
   return new Promise((resolve) => {
-    // fileApi.uploadFile(options).then(res => {
-    //   resolve(res)
-    // }).catch(err => {
-    //   console.log(err)
-    //   notify({
-    //     type:'error',
-    //     title: "上传失败！",
-    //     text: "请联系管理员解决"
-    //   });
-    // })
+    fileApi.uploadFile(options).then(res => {
+      resolve(res)
+    }).catch(err => {
+      console.log(err)
+      notify({
+        type:'error',
+        title: "上传失败！",
+        text: "请联系管理员解决"
+      });
+    })
   }).then(res => {
-    // @todo:成功上传到服务器
-    // formData.problem_picture.push(res.data);
+    statusMessage.pictures.push(res.data);
   })
 }
 const handleCountExceed = () => {
@@ -243,6 +255,29 @@ const handleCountExceed = () => {
 }
 const handlePictureUploadSuccess = (uploadFile, uploadFiles) => {
   console.log(uploadFile, uploadFiles)
+}
+
+
+// 其他方法
+// 1. 撤销预约
+const withdrawThisOrder = () => {
+  console.log(formData.value.id)
+  userApi.withdrawOrder(formData.value.id).then(res => {
+    // store.dispatch('getUserOrderList',{
+    //   page:1
+    // })
+    pushRouter('/order')
+    notify({
+      type:'success',
+      title: "已撤销预约",
+    })
+  }).catch(err => {
+    notify({
+      type:'fail',
+      title: "撤销失败",
+    })
+    console.log(err)
+  })
 }
 </script>
 

@@ -11,7 +11,7 @@
 
 <script setup>
 // 进度条
-const steps = ['填写表单','正在处理','已完成']
+const steps = ['填写表单','排队中','正在处理','已完成']
 const props = defineProps({
   onStep:{
     type:Number,
