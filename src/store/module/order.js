@@ -1,5 +1,5 @@
 import user from '../../api/order'
-import baseUrl from "../../api/urls";
+import { getOnlineImageUrl } from "../../utils";
 
 const order = {
     state: () => ({
@@ -14,6 +14,7 @@ const order = {
         ],
         // 当前的预约表单信息(预约详情)
         orderFormData:{},
+        orderStatusMessage:[],
         // 用户的预约历史
         orderList:[],
         // orderList: [
@@ -48,111 +49,6 @@ const order = {
         //             "status": 0
         //         },
         //         {
-        //             "id": 21,
-        //             "name": "yzw",
-        //             "contact_details": "QQ:231423",
-        //             "problem_description": "45235436",
-        //             "problem_category": "系统问题,流氓软件清理",
-        //             "problem_picture": null,
-        //             "problem_video": null,
-        //             "create_time": "2022-07-14T19:08:39",
-        //             "appointment_time": null,
-        //             "done_time": null,
-        //             "appointment_location": null,
-        //             "dianyi_name": null,
-        //             "status": 0
-        //         },
-        //         {
-        //             "id": 20,
-        //             "name": "杨志文",
-        //             "contact_details": "10086",
-        //             "problem_description": "电脑无法启动",
-        //             "problem_category": "网络，系统问题",
-        //             "problem_picture": null,
-        //             "problem_video": null,
-        //             "create_time": "2022-07-14T17:03:33",
-        //             "appointment_time": null,
-        //             "done_time": null,
-        //             "appointment_location": null,
-        //             "dianyi_name": null,
-        //             "status": 0
-        //         },
-        //         {
-        //             "id": 19,
-        //             "name": "mdd",
-        //             "contact_details": "qq:23452345",
-        //             "problem_description": "测试自动生成时间2",
-        //             "problem_category": "测试",
-        //             "problem_picture": null,
-        //             "problem_video": null,
-        //             "create_time": "2022-07-13T16:24:04",
-        //             "appointment_time": "2022-07-16T12:16:00",
-        //             "done_time": null,
-        //             "appointment_location": null,
-        //             "dianyi_name": "陈骏哲",
-        //             "status": 0
-        //         },
-        //         {
-        //             "id": 18,
-        //             "name": "mdd",
-        //             "contact_details": "qq:23452345",
-        //             "problem_description": "测试自动生成时间",
-        //             "problem_category": "测试",
-        //             "problem_picture": null,
-        //             "problem_video": null,
-        //             "create_time": "2022-07-13T16:20:37",
-        //             "appointment_time": "2022-07-11T12:16:00",
-        //             "done_time": "2022-07-11T12:16:00",
-        //             "appointment_location": null,
-        //             "dianyi_name": "陈骏哲",
-        //             "status": 0
-        //         },
-        //         {
-        //             "id": 17,
-        //             "name": "yzw",
-        //             "contact_details": "qq:9876543",
-        //             "problem_description": "寝室路由器联网",
-        //             "problem_category": "网络",
-        //             "problem_picture": null,
-        //             "problem_video": null,
-        //             "create_time": "2022-07-11T12:16:00",
-        //             "appointment_time": "2022-07-11T12:16:00",
-        //             "done_time": null,
-        //             "appointment_location": null,
-        //             "dianyi_name": null,
-        //             "status": 0
-        //         },
-        //         {
-        //             "id": 16,
-        //             "name": "submit",
-        //             "contact_details": "phone:5432",
-        //             "problem_description": "测试",
-        //             "problem_category": "测试",
-        //             "problem_picture": null,
-        //             "problem_video": null,
-        //             "create_time": "2022-07-11T12:16:00",
-        //             "appointment_time": null,
-        //             "done_time": null,
-        //             "appointment_location": null,
-        //             "dianyi_name": null,
-        //             "status": 1
-        //         },
-        //         {
-        //             "id": 15,
-        //             "name": "hahaha",
-        //             "contact_details": "qq:12345",
-        //             "problem_description": "连不上网络",
-        //             "problem_category": "网络",
-        //             "problem_picture": null,
-        //             "problem_video": null,
-        //             "create_time": "2022-07-11T12:16:00",
-        //             "appointment_time": null,
-        //             "done_time": null,
-        //             "appointment_location": null,
-        //             "dianyi_name": null,
-        //             "status": 0
-        //         },
-        //         {
         //             "id": 14,
         //             "name": "name13",
         //             "contact_details": "contact13",
@@ -180,15 +76,8 @@ const order = {
             return state.isOrderListLoaded === true || state.orderList.length > 0;
         },
         getOrderFormDataImagesUrls(state){
-            const urls = []
             const originUrls = state.orderFormData.problem_picture
-            if (originUrls){
-                originUrls.split(',').forEach((each) => {
-                    // urls.push(baseUrl + '/file/' +each)
-                    urls.push(`${baseUrl.testUrl}file/${each}`)
-                })
-            }
-            return urls
+            return getOnlineImageUrl(originUrls)
         }
     },
     mutations:{
@@ -202,6 +91,9 @@ const order = {
         setOrderList(state,orderList){
             state.orderList = orderList
             state.isOrderListLoaded = true
+        },
+        setOrderStatusMessage(state,statusMessage){
+            state.orderStatusMessage = statusMessage
         }
     },
     actions:{
@@ -214,6 +106,15 @@ const order = {
                 console.log(err)
             })
         },
+        getOrderStatusMessage(content,appointment_id){
+            user.getOrderStatusMessage(appointment_id).then(res =>{
+                    content.commit('setOrderStatusMessage', res.data)
+                    console.log("查询状态消息",res.data)
+                }
+            ).catch(err =>{
+                console.log(err)
+            })
+        }
         // updateOrderFormData(content,orderFormData){
         //     content.commit('updateOrderFormData', orderFormData)
         // }
