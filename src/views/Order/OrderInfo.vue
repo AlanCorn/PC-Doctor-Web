@@ -16,19 +16,19 @@
       <!-- 预约已完成的提示 -->
       <div class="flex items-center justify-center flex-col"
            v-if="formData.status === 2">
-        <div class="flex items-center">
+        <div class="grid items-center grid-cols-1 md:grid-cols-2">
           <el-image style="width: 200px; height: 200px"
                     :src="getImageUrl('icon-5.6s-250px.png')"
                     fit="fill" />
-          <div class="text-5xl font-bold ">
+          <div class="text-4xl font-bold text-center">
             已完成！
           </div>
         </div>
         <div class="flex my-5">
-          <div class="text-2xl font-bold mx-5">
+          <div class="text-2xl font-bold text-center mr-1">
             评分
           </div>
-          <div class="rating gap-1">
+          <div class="rating gap-1 items-center">
             <input type="radio" name="rating-3" class="mask mask-heart bg-red-400" />
             <input type="radio" name="rating-3" class="mask mask-heart bg-red-400" checked />
             <input type="radio" name="rating-3" class="mask mask-heart bg-red-400" />
@@ -79,16 +79,15 @@
            v-if="formData.status > 0">
         <div class="title-info"> 状态消息 </div>
         <ul class="steps steps-vertical">
-          <li class="step">
-            <div>
-              <div class="text-left font-bold">电医-杨志文</div>
-              <div>可以换个视角再拍一张照片吗？</div>
-            </div>
-          </li>
-          <li class="step">
-            <div>
-              <div class="text-left font-bold">委托人</div>
-              <div>上传了一张照片 <button class="btn btn-ghost border-base-200 btn-sm">点击查看</button></div>
+          <li class="step"
+              v-for="(each,index) in statusMessage"
+              :key="each.id">
+            <div class="text-left">
+              <div><span class="font-bold">{{ each.user_name }} </span> 发送于：{{ sendTime(each.time) }}</div>
+              <div class="flex items-center">
+                <div class="text-center">{{ each.message }}</div>
+                <button class="btn btn-ghost border-base-200 btn-sm" @click="handleMsgPicPreview(each,index)">点击查看</button>
+              </div>
             </div>
           </li>
           <li class="step" data-content="">
@@ -107,25 +106,22 @@
       <div class="font-bold text-2xl">添加消息</div>
       <div class="my-3">
         <el-input
-            v-model="statusMessage.message"
+            v-model="sendingStatusMessage.message"
             :rows="2"
             type="textarea"
             autosize
-            placeholder="请输入要发送的消息！"
+            placeholder="请输入要发送的消息"
         />
       </div>
       <div>
         <el-upload
             v-model:file-list="pictureWall.fileList"
-            :action="url"
             :accept="acceptFiletype"
             list-type="picture-card"
             :before-upload="beforeUploadFile"
             :http-request="uploadFile"
             :on-preview="handlePictureCardPreview"
             :before-remove="handleBeforeRemove"
-            :on-remove="handleRemove"
-            :on-success="handlePictureUploadSuccess"
             :on-exceed="handleCountExceed"
             :limit="10"
         >
@@ -133,30 +129,34 @@
         </el-upload>
       </div>
       <div class="modal-action">
-        <label for="addMessageDialog" class="btn">确认</label>
+        <label for="addMessageDialog"
+               class="btn"
+               @click="addMessageConfirm">
+          确认
+        </label>
         <label for="addMessageDialog" class="btn">取消</label>
       </div>
     </div>
   </div>
   <!-- 图片预览 -->
-  <div class="imagePreviewDialog">
-    <el-dialog v-model="pictureWall.dialogVisible">
-      <img :src="pictureWall.dialogImageUrl" alt="Preview Image"/>
-    </el-dialog>
-  </div>
+  <el-image-viewer
+      @close="handleViewerClose"
+      :url-list="pictureWallPreview"
+      v-if="pictureWall.previewVisible"
+      :initial-index="pictureWall.previewIndex">
+  </el-image-viewer>
 </template>
 
 <script setup>
-import {computed, reactive, ref} from "vue";
+import {computed, onMounted, reactive, ref} from "vue";
 import { Picture as IconPicture } from '@element-plus/icons-vue'
 
 import { notify } from "@kyvg/vue3-notification";
 import { Plus } from '@element-plus/icons-vue'
 // axios请求接口
-import baseUrl from "@/api/urls"
 import fileApi from "@/api/file"
 import userApi from "@/api/order"
-import { timeFormatter,getImageUrl } from "@/utils"
+import { getOnlineImageUrl,timeFormatter,getImageUrl } from "@/utils"
 import OrderSteps from "./OrderSteps.vue"
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
@@ -173,38 +173,83 @@ const cateList = computed(() => {
   return formData.value.problem_category.split(',')
 })
 const createTime = computed(() => timeFormatter(formData.value.create_time))
-// @todo：测试url数据
 const imageUrls = computed(() => store.getters.getOrderFormDataImagesUrls)
 
+// 2. 状态消息
+const statusMessage = computed(() => store.state.order.orderStatusMessage)
+const sendTime = (time) => timeFormatter(time)
+if (formData.value.status > 0) store.dispatch('getOrderStatusMessage',formData.value.id)
+const handleMsgPicPreview = (msg,index) => {
+  pictureWall.type = 1
+  pictureWall.indexOfMsg = index
+  pictureWall.previewVisible = true
+}
 
-
-// 2. 发送消息的对话框
-const statusMessage = reactive({
+// 3. el-image-viewer的关闭钩子
+const handleViewerClose = () => {
+  pictureWall.previewVisible = false
+  // 将预览来源重新设置为预览消息对话框中上传的图片
+  if (pictureWall.type === 1) pictureWall.type = 0
+}
+// 4. 发送消息的对话框
+const sendingStatusMessage = reactive({
   message:'',
   pictures:[]
 })
+
+const addMessageConfirm = () => {
+  if (!sendingStatusMessage.message && sendingStatusMessage.pictures.length === 0) {
+    notify({
+      type:'warn',
+      title:'消息不能为空'
+    });
+  }else {
+    let message
+    sendingStatusMessage.message ? message = sendingStatusMessage.message :message = "发送了图片消息"
+    userApi.addOrderMessage({
+      id : formData.value.id,
+      name : formData.value.name,
+      message : message,
+      picture : sendingStatusMessage.pictures
+    }).then(res => {
+      notify({
+        type:'success',
+        title:"成功🎉",
+      })
+    })
+  }
+}
+
+// Element Plus 照片墙数据
 const pictureWall = reactive({
   fileList:[],
-  dialogImageUrl :'',
-  dialogVisible :false
+  previewVisible :false,
+  previewIndex : 0, // 从哪一张图片开始预览
+  type:0,  // 0 预览消息对话框中上传的图片，1 预览来自消息的图片
+  indexOfMsg:0  // 若type为1,那么要预览哪条消息里的图片
 })
-
-// 照片墙钩子
+// 照片墙预览 urls
+const pictureWallPreview = computed(() => {
+  if (pictureWall.type === 0){
+    return getOnlineImageUrl(sendingStatusMessage.pictures.toString())
+  } else {
+    return getOnlineImageUrl(statusMessage.value[pictureWall.indexOfMsg].picture.toString())
+  }
+})
+// 得到照片墙中某个文件的索引
+const currentIndex = (file) => pictureWall.fileList.findIndex((checkItem) => checkItem.name === file.name)
+// 接受的文件类型
 const acceptFiletype = '.jpg,.jpeg,.png,.gif,.JPG,.JPEG,.PBG,.GIF'
-const url = baseUrl.testUrl + '/upload'
-const handleBeforeRemove = (uploadFile,uploadFiles) => {
+// 照片墙钩子
+const handleBeforeRemove = (uploadFile) => {
   // 删除某张图片
-  const deleteIndex = pictureWall.fileList.findIndex((checkItem) => checkItem.name === uploadFile.name)
+  const deleteIndex = currentIndex(uploadFile)
   console.log('uploadFile在fileList中的index',deleteIndex)
-  formData.problem_picture = formData.problem_picture.filter((checkItem,index) => index !== deleteIndex)
-}
-const handleRemove = (uploadFile, uploadFiles) => {
-  console.log(uploadFile, uploadFiles)
+  sendingStatusMessage.pictures = sendingStatusMessage.pictures.filter((checkItem,index) => index !== deleteIndex)
 }
 const handlePictureCardPreview = (file) => {
-  pictureWall.dialogImageUrl = file.url
-  console.log(pictureWall.dialogImageUrl)
-  pictureWall.dialogVisible = true
+  pictureWall.previewIndex = pictureWall.fileList.findIndex((checkItem) => checkItem.name === file.name)
+  pictureWall.previewVisible = true
 }
 const beforeUploadFile = (file) => {
   const fileSuffix = file.name.substring(file.name.lastIndexOf(".") + 1);
@@ -243,7 +288,8 @@ const uploadFile = (options) => {
       });
     })
   }).then(res => {
-    statusMessage.pictures.push(res.data);
+    // 成功上传到服务器，向表单中添加数据
+    sendingStatusMessage.pictures.push(res.data);
   })
 }
 const handleCountExceed = () => {
@@ -253,19 +299,12 @@ const handleCountExceed = () => {
     text:"图片上限为10张"
   });
 }
-const handlePictureUploadSuccess = (uploadFile, uploadFiles) => {
-  console.log(uploadFile, uploadFiles)
-}
-
 
 // 其他方法
 // 1. 撤销预约
 const withdrawThisOrder = () => {
   console.log(formData.value.id)
   userApi.withdrawOrder(formData.value.id).then(res => {
-    // store.dispatch('getUserOrderList',{
-    //   page:1
-    // })
     pushRouter('/order')
     notify({
       type:'success',
