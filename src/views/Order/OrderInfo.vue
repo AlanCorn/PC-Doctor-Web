@@ -86,7 +86,9 @@
               <div><span class="font-bold">{{ each.user_name }} </span> 发送于：{{ sendTime(each.time) }}</div>
               <div class="flex items-center">
                 <div class="text-center">{{ each.message }}</div>
-                <button class="btn btn-ghost border-base-200 btn-sm" @click="handleMsgPicPreview(each,index)">点击查看</button>
+                <button class="btn btn-ghost border-base-200 btn-sm ml-2"
+                        v-if="each.picture.length > 0"
+                        @click="handleMsgPicPreview(each,index)">查看图片</button>
               </div>
             </div>
           </li>
