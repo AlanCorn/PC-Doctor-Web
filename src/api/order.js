@@ -29,7 +29,22 @@ const user = {
         return request.post("/delete", form, {
             headers
         })
-    }
+    },
+    // 添加消息
+    addOrderMessage(params) {
+        const form = new FormData();
+        form.append('appointment_id', params.id);
+        form.append('user_name', params.name);
+        form.append('message', params.message);
+        if (params.picture !== 0 ) form.append('picture', params.picture.toString())
+        return request.post("/add_message", form, {
+            headers
+        })
+    },
+    // 获取消息
+    getOrderStatusMessage(id){
+        return request.get("/query_message",  {params:{ appointment_id:id}})
+    },
 }
 
 
