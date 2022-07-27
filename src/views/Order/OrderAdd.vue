@@ -50,9 +50,12 @@
           >
             <el-icon><Plus /></el-icon>
           </el-upload>
-          <el-dialog v-model="pictureWall.dialogVisible">
-            <img :src="pictureWall.dialogImageUrl" alt="Preview Image"/>
-          </el-dialog>
+          <el-image-viewer
+            @close="pictureWall.previewVisible = false"
+            :url-list="pictureWallPreview"
+            v-if="pictureWall.previewVisible"
+            :initial-index="pictureWall.previewIndex">
+          </el-image-viewer>
         </div>
       </div>
     </div>
@@ -81,6 +84,7 @@ import { Plus } from '@element-plus/icons-vue'
 import baseUrl from "@/api/urls"
 import fileApi from "@/api/file"
 import userApi from "@/api/order"
+import { getOnlineImageUrl } from "../../utils";
 
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
@@ -142,16 +146,21 @@ const submitForm = () => {
 // Element Plus 照片墙数据
 const pictureWall = reactive({
   fileList:[],
-  dialogImageUrl :'',
-  dialogVisible :false
+  previewVisible :false,
+  previewIndex : 0
 })
-
-// 照片墙钩子
+// 照片墙预览 urls
+const pictureWallPreview = computed(() => getOnlineImageUrl(formData.problem_picture.toString()))
+// 得到照片墙中某个文件的索引
+const currentIndex = (file) => pictureWall.fileList.findIndex((checkItem) => checkItem.name === file.name)
+// 接受的文件类型
 const acceptFiletype = '.jpg,.jpeg,.png,.gif,.JPG,.JPEG,.PBG,.GIF'
+// 照片墙上传api地址
 const url = baseUrl.testUrl + '/upload'
+// 照片墙钩子
 const handleBeforeRemove = (uploadFile,uploadFiles) => {
   // 删除某张图片
-  const deleteIndex = pictureWall.fileList.findIndex((checkItem) => checkItem.name === uploadFile.name)
+  const deleteIndex = currentIndex(uploadFile)
   console.log('uploadFile在fileList中的index',deleteIndex)
   formData.problem_picture = formData.problem_picture.filter((checkItem,index) => index !== deleteIndex)
 }
@@ -159,9 +168,8 @@ const handleRemove = (uploadFile, uploadFiles) => {
   console.log(uploadFile, uploadFiles)
 }
 const handlePictureCardPreview = (file) => {
-  pictureWall.dialogImageUrl = file.url
-  console.log(pictureWall.dialogImageUrl)
-  pictureWall.dialogVisible = true
+  pictureWall.previewIndex = pictureWall.fileList.findIndex((checkItem) => checkItem.name === file.name)
+  pictureWall.previewVisible = true
 }
 const beforeUploadFile = (file) => {
   const fileSuffix = file.name.substring(file.name.lastIndexOf(".") + 1);
