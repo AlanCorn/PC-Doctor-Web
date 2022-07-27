@@ -1,7 +1,7 @@
 <template>
-  <div class="shadow-md my-2 mx-1 card bg-base-200 shadow-xl"
-       @click="posCardClick">
-    <div class="flex flex-row card-body">
+  <div class="shadow-lg my-2 mx-1 card bg-base-200"
+      @click="posCardClick">
+    <div class="flex flex-row card-body flex-">
       <div class="flex flex-col justify-between">
         <!-- 显示文体描述与分类-->
         <div>
@@ -19,13 +19,6 @@
             <div>{{ createTime }} </div>
           </div>
         </div>
-      </div>
-      <!-- 堆叠图片,靠右对齐 -->
-      <div class="w-36 min-w-fit stack ml-auto">
-<!--        <img-->
-<!--            v-for=""-->
-<!--            class="mask mask-square shadow-md rounded"-->
-<!--            src="https://placeimg.com/160/160/arch" />-->
       </div>
     </div>
   </div>
@@ -52,14 +45,14 @@ const cateList = computed(() => {
   return data.problem_category.split(',')
 })
 const shortDescription = computed(() => {
-  return data.problem_description.slice(0,20)+"..."
+  return data.problem_description.length > 20 ? data.problem_description.slice(0,20)+"..." : data.problem_description
 })
 const status = computed(() => {
   switch (data.status) {
     case 0:
-      return "待受理"
+      return "排队中"
     case 1:
-      return "已受理"
+      return "正在处理"
     case 2:
       return "已完成"
   }

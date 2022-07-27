@@ -37,14 +37,12 @@
         <div>
           <el-upload
               v-model:file-list="pictureWall.fileList"
-              :action="url"
               :accept="acceptFiletype"
               list-type="picture-card"
               :before-upload="beforeUploadFile"
               :http-request="uploadFile"
               :on-preview="handlePictureCardPreview"
               :before-remove="handleBeforeRemove"
-              :on-remove="handleRemove"
               :on-exceed="handleCountExceed"
               :limit="10"
           >
@@ -155,17 +153,12 @@ const pictureWallPreview = computed(() => getOnlineImageUrl(formData.problem_pic
 const currentIndex = (file) => pictureWall.fileList.findIndex((checkItem) => checkItem.name === file.name)
 // 接受的文件类型
 const acceptFiletype = '.jpg,.jpeg,.png,.gif,.JPG,.JPEG,.PBG,.GIF'
-// 照片墙上传api地址
-const url = baseUrl.testUrl + '/upload'
 // 照片墙钩子
 const handleBeforeRemove = (uploadFile,uploadFiles) => {
   // 删除某张图片
   const deleteIndex = currentIndex(uploadFile)
   console.log('uploadFile在fileList中的index',deleteIndex)
   formData.problem_picture = formData.problem_picture.filter((checkItem,index) => index !== deleteIndex)
-}
-const handleRemove = (uploadFile, uploadFiles) => {
-  console.log(uploadFile, uploadFiles)
 }
 const handlePictureCardPreview = (file) => {
   pictureWall.previewIndex = pictureWall.fileList.findIndex((checkItem) => checkItem.name === file.name)
@@ -208,7 +201,7 @@ const uploadFile = (options) => {
       });
     })
   }).then(res => {
-    // 成功上传到服务器
+    // 成功上传到服务器，向表单中添加数据
     formData.problem_picture.push(res.data);
   })
 }
