@@ -13,12 +13,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@master
 
       - name: BuildandDeploy
         uses: AlanCorn/PC-Doctor-Web@main
         env:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }} # 使用刚新建的secret
+          BASE_BRANCH: main
           BRANCH: gh-pages # 存放产物的分支名称
           FOLDER: dist # 存放build后产物的目录
           BUILD_SCRIPT: npm install && npm run build # 执行的命令
