@@ -1,5 +1,18 @@
-$default-color: #666666;
+// 使SVG对齐文字
+.svg-icon {
+  display: inline-flex;
+  align-self: center;
+  position: relative;
+  height: 1em;
+  width: 1em;
+}
 
-a {
-  color: aqua;
+.svg-icon svg {
+  height:1em;
+  width:1em;
+}
+
+.svg-icon.svg-baseline svg {
+  bottom: -0.125em;
+  position: absolute;
 }
