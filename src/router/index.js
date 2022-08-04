@@ -1,5 +1,8 @@
 import {createRouter, createWebHistory} from 'vue-router'
 import { notify } from "@kyvg/vue3-notification";
+import {myStore} from '@/store/index'
+
+const store = myStore();
 
 // @@@ 注意： 在vite脚手架中, 引入时忽略.vue扩展名将导致错误
 
@@ -154,7 +157,7 @@ router.beforeEach((to, from, next) => {//beforeEach是router的钩子函数，�
     if (to.meta.title) {
         document.title = to.meta.title
     }
-    if (to.meta.reqLogin) {
+    if (to.meta.reqLogin && store.state.user.isLogin === false) {
         next({name: 'Login'})
         if (to.meta.title === "电脑医院-添加预约"){
             notify({
