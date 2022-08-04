@@ -4,7 +4,7 @@
   <div class="flex items-center flex-col">
     <div class="py-5 space-y-6 w-11/12 lg:w-3/4 xl:w-1/2">
       <div class="alert shadow-lg bg-base-200"
-           v-if="formData.status === 0">
+          v-if="formData.status === 0">
         <div>
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-info flex-shrink-0 w-6 h-6 text-neutral"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
           <span>已创建预约，请耐心等待</span>
@@ -15,7 +15,7 @@
       </div>
       <!-- 预约已完成的提示 -->
       <div class="flex items-center justify-center flex-col"
-           v-if="formData.status === 2">
+          v-if="formData.status === 2">
         <div class="grid items-center grid-cols-1 md:grid-cols-2">
           <el-image style="width: 200px; height: 200px"
                     :src="getImageUrl('icon-5.6s-250px.png')"
@@ -54,6 +54,7 @@
           <el-image
               v-for="(each,index) in imageUrls"
               :src="each"
+              :key="each.id"
               :preview-src-list="imageUrls"
               :initial-index="index"
           >
@@ -67,7 +68,7 @@
       </div>
       <!-- 接单电医信息 -->
       <div class="flex flex-col"
-           v-if="formData.status > 0">
+          v-if="formData.status > 0">
         <div class="title-info"> 接单电医 </div>
         <div>
           todo:电医名片:接单数量，回复消息条数和及时程度，评价等
@@ -76,7 +77,7 @@
       </div>
       <!-- 状态消息 -->
       <div class="flex flex-col"
-           v-if="formData.status > 0">
+          v-if="formData.status > 0">
         <div class="title-info"> 状态消息 </div>
         <ul class="steps steps-vertical">
           <li class="step"
@@ -157,7 +158,7 @@ import { notify } from "@kyvg/vue3-notification";
 import { Plus } from '@element-plus/icons-vue'
 // axios请求接口
 import fileApi from "@/api/file"
-import userApi from "@/api/order"
+import userApi from "@/api/userApi"
 import { getOnlineImageUrl,timeFormatter,getImageUrl } from "@/utils"
 import OrderSteps from "./OrderSteps.vue"
 import { useStore } from "vuex";
@@ -218,6 +219,7 @@ const addMessageConfirm = () => {
         type:'success',
         title:"成功🎉",
       })
+      store.dispatch('getOrderStatusMessage',formData.value.id)
     })
   }
 }

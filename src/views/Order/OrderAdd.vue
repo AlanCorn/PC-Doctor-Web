@@ -3,25 +3,26 @@
   <OrderSteps :onStep="0"></OrderSteps>
   <div class="flex items-center flex-col">
     <div class="py-5 space-y-6 w-11/12 lg:w-3/4 xl:w-1/2">
-      <div>
-        <label class="title-info"> 姓名 </label>
-        <el-input v-model="formData.name" placeholder="请输入姓名" />
-      </div>
-      <div>
-        <label class="title-info"> 联系方式 </label>
-        <el-radio-group style="display:block" v-model="formData.radio">
-          <el-radio label="QQ">QQ</el-radio>
-          <el-radio label="WeChat">WeChat</el-radio>
-          <el-radio label="Phone">Phone</el-radio>
-        </el-radio-group>
-        <el-input v-model="formData.contact_details" placeholder="请输入联系方式(QQ/微信/手机号)" />
-      </div>
+<!--      <div>-->
+<!--        <label class="title-info"> 姓名 </label>-->
+<!--        <el-input v-model="formData.name" placeholder="请输入姓名" />-->
+<!--      </div>-->
+<!--      <div>-->
+<!--        <label class="title-info"> 联系方式 </label>-->
+<!--        <el-radio-group style="display:block" v-model="formData.radio">-->
+<!--          <el-radio label="QQ">QQ</el-radio>-->
+<!--          <el-radio label="WeChat">WeChat</el-radio>-->
+<!--          <el-radio label="Phone">Phone</el-radio>-->
+<!--        </el-radio-group>-->
+<!--        <el-input v-model="formData.contact_details" placeholder="请输入联系方式(QQ/微信/手机号)" />-->
+<!--      </div>-->
       <div>
         <label class="title-info"> 问题描述 </label>
         <el-input
             v-model="formData.problem_description"
             :rows="2"
             type="textarea"
+            maxlength="250"
             autosize
             placeholder="描述你遇到的问题，并留下希望电脑医生帮助你解决问题的时间、地点。"
         />
@@ -29,7 +30,7 @@
       <div>
         <label class="title-info"> 问题分类 </label>
         <el-checkbox-group v-model="formData.problem_category" >
-          <el-checkbox v-for="(each) in cateList" key="index" :label="each" />
+          <el-checkbox v-for="(each,index) in cateList" :key="index" :label="each" />
         </el-checkbox-group>
       </div>
       <div>
@@ -58,8 +59,8 @@
       </div>
     </div>
     <div class="my-5 px-4 py-3  text-right sm:px-6">
-      <label for="my-modal" class="btn modal-button mx-1" >提交</label>
-      <button class="btn mx-1 btn-accent" @click="pushRouter('/order')">取消</button>
+      <label for="my-modal" class="btn  btn-accent mx-1" >提交</label>
+      <button class="btn mx-1 " @click="pushRouter('/order')">取消</button>
     </div>
   </div>
   <input type="checkbox" id="my-modal" class="modal-toggle" />
@@ -81,7 +82,7 @@ import { Plus } from '@element-plus/icons-vue'
 // axios请求接口
 import baseUrl from "@/api/urls"
 import fileApi from "@/api/file"
-import userApi from "@/api/order"
+import userApi from "@/api/userApi"
 import { getOnlineImageUrl } from "../../utils";
 
 import { useStore } from "vuex";
@@ -98,9 +99,9 @@ function pushRouter(path) {
 
 // 表单数据
 let formData = reactive({
-  name:'',
-  radio:'QQ',
-  contact_details:'',
+  // name:'',
+  // radio:'QQ',
+  // contact_details:'',
   problem_description:'',
   problem_category:[],
   problem_picture:[],
@@ -118,13 +119,11 @@ const submitForm = () => {
       title:text
     });
   }
-  if (!formData.name) showInfo('请输入姓名')
-  else if (!formData.contact_details) showInfo('请输入联系方式')
-  else if (!formData.problem_description) showInfo('请输入问题描述')
+  // if (!formData.name) showInfo('请输入姓名')
+  // else if (!formData.contact_details) showInfo('请输入联系方式')
+  if (!formData.problem_description) showInfo('请输入问题描述')
   else if (formData.problem_category.length === 0) showInfo('请选择问题类别')
-  else if (formData.name.length > 20) showInfo('姓名长度大于20！')
-  else if (formData.contact_details.length > 20) showInfo('联系方式长度大于20！')
-  else if (formData.problem_description.length > 250) showInfo('问题描述长度大于250！')
+  else if (formData.problem_description.length > 250) showInfo('问题描述文本长度不得超过250')
   else {
     // 通过非空判断，提交表单
     userApi.submitOrder(formData).then(res => {
