@@ -1,5 +1,6 @@
-import user from '../../api/order'
+import user from '../../api/userApi'
 import { getOnlineImageUrl } from "../../utils";
+// 预约订单相关的状态，
 
 const order = {
     state: () => ({
@@ -17,6 +18,8 @@ const order = {
         orderStatusMessage:[],
         // 用户的预约历史
         orderList:[],
+        // 总长度，做分页浏览的时候有用
+        orderListSize:0,
         // orderList: [
         //     {
         //         "id": 23,
@@ -92,6 +95,9 @@ const order = {
             state.orderList = orderList
             state.isOrderListLoaded = true
         },
+        setOrderSize(state,num){
+            state.orderListSize = num
+        },
         setOrderStatusMessage(state,statusMessage){
             state.orderStatusMessage = statusMessage
         }
@@ -100,7 +106,8 @@ const order = {
         getUserOrderList(content,params){
             // 使用user Api 发送异步请求，提交commit
             user.getOrderHistory(params).then(res =>{
-                    content.commit('setOrderList', res.data)
+                content.commit('setOrderList', res.data.list)
+                content.commit('setOrderSize', res.data.size)
                 }
             ).catch(err =>{
                 console.log(err)
