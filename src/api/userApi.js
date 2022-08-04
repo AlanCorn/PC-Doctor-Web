@@ -7,14 +7,12 @@ const headers = {
 
 const user = {
     getOrderHistory(params) {
-        return request.get("/query", {params: params});
+        return request.get("/query", {params});
     },
     // 提交预约
     submitOrder(formData) {
         console.log(formData)
         const form = new FormData();
-        form.append('name', formData.name);
-        form.append('contact_details', formData.radio + ":" + formData.contact_details);
         form.append('problem_description', formData.problem_description);
         form.append('problem_category', formData.problem_category.toString());
         if (formData.problem_picture.length !== 0) {
@@ -32,7 +30,7 @@ const user = {
             headers
         })
     },
-    // 添加消息
+    // 添加消息 @todo 接口待更新
     addOrderMessage(params) {
         const form = new FormData();
         form.append('appointment_id', params.id);
@@ -43,7 +41,7 @@ const user = {
             headers
         })
     },
-    // 获取消息
+    // 获取消息 @todo 接口待更新
     getOrderStatusMessage(id) {
         return request.get("/query_message", {params: {appointment_id: id}})
     },
@@ -65,6 +63,10 @@ const user = {
         return request.post("/register", form, {
             headers
         })
+    },
+    // 通过session_id查询自己的信息 @todo
+    queryUser() {
+        return request.get("/query_self");
     }
 }
 
