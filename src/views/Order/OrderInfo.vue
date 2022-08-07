@@ -3,23 +3,40 @@
   <OrderSteps :onStep="formData.status + 1"></OrderSteps>
   <div class="flex items-center flex-col">
     <div class="py-5 space-y-6 w-11/12 lg:w-3/4 xl:w-1/2">
+      <!-- 不属于自己的订单 - 仅供预览 -->
       <div class="alert shadow-lg bg-base-200"
-          v-if="formData.status === 0">
+           v-if="formData.status === '0' && !isMyOwnOrder">
         <div>
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-info flex-shrink-0 w-6 h-6 text-neutral"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+               class="stroke-current flex-shrink-0 w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <span>该预约不属于你哦，仅供预览</span>
+        </div>
+      </div>
+      <!-- 属于自己的订单 - 正在排队提示 -->
+      <div class="alert shadow-lg bg-base-200"
+           v-if="formData.status === '0' && isMyOwnOrder">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+               class="stroke-current flex-shrink-0 w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
           <span>已创建预约，请耐心等待</span>
         </div>
         <div class="flex-none">
-          <button class="btn btn-sm btn-ghost" @click="withdrawThisOrder">撤销预约</button>
+          <button class="btn btn-sm btn-ghost" @click="withdrawThisOrder">撤销</button>
         </div>
       </div>
       <!-- 预约已完成的提示 -->
       <div class="flex items-center justify-center flex-col"
-          v-if="formData.status === 2">
+           v-if="formData.status === 2">
         <div class="grid items-center grid-cols-1 md:grid-cols-2">
           <el-image style="width: 200px; height: 200px"
                     :src="getImageUrl('icon-5.6s-250px.png')"
-                    fit="fill" />
+                    fit="fill"/>
           <div class="text-4xl font-bold text-center">
             已完成！
           </div>
@@ -29,24 +46,28 @@
             评分
           </div>
           <div class="rating gap-1 items-center">
-            <input type="radio" name="rating-3" class="mask mask-heart bg-red-400" />
-            <input type="radio" name="rating-3" class="mask mask-heart bg-red-400" checked />
-            <input type="radio" name="rating-3" class="mask mask-heart bg-red-400" />
-            <input type="radio" name="rating-3" class="mask mask-heart bg-red-400" />
-            <input type="radio" name="rating-3" class="mask mask-heart bg-red-400" />
+            <input type="radio" name="rating-3" class="mask mask-heart bg-red-400"/>
+            <input type="radio" name="rating-3" class="mask mask-heart bg-red-400" checked/>
+            <input type="radio" name="rating-3" class="mask mask-heart bg-red-400"/>
+            <input type="radio" name="rating-3" class="mask mask-heart bg-red-400"/>
+            <input type="radio" name="rating-3" class="mask mask-heart bg-red-400"/>
           </div>
         </div>
 
       </div>
       <!-- 预约信息 -->
       <div class="flex flex-col">
-        <div class="title-info"> 预约信息 </div>
+        <div class="title-info"> 预约信息</div>
         <div>
           <div class="ml-2 text-lg lg:text-xl">{{ formData.problem_description }}</div>
           <div class="ml-2 badge badge-lg mx-0.5 my-3" v-for="(each,index) in cateList" :key="index">{{ each }}</div>
           <div class="flex px-1">
-            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path></svg>
-            <div>{{ createTime }} </div>
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
+                    clip-rule="evenodd"></path>
+            </svg>
+            <div>{{ createTime }}</div>
           </div>
         </div>
         <!-- 图片 -->
@@ -60,7 +81,9 @@
           >
             <template #error>
               <div class="image-slot">
-                <el-icon><icon-picture /></el-icon>
+                <el-icon>
+                  <icon-picture/>
+                </el-icon>
               </div>
             </template>
           </el-image>
@@ -68,17 +91,17 @@
       </div>
       <!-- 接单电医信息 -->
       <div class="flex flex-col"
-          v-if="formData.status > 0">
-        <div class="title-info"> 接单电医 </div>
+           v-if="formData.status > 0">
+        <div class="title-info"> 接单电医</div>
         <div>
           todo:电医名片:接单数量，回复消息条数和及时程度，评价等
-<!--            @todo:是否要为电医制作名片？还是仅展示基本信息-->
+          <!--            @todo:是否要为电医制作名片？还是仅展示基本信息-->
         </div>
       </div>
       <!-- 状态消息 -->
       <div class="flex flex-col"
-          v-if="formData.status > 0">
-        <div class="title-info"> 状态消息 </div>
+           v-if="formData.status > 0">
+        <div class="title-info"> 状态消息</div>
         <ul class="steps steps-vertical">
           <li class="step"
               v-for="(each,index) in statusMessage"
@@ -89,7 +112,8 @@
                 <div class="text-center">{{ each.message }}</div>
                 <button class="btn btn-ghost border-base-200 btn-sm ml-2"
                         v-if="each.picture.length > 0"
-                        @click="handleMsgPicPreview(each,index)">查看图片</button>
+                        @click="handleMsgPicPreview(each,index)">查看图片
+                </button>
               </div>
             </div>
           </li>
@@ -103,7 +127,7 @@
     </div>
   </div>
   <!-- 对话框-添加消息 -->
-  <input type="checkbox" id="addMessageDialog" class="modal-toggle" />
+  <input type="checkbox" id="addMessageDialog" class="modal-toggle"/>
   <div class="modal">
     <div class="modal-box p-5">
       <div class="font-bold text-2xl">添加消息</div>
@@ -128,7 +152,9 @@
             :on-exceed="handleCountExceed"
             :limit="10"
         >
-          <el-icon><Plus /></el-icon>
+          <el-icon>
+            <Plus/>
+          </el-icon>
         </el-upload>
       </div>
       <div class="modal-action">
@@ -152,24 +178,25 @@
 
 <script setup>
 import {computed, onMounted, reactive, ref} from "vue";
-import { Picture as IconPicture } from '@element-plus/icons-vue'
+import {Picture as IconPicture} from '@element-plus/icons-vue'
 
-import { notify } from "@kyvg/vue3-notification";
-import { Plus } from '@element-plus/icons-vue'
+import {notify} from "@kyvg/vue3-notification";
+import {Plus} from '@element-plus/icons-vue'
 // axios请求接口
 import fileApi from "@/api/file"
 import userApi from "@/api/userApi"
-import { getOnlineImageUrl,timeFormatter,getImageUrl } from "@/utils"
+import {getOnlineImageUrl, timeFormatter, getImageUrl} from "@/utils"
 import OrderSteps from "./OrderSteps.vue"
-import { useStore } from "vuex";
-import { useRouter } from "vue-router";
+import {useStore} from "vuex";
+import {useRouter} from "vue-router";
 
-const store  = useStore()
+const store = useStore()
 const router = useRouter()
 
 function pushRouter(path) {
   router.push(path)
 }
+
 // 1. 预约详情信息
 let formData = computed(() => store.state.order.orderFormData)
 const cateList = computed(() => {
@@ -177,12 +204,14 @@ const cateList = computed(() => {
 })
 const createTime = computed(() => timeFormatter(formData.value.create_time))
 const imageUrls = computed(() => store.getters.getOrderFormDataImagesUrls)
+// 检验是否是属于用户的订单
+const isMyOwnOrder = computed(() => formData.value.user_id ===  store.state.user.user_id)
 
 // 2. 状态消息
 const statusMessage = computed(() => store.state.order.orderStatusMessage)
 const sendTime = (time) => timeFormatter(time)
-if (formData.value.status > 0) store.dispatch('getOrderStatusMessage',formData.value.id)
-const handleMsgPicPreview = (msg,index) => {
+if (formData.value.status > 0) store.dispatch('getOrderStatusMessage', formData.value.id)
+const handleMsgPicPreview = (msg, index) => {
   pictureWall.type = 1
   pictureWall.indexOfMsg = index
   pictureWall.previewVisible = true
@@ -196,45 +225,45 @@ const handleViewerClose = () => {
 }
 // 4. 发送消息的对话框
 const sendingStatusMessage = reactive({
-  message:'',
-  pictures:[]
+  message: '',
+  pictures: []
 })
 
 const addMessageConfirm = () => {
   if (!sendingStatusMessage.message && sendingStatusMessage.pictures.length === 0) {
     notify({
-      type:'warn',
-      title:'消息不能为空'
+      type: 'warn',
+      title: '消息不能为空'
     });
-  }else {
+  } else {
     let message
-    sendingStatusMessage.message ? message = sendingStatusMessage.message :message = "发送了图片消息"
+    sendingStatusMessage.message ? message = sendingStatusMessage.message : message = "发送了图片消息"
     userApi.addOrderMessage({
-      id : formData.value.id,
-      name : formData.value.name,
-      message : message,
-      picture : sendingStatusMessage.pictures
+      id: formData.value.id,
+      name: formData.value.name,
+      message: message,
+      picture: sendingStatusMessage.pictures
     }).then(res => {
       notify({
-        type:'success',
-        title:"成功🎉",
+        type: 'success',
+        title: "成功🎉",
       })
-      store.dispatch('getOrderStatusMessage',formData.value.id)
+      store.dispatch('getOrderStatusMessage', formData.value.id)
     })
   }
 }
 
 // Element Plus 照片墙数据
 const pictureWall = reactive({
-  fileList:[],
-  previewVisible :false,
-  previewIndex : 0, // 从哪一张图片开始预览
-  type:0,  // 0 预览消息对话框中上传的图片，1 预览来自消息的图片
-  indexOfMsg:0  // 若type为1,那么要预览哪条消息里的图片
+  fileList: [],
+  previewVisible: false,
+  previewIndex: 0, // 从哪一张图片开始预览
+  type: 0,  // 0 预览消息对话框中上传的图片，1 预览来自消息的图片
+  indexOfMsg: 0  // 若type为1,那么要预览哪条消息里的图片
 })
 // 照片墙预览 urls
 const pictureWallPreview = computed(() => {
-  if (pictureWall.type === 0){
+  if (pictureWall.type === 0) {
     return getOnlineImageUrl(sendingStatusMessage.pictures.toString())
   } else {
     return getOnlineImageUrl(statusMessage.value[pictureWall.indexOfMsg].picture.toString())
@@ -248,8 +277,8 @@ const acceptFiletype = '.jpg,.jpeg,.png,.gif,.JPG,.JPEG,.PBG,.GIF'
 const handleBeforeRemove = (uploadFile) => {
   // 删除某张图片
   const deleteIndex = currentIndex(uploadFile)
-  console.log('uploadFile在fileList中的index',deleteIndex)
-  sendingStatusMessage.pictures = sendingStatusMessage.pictures.filter((checkItem,index) => index !== deleteIndex)
+  console.log('uploadFile在fileList中的index', deleteIndex)
+  sendingStatusMessage.pictures = sendingStatusMessage.pictures.filter((checkItem, index) => index !== deleteIndex)
 }
 const handlePictureCardPreview = (file) => {
   pictureWall.previewIndex = pictureWall.fileList.findIndex((checkItem) => checkItem.name === file.name)
@@ -261,9 +290,9 @@ const beforeUploadFile = (file) => {
   // 文件类型检验
   if (whiteList.indexOf(fileSuffix) === -1) {
     notify({
-      type:'warn',
+      type: 'warn',
       title: "上传失败",
-      text:"请上传jpg/jpeg/png/gif/bmp格式的文件"
+      text: "请上传jpg/jpeg/png/gif/bmp格式的文件"
     })
     return false;
   }
@@ -272,9 +301,9 @@ const beforeUploadFile = (file) => {
 
   if (!isLt10M) {
     notify({
-      type:'warn',
+      type: 'warn',
       title: "上传失败",
-      text:"文件大小不能超过 10MB"
+      text: "文件大小不能超过 10MB"
     })
     return false;
   }
@@ -286,7 +315,7 @@ const uploadFile = (options) => {
     }).catch(err => {
       console.log(err)
       notify({
-        type:'error',
+        type: 'error',
         title: "上传失败！",
         text: "请联系管理员解决"
       });
@@ -298,9 +327,9 @@ const uploadFile = (options) => {
 }
 const handleCountExceed = () => {
   notify({
-    type:'warn',
+    type: 'warn',
     title: "上传失败",
-    text:"图片上限为10张"
+    text: "图片上限为10张"
   });
 }
 
@@ -311,12 +340,12 @@ const withdrawThisOrder = () => {
   userApi.withdrawOrder(formData.value.id).then(res => {
     pushRouter('/order')
     notify({
-      type:'success',
+      type: 'success',
       title: "已撤销预约",
     })
   }).catch(err => {
     notify({
-      type:'fail',
+      type: 'fail',
       title: "撤销失败",
     })
     console.log(err)
@@ -325,14 +354,14 @@ const withdrawThisOrder = () => {
 </script>
 
 <style lang="scss" scoped>
-  .pictures .image-slot {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-    background: var(--el-fill-color-light);
-    color: var(--el-text-color-secondary);
-    font-size: 30px;
-  }
+.pictures .image-slot {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  background: var(--el-fill-color-light);
+  color: var(--el-text-color-secondary);
+  font-size: 30px;
+}
 </style>
