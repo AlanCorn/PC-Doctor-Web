@@ -30,9 +30,9 @@
               </form>
               <button
                   class="btn btn-primary mt-3 text-lg w-full"
-                  type="submit"
+                  @click="updateConfirm"
               >
-                确认
+                确认修改
               </button>
               <button
                   class="btn mt-3 text-lg w-full"
@@ -50,15 +50,16 @@
 
 <script setup>
 import { notify } from "@kyvg/vue3-notification";
-import { computed,reactive,onBeforeMount} from "vue";
+import { computed, reactive, onBeforeMount } from "vue";
 import { useStore } from "vuex";
-import router from "../../router";
+import { useRouter } from "vue-router";
+import userApi from "../../api/userApi";
 
 const store = useStore()
+const router = useRouter()
 
 const user_name = computed(() => store.state.user.user_name)
 const contact_details = computed(() => store.state.user.contact_details)
-console.log(user_name)
 
 const formData = reactive({
   user_name: "",
@@ -69,18 +70,32 @@ const formData = reactive({
 onBeforeMount(() => {
   formData.user_name = user_name.value
   const splitIndex = contact_details.value.indexOf(':')
-  formData.radio = contact_details.value.slice(0,splitIndex)
+  formData.radio = contact_details.value.slice(0, splitIndex)
   formData.contact_details = contact_details.value.slice(splitIndex + 1)
 })
 
 
 const logout = () => {
   store.commit("offToken")
-  router.replace('/')
+  router.push('/')
   notify({
     type: 'success',
     title: '已成功退出',
   })
+}
+
+const updateConfirm = () => {
+  const user_id = store.state.user.user_id
+  userApi.userUpdateInfo(formData, user_id).then(res => {
+      store.dispatch("updateState").then(res => {
+        router.replace('/')
+        notify({
+          type: 'success',
+          title: '已成功修改',
+        })
+      })
+    }
+  )
 }
 </script>
 

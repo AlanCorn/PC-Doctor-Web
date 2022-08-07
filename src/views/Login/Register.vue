@@ -87,10 +87,10 @@
 </template>
 
 <script setup>
-import { computed, reactive } from "vue";
-import { notify } from "@kyvg/vue3-notification";
+import {computed, reactive} from "vue";
+import {notify} from "@kyvg/vue3-notification";
 import userApi from "@/api/userApi";
-import { useRouter } from "vue-router";
+import {useRouter} from "vue-router";
 
 const router = useRouter()
 
@@ -121,8 +121,9 @@ const checkPwdAgain = computed(() => formData.password === formData.repeatPasswo
 const submitRegister = () => {
   if (!formData.user_name) showInfo('请输入昵称')
   else if (!formData.contact_details) showInfo('请输入联系方式')
-  else if (!checkIdValid) showInfo(uErrorMsg)
-  else if (!checkPwdValid) showInfo(pErrorMsg)
+  else if (!checkIdValid.value) showInfo(uErrorMsg)
+  else if (!checkPwdValid.value) showInfo(pErrorMsg)
+  else if (!checkPwdAgain.value) showInfo('密码不一致')
   else {
     userApi.userRegister(formData).then(res => {
       if (res.data === "FAIL") {
