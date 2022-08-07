@@ -1,5 +1,5 @@
 import {createRouter, createWebHistory} from 'vue-router'
-import { notify } from "@kyvg/vue3-notification";
+import {notify} from "@kyvg/vue3-notification";
 import {myStore} from '@/store/index'
 
 const store = myStore();
@@ -104,6 +104,7 @@ const routes = [
         name: 'Admin',
         meta: {
             title: "电脑医院-管理员",
+            reqAdmin: true,
             reqLogin: true
         },
         component: () => import('../views/Admin/Admin.vue'),
@@ -117,6 +118,7 @@ const routes = [
                 name: 'AdminDashBoard',
                 meta: {
                     title: "电脑医院-管理员",
+                    reqAdmin: true,
                     reqLogin: true
                 },
                 component: () => import('../views/Admin/AdminDashboard.vue'),
@@ -127,6 +129,7 @@ const routes = [
                 name: 'AdminProblemCate',
                 meta: {
                     title: "电脑医院-管理员-问题类别",
+                    reqAdmin: true,
                     reqLogin: true
                 },
                 component: () => import('../views/Admin/AdminProblemCate.vue'),
@@ -137,6 +140,7 @@ const routes = [
                 name: 'AdminInfoEdit',
                 meta: {
                     title: "电脑医院-管理员-个人信息编辑",
+                    reqAdmin: true,
                     reqLogin: true
                 },
                 component: () => import('../views/Admin/AdminInfoEdit.vue'),
@@ -153,20 +157,38 @@ const router = createRouter({
 
 //todo 全局路由守卫，内部做一些登录验证处理
 router.beforeEach((to, from, next) => {//beforeEach是router的钩子函数，在进入路由前执行
-    //添加标题
+    // 再次检验登录
+
     if (to.meta.title) {
         document.title = to.meta.title
     }
-    if (to.meta.reqLogin && store.state.user.isLogin === false) {
-        next({name: 'Login'})
-        if (to.meta.title === "电脑医院-添加预约"){
-            notify({
-                title: "提示",
-                text: "预约需要登录"
-            })
-        }
-    }
-    next()
+    if (to.meta.reqLogin) {
+        store.dispatch('updateState').then(res => {
+            console.log(res)
+            console.log(store.state.user.isLogin)
+            if (store.state.user.isLogin === false) {
+                next({name: 'Login'})
+                if (to.meta.title === "电脑医院-添加预约") {
+                    notify({
+                        title: "提示",
+                        text: "预约需要登录"
+                    })
+                } else {
+                    notify({
+                        title: "提示",
+                        text: "该功能需要登录"
+                    })
+                }
+            } else if (to.meta.reqAdmin && store.state.user.level === '0') {
+                next({name: 'Index'})
+                notify({
+                    title: "提示",
+                    text: "您不具备管理员权限"
+                })
+            } next()
+        })
+    } else next()
+
 })
 
 

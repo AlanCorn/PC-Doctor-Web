@@ -1,4 +1,5 @@
 import userApi from '../../api/userApi'
+import { notify } from "@kyvg/vue3-notification";
 
 const user = {
     state: () => ({
@@ -15,7 +16,6 @@ const user = {
             let sessionId = localStorage.getItem("token");
             // 如果在localStorage中没找到就去sessionStorage找
             if (!sessionId) sessionId = sessionStorage.getItem("token");
-            console.log("vuex读取本地sessionId",sessionId)
             if (sessionId) {
                 state.sessionId = sessionId
                 state.isLogin = true
@@ -31,15 +31,28 @@ const user = {
     actions:{
         updateState(content){
             content.commit('setToken')
+            // @todo 登录过期异常处理
             if (content.state.sessionId !== ""){
-                userApi.queryUser().then(res => {
-                    if (res.data !== "FAIL") {
-                        content.state.user_name = res.data.user_name
-                        content.state.user_id = res.data.user_id
-                        content.state.level = res.data.level
-                        content.state.contact_details = res.data.contact_details
-                    }
-                })
+                return new Promise((resolve,reject) => {
+                    userApi.queryUser().then(res => {
+                        if (res.data !== "FAIL") {
+                            content.state.user_name = res.data.user_name
+                            content.state.user_id = res.data.user_id
+                            content.state.level = res.data.level
+                            content.state.contact_details = res.data.contact_details
+                        }
+                        resolve(res)
+                    }).catch(err => {
+                        console.log(err)
+                        notify({
+                            type: 'warn',
+                            title: '登录已过期',
+                            text: '请重新登录',
+                        })
+                        content.commit('offToken')
+                        reject(err)
+                    })
+                } )
             }
         }
     }
