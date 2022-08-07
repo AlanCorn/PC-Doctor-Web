@@ -4,8 +4,8 @@
       <div class="hero-overlay bg-opacity-10"></div>
       <div class="hero-content text-center text-neutral-content">
         <div class="max-w-md">
-          <h1 class="mb-5 text-4xl font-bold text-base-100">欢迎使用电医预约</h1>
-          <p class="mb-5 text-xl text-base-200">——致力于提供最优质的公益维修服务</p>
+          <h1 class="mb-5 text-4xl font-bold text-base-100 order-title-shadow">欢迎使用电医预约</h1>
+          <p class="mb-5 text-xl text-base-200 order-title-shadow">——致力于提供最优质的公益维修服务</p>
           <div class="flex items-center flex-col">
             <a @click="pushRouter('/addOrder')" class="btn btn-primary my-1 w-48">立即预约</a>
             <a @click="clickHistory" class="btn btn-info my-1 w-48">预约历史</a>
@@ -107,7 +107,7 @@ const isOrderListLoaded = computed(() => store.getters.isOrderListLoaded)
 const imgUrlList = [
   'https://w.wallhaven.cc/full/39/wallhaven-39gjlv.jpg',
   'https://w.wallhaven.cc/full/dp/wallhaven-dpo38l.jpg',
-  'https://w.wallhaven.cc/full/pk/wallhaven-pkogdp.jpg',
+  // 'https://w.wallhaven.cc/full/pk/wallhaven-pkogdp.jpg',
 ]
 
 const imgUrl = computed(() => {
@@ -123,3 +123,10 @@ onBeforeMount(() => {
   })
 })
 </script>
+
+
+<style>
+.order-title-shadow {
+  text-shadow: 1px 1px 20px rgba(59, 130, 246, 1);
+}
+</style>
