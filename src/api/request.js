@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { ElMessage } from "element-plus";
+import {notify} from "@kyvg/vue3-notification";
 import baseUrl from "./urls";
 
 
@@ -18,14 +18,15 @@ instance.interceptors.request.use(config => {
   // 如果在localStorage中没找到就去sessionStorage找
   if (!token) token = sessionStorage.getItem("token");
   if (token) {
+    console.log(token)
     config.headers.Authorization = token
   }
   return config;
 },
   error => {
-    ElMessage({
-      message: error,
-      type: "warning"
+    notify({
+      type: 'error',
+      title: error
     });
     return Promise.reject(error);
   }
@@ -34,34 +35,44 @@ instance.interceptors.request.use(config => {
 instance.interceptors.response.use(
   response => {
     if (response.status === 200) {
-      // 后端返回的错误码
-      // switch (response.data.code) {
-      //   case 4000:
-      //     ElMessage({
-      //       message: "处理失败",
-      //       type: "warning"
-      //     }); break;
-      //   case 4004:
-      //     ElMessage({
-      //       message: "登录失败",
-      //       type: "warning"
-      //     }); break;
-      //   case 5000:
-      //     ElMessage({
-      //       message: "参数错误",
-      //       type: "warning"
-      //     }); break;
-      //   case 7777:
-      //     ElMessage({
-      //       message: "拒绝访问",
-      //       type: "warning"
-      //     }); break;
-      //   case 9999:
-      //     ElMessage({
-      //       message: "未知错误",
-      //       type: "warning"
-      //     }); break;
-      // }
+      // 后端返回的错误码 参见apifox文档 “返回code码”
+      switch (response.data.code) {
+        case 1:
+          notify({
+            type: 'warn',
+            title: '用户不存在'
+          }); break;
+        case 2:
+          notify({
+            type: 'warn',
+            title: '密码错误'
+          });break;
+        case 3:
+          notify({
+            type: 'warn',
+            title: '未知错误，请联系管理员'
+          });break;
+        case 4:
+          notify({
+            type: 'warn',
+            title: '登录过期，请重新登录'
+          });break;
+        case 5:
+          notify({
+            type: 'warn',
+            title: '没有相应权限'
+          });break;
+        case 6:
+          notify({
+            type: 'warn',
+            title: '查询页数超出范围'
+          });break;
+        case 7:
+          notify({
+            type: 'warn',
+            title: '帐号已注册'
+          });break;
+      }
       return Promise.resolve(response);
     } else {
       return Promise.reject(response);
