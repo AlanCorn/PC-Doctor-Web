@@ -1,6 +1,6 @@
 <template>
 	<!-- 为管理员设置专属的navbar(部分拷贝自views/index.vue) -->
-	<div class="w-full navbar bg-info">
+	<div class="w-full navbar shadow-xl bg-blue-300">
 		<div class="flex-none lg:hidden">
 			<label for="my-drawer-2" class="btn btn-square btn-ghost">
 				<svg
@@ -62,9 +62,13 @@
 				<li><router-link to="/adminInfoEdit">个人信息</router-link></li>
 				<li><a>预约管理(root)</a></li>
 				<li><router-link to="/adminProblemCate">问题类别(root)</router-link></li>
-				<li><a>电医管理(root)</a></li>
+        <li><router-link to="/adminDoctorMng">电医管理(root)</router-link></li>
+        <li><router-link to="/adminUserMng">用户管理(root)</router-link></li>
 			</ul>
 		</div>
 	</div>
 </template>
-<script setup></script>
+<script setup>
+
+
+</script>

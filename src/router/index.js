@@ -145,6 +145,28 @@ const routes = [
                 },
                 component: () => import('../views/Admin/AdminInfoEdit.vue'),
             },
+            // 电医管理
+            {
+                path: '/adminDoctorMng',
+                name: 'AdminDoctorMng',
+                meta: {
+                    title: "电脑医院-管理员-电医管理",
+                    reqAdmin: true,
+                    reqLogin: true
+                },
+                component: () => import('../views/Admin/AdminDoctorMng.vue'),
+            },
+            // 用户管理
+            {
+                path: '/adminUserMng',
+                name: 'AdminUserMng',
+                meta: {
+                    title: "电脑医院-管理员-用户管理",
+                    reqAdmin: true,
+                    reqLogin: true
+                },
+                component: () => import('../views/Admin/AdminUserMng.vue'),
+            },
         ]
     }
 ]
@@ -164,8 +186,6 @@ router.beforeEach((to, from, next) => {//beforeEach是router的钩子函数，�
     }
     if (to.meta.reqLogin) {
         store.dispatch('updateState').then(res => {
-            console.log(res)
-            console.log(store.state.user.isLogin)
             if (store.state.user.isLogin === false) {
                 next({name: 'Login'})
                 if (to.meta.title === "电脑医院-添加预约") {
