@@ -126,12 +126,7 @@ const submitRegister = () => {
   else if (!checkPwdAgain.value) showInfo('密码不一致')
   else {
     userApi.userRegister(formData).then(res => {
-      if (res.data === "FAIL") {
-        notify({
-          type: 'warn',
-          title: '帐号已被注册',
-        });
-      }else {
+      if (res.data.code === 0) {
         router.replace('login')
         notify({
           type: 'success',
@@ -139,7 +134,6 @@ const submitRegister = () => {
           text: '请登录',
         });
       }
-
     }).catch(err => {
       notify({
         type: 'error',

@@ -106,10 +106,9 @@ const order = {
         getUserOrderList(content,params){
             // 使用user Api 发送异步请求，提交commit
             user.getOrderHistory(params).then(res =>{
-                content.commit('setOrderList', res.data.list)
+                content.commit('setOrderList', res.data.appointment_list)
                 content.commit('setOrderSize', res.data.size)
-                }
-            ).catch(err =>{
+            }).catch(err =>{
                 console.log(err)
             })
         },

@@ -35,11 +35,11 @@ const user = {
             if (content.state.sessionId !== ""){
                 return new Promise((resolve,reject) => {
                     userApi.queryUser().then(res => {
-                        if (res.data !== "FAIL") {
-                            content.state.user_name = res.data.user_name
-                            content.state.user_id = res.data.user_id
-                            content.state.level = res.data.level
-                            content.state.contact_details = res.data.contact_details
+                        if (res.data.code === 0) {
+                            content.state.user_name = res.data.user_info.user_name
+                            content.state.user_id = res.data.user_info.user_id
+                            content.state.level = res.data.user_info.level
+                            content.state.contact_details = res.data.user_info.contact_details
                         }
                         resolve(res)
                     }).catch(err => {
