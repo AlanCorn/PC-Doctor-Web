@@ -1,6 +1,6 @@
 const baseUrl = {
-    testUrl: "http://1.117.89.152:8080/"
-  // testUrl: "http://4696a20f.cpolar.cn/"
+    testUrl: "http://116.62.129.37:8080"
+  // testUrl: "http://62846820.r2.cpolar.cn/"
 }
 
 export default baseUrl;

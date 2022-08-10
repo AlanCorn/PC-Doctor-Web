@@ -1,7 +1,7 @@
 <template>
   <div class="shadow-xl my-2 mx-1 card bg-blue-50 bg-blue-100 hover:bg-blue-200"
       @click="posCardClick">
-    <div class="flex flex-row card-body flex-">
+    <div class="flex flex-row card-body p-5">
       <div class="flex flex-col justify-between">
         <!-- 显示文体描述与分类-->
         <div>
