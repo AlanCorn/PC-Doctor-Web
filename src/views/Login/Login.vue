@@ -83,23 +83,13 @@ const loginSubmit = () => {
     name: loginForm.username,
     password: loginForm.password,
   }).then((res) => {
-    if (res.data === "PWD ERROR") {
-      notify({
-        type: 'error',
-        title: '密码错误',
-      })
-    } else if (res.data === "NO SUCH ACCOUNT") {
-      notify({
-        type: 'error',
-        title: '帐号未注册',
-      })
-    } else {
+    if (res.data.code === 0) {
       if (loginForm.isRemember) {
         sessionStorage.clear()
-        localStorage.setItem("token", res.data);
+        localStorage.setItem("token", res.data.session_id);
       } else {
         localStorage.clear()
-        sessionStorage.setItem("token", res.data);
+        sessionStorage.setItem("token", res.data.session_id);
       }
       store.dispatch('updateState')
       router.replace('/')

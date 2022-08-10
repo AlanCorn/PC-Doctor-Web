@@ -87,6 +87,7 @@ const logout = () => {
 const updateConfirm = () => {
   const user_id = store.state.user.user_id
   userApi.userUpdateInfo(formData, user_id).then(res => {
+    console.log(res)
       store.dispatch("updateState").then(res => {
         router.replace('/')
         notify({
