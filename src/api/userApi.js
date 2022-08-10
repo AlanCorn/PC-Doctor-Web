@@ -7,6 +7,7 @@ const headers = {
 
 const user = {
     getOrderHistory(params) {
+        console.log('params', params)
         return request.get("/query", {params});
     },
     // 提交预约
@@ -54,6 +55,7 @@ const user = {
             headers
         })
     },
+    // 用户注册
     userRegister(params) {
         const form = new FormData();
         form.append('user_id', params.user_id);
@@ -61,6 +63,16 @@ const user = {
         form.append('contact_details', params.radio + ":" + params.contact_details);
         form.append('pwd_md5', md5(params.password).toUpperCase());
         return request.post("/register", form, {
+            headers
+        })
+    },
+    // 用户更新信息
+    userUpdateInfo(params,user_id) {
+        const form = new FormData();
+        form.append('user_id', user_id);
+        form.append('user_name', params.user_name);
+        form.append('contact_details', params.radio + ":" + params.contact_details);
+        return request.post("/update_user", form, {
             headers
         })
     },
