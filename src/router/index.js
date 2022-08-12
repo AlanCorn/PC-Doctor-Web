@@ -180,11 +180,13 @@ const router = createRouter({
 //todo 全局路由守卫，内部做一些登录验证处理
 router.beforeEach((to, from, next) => {//beforeEach是router的钩子函数，在进入路由前执行
     // 再次检验登录
-
     if (to.meta.title) {
         document.title = to.meta.title
     }
     if (to.meta.reqLogin) {
+        if (to.name === "OrderInfo" && !from.name) {
+            next({name: 'Index'})
+        }
         store.dispatch('updateState').then(res => {
             if (store.state.user.isLogin === false) {
                 next({name: 'Login'})
