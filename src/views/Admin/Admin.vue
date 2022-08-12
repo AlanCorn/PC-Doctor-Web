@@ -53,7 +53,11 @@
 		<input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
 		<div class="drawer-content">
 			<!-- Page content here -->
-      <router-view></router-view>
+      <router-view v-slot="{Component}">
+        <transition enter-active-class="animate__animated animate__fadeIn" >
+          <component :is="Component" />
+        </transition>
+      </router-view>
 		</div>
 		<div class="drawer-side">
 			<label for="my-drawer-2" class="drawer-overlay"></label>
