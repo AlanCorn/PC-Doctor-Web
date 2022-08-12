@@ -1,11 +1,11 @@
 <template>
   <!--  步骤条-->
-  <OrderSteps :onStep="formData.status + 1"></OrderSteps>
+  <OrderSteps :onStep="statusToNum"></OrderSteps>
   <div class="flex items-center flex-col">
     <div class="py-5 space-y-6 w-11/12 lg:w-3/4 xl:w-1/2">
-      <!-- 不属于自己的订单 - 仅供预览 -->
+      <!-- tip 1： 不属于自己的订单 - 仅供预览 -->
       <div class="alert shadow-lg bg-base-200"
-           v-if="formData.status === '0' && !isMyOwnOrder">
+           v-if="formData.status === '0' && !isMyOwnOrder && !isPCDoctor">
         <div>
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                class="stroke-current flex-shrink-0 w-6 h-6">
@@ -15,7 +15,7 @@
           <span>该预约不属于你哦，仅供预览</span>
         </div>
       </div>
-      <!-- 属于自己的订单 - 正在排队提示 -->
+      <!-- tip 2： 属于自己的订单 - 正在排队提示 -->
       <div class="alert shadow-lg bg-base-200"
            v-if="formData.status === '0' && isMyOwnOrder">
         <div>
@@ -30,9 +30,21 @@
           <button class="btn btn-sm btn-ghost" @click="withdrawThisOrder">撤销</button>
         </div>
       </div>
+      <!-- tip 3： 电医 - 接单说明 -->
+      <div class="alert shadow-lg bg-base-200"
+           v-if="formData.status === '0' && isPCDoctor">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+               class="stroke-current flex-shrink-0 w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <span>电脑医生请合理安排，适量接单</span>
+        </div>
+      </div>
       <!-- 预约已完成的提示 -->
       <div class="flex items-center justify-center flex-col"
-           v-if="formData.status === 2">
+           v-if="formData.status === '2'">
         <div class="grid items-center grid-cols-1 md:grid-cols-2">
           <el-image style="width: 200px; height: 200px"
                     :src="getImageUrl('icon-5.6s-250px.png')"
@@ -41,26 +53,25 @@
             已完成！
           </div>
         </div>
-        <div class="flex my-5">
-          <div class="text-2xl font-bold text-center mr-1">
-            评分
-          </div>
-          <div class="rating gap-1 items-center">
-            <input type="radio" name="rating-3" class="mask mask-heart bg-red-400"/>
-            <input type="radio" name="rating-3" class="mask mask-heart bg-red-400" checked/>
-            <input type="radio" name="rating-3" class="mask mask-heart bg-red-400"/>
-            <input type="radio" name="rating-3" class="mask mask-heart bg-red-400"/>
-            <input type="radio" name="rating-3" class="mask mask-heart bg-red-400"/>
-          </div>
-        </div>
-
+<!--        <div class="flex my-5">-->
+<!--          <div class="text-2xl font-bold text-center mr-1">-->
+<!--            评分-->
+<!--          </div>-->
+<!--          <div class="rating gap-1 items-center">-->
+<!--            <input type="radio" name="rating-3" class="mask mask-heart bg-red-400"/>-->
+<!--            <input type="radio" name="rating-3" class="mask mask-heart bg-red-400" checked/>-->
+<!--            <input type="radio" name="rating-3" class="mask mask-heart bg-red-400"/>-->
+<!--            <input type="radio" name="rating-3" class="mask mask-heart bg-red-400"/>-->
+<!--            <input type="radio" name="rating-3" class="mask mask-heart bg-red-400"/>-->
+<!--          </div>-->
+<!--        </div>-->
       </div>
       <!-- 预约信息 -->
       <div class="flex flex-col">
         <div class="title-info"> 预约信息</div>
         <div>
-          <div class="ml-2 text-lg lg:text-xl">{{ formData.problem_description }}</div>
-          <div class="ml-2 badge badge-lg mx-0.5 my-3" v-for="(each,index) in cateList" :key="index">{{ each }}</div>
+          <div class="ml-2 text-xl lg:text-2xl">{{ formData.problem_description }}</div>
+          <div class="ml-2 badge bg-secondary text-base-100 border-none badge-lg mx-0.5 my-3" v-for="(each,index) in cateList" :key="index">{{ each }}</div>
           <div class="flex px-1">
             <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
               <path fill-rule="evenodd"
@@ -100,7 +111,7 @@
       </div>
       <!-- 状态消息 -->
       <div class="flex flex-col"
-           v-if="formData.status > 0">
+           v-if="formData.status === '1' || statusMessage.length > 0 && formData.status === '2'">
         <div class="title-info"> 状态消息</div>
         <ul class="steps steps-vertical">
           <li class="step"
@@ -117,12 +128,26 @@
               </div>
             </div>
           </li>
-          <li class="step" data-content="">
+          <li class="step"
+              v-if="formData.status === '1'"
+          >
             <div>
               <label for="addMessageDialog" class="btn border-base-200 mx-1">添加消息</label>
             </div>
           </li>
         </ul>
+      </div>
+      <!-- 操作按钮 接单按钮 status：排队中 电医可见 -->
+      <div class="flex justify-center gap-1.5"
+           v-if="formData.status === '0' && isPCDoctor">
+        <div class="btn btn-primary" @click="takeOrder">接单</div>
+        <div class="btn" @click="routerBack">返回</div>
+      </div>
+      <!-- 操作按钮 标记完成 status：正在处理 电医与用户可见 -->
+      <div class="flex justify-center gap-1.5"
+           v-if="formData.status === '1' && (isPCDoctor || isMyOwnOrder)">
+        <div class="btn btn-primary" @click="finishOrder">预约完成</div>
+        <div class="btn" @click="routerBack">返回</div>
       </div>
     </div>
   </div>
@@ -177,11 +202,11 @@
 </template>
 
 <script setup>
-import {computed, onMounted, reactive, ref} from "vue";
-import {Picture as IconPicture} from '@element-plus/icons-vue'
+import { computed, reactive } from "vue";
+import { Picture as IconPicture } from '@element-plus/icons-vue'
 
-import {notify} from "@kyvg/vue3-notification";
-import {Plus} from '@element-plus/icons-vue'
+import { notify } from "@kyvg/vue3-notification";
+import { Plus } from '@element-plus/icons-vue'
 // axios请求接口
 import fileApi from "@/api/file"
 import userApi from "@/api/userApi"
@@ -197,6 +222,9 @@ function pushRouter(path) {
   router.push(path)
 }
 
+function routerBack() {
+  router.back()
+}
 // 1. 预约详情信息
 let formData = computed(() => store.state.order.orderFormData)
 const cateList = computed(() => {
@@ -206,6 +234,10 @@ const createTime = computed(() => timeFormatter(formData.value.create_time))
 const imageUrls = computed(() => store.getters.getOrderFormDataImagesUrls)
 // 检验是否是属于用户的订单
 const isMyOwnOrder = computed(() => formData.value.user_id ===  store.state.user.user_id)
+// 检验是否是电医
+const isPCDoctor = computed(() => store.state.user.level === "1")
+// 步骤条状态码计算属性
+const statusToNum = computed(() => parseInt(formData.value.status) + 1)
 
 // 2. 状态消息
 const statusMessage = computed(() => store.state.order.orderStatusMessage)
@@ -322,7 +354,7 @@ const uploadFile = (options) => {
     })
   }).then(res => {
     // 成功上传到服务器，向表单中添加数据
-    sendingStatusMessage.pictures.push(res.data);
+    sendingStatusMessage.pictures.push(res.data.file_name);
   })
 }
 const handleCountExceed = () => {
@@ -336,7 +368,6 @@ const handleCountExceed = () => {
 // 其他方法
 // 1. 撤销预约
 const withdrawThisOrder = () => {
-  console.log(formData.value.id)
   userApi.withdrawOrder(formData.value.id).then(res => {
     pushRouter('/order')
     notify({
@@ -351,6 +382,41 @@ const withdrawThisOrder = () => {
     console.log(err)
   })
 }
+// 2. 电医接单
+const takeOrder = () => {
+  userApi.takeOrder(formData.value.id, store.state.user.user_id).then(res => {
+    if (res.data.code === 0) {
+      notify({
+        type: 'success',
+        title: "已成功接单",
+      })
+    }
+  }).catch(err => {
+    notify({
+      type: 'error',
+      title: "失败",
+    })
+    console.log(err)
+  })
+}
+// 3. 标记完成
+const finishOrder = () => {
+  userApi.finishOrder(formData.value.id).then(res => {
+    if (res.data.code === 0) {
+      notify({
+        type: 'success',
+        title: "预约订单完成",
+      })
+    }
+  }).catch(err => {
+    notify({
+      type: 'error',
+      title: "修改失败",
+    })
+    console.log(err)
+  })
+}
+
 </script>
 
 <style lang="scss" scoped>
