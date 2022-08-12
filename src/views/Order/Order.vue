@@ -112,7 +112,6 @@ const imgUrlList = [
 
 const imgUrl = computed(() => {
   const index = Math.floor(Math.random() * imgUrlList.length);
-  console.log(`url('${imgUrlList[index]}')`)
   return `url('${imgUrlList[index]}')`
 })
 

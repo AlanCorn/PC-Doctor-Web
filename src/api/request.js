@@ -18,7 +18,7 @@ instance.interceptors.request.use(config => {
   // 如果在localStorage中没找到就去sessionStorage找
   if (!token) token = sessionStorage.getItem("token");
   if (token) {
-    console.log(token)
+    // console.log(token)
     config.headers.Authorization = token
   }
   return config;

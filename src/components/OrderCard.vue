@@ -6,7 +6,7 @@
         <!-- 显示文体描述与分类-->
         <div>
           <div class="card-title">{{ shortDescription }}</div>
-          <div class="badge bg-secondary text-base-100 border-none" v-for="(each,index) in cateList" :key="index">{{ each }}</div>
+          <div class="badge bg-secondary text-base-100 border-none mr-1" v-for="(each,index) in cateList" :key="index">{{ each }}</div>
         </div>
         <!-- 在卡片左下显示预约时间与状态-->
         <div class="mt-2">
