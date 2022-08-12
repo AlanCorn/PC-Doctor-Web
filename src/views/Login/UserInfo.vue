@@ -86,17 +86,28 @@ const logout = () => {
 
 const updateConfirm = () => {
   const user_id = store.state.user.user_id
-  userApi.userUpdateInfo(formData, user_id).then(res => {
-    console.log(res)
-      store.dispatch("updateState").then(res => {
-        router.replace('/')
-        notify({
-          type: 'success',
-          title: '已成功修改',
-        })
-      })
-    }
-  )
+  if (!formData.user_name) showInfo('请输入昵称')
+  else if (!formData.contact_details) showInfo('请输入联系方式')
+  else {
+    userApi.userUpdateInfo(formData, user_id).then(res => {
+          console.log(res)
+          store.dispatch("updateState").then(res => {
+            router.replace('/')
+            notify({
+              type: 'success',
+              title: '已成功修改',
+            })
+          })
+        }
+    )
+  }
+}
+
+const showInfo = (text) => {
+  notify({
+    type: 'warn',
+    title: text
+  });
 }
 </script>
 
