@@ -200,8 +200,10 @@ const uploadFile = (options) => {
       });
     })
   }).then(res => {
-    // 成功上传到服务器，向表单中添加数据
-    formData.problem_picture.push(res.data);
+    if (res.data.code === 0){
+      // 成功上传到服务器，向表单中添加数据
+      formData.problem_picture.push(res.data.file_name);
+    }
   })
 }
 const handleCountExceed = () => {

@@ -106,7 +106,7 @@ const uploadFile = (options) => {
     })
   }).then(res => {
     // 成功上传到服务器
-    formData.problem_picture.push(res.data);
+    formData.problem_picture.push(res.data.file_name);
   })
 }
 const handleCountExceed = () => {
