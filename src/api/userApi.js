@@ -7,7 +7,6 @@ const headers = {
 
 const user = {
     getOrderHistory(params) {
-        console.log('params', params)
         return request.get("/query", {params});
     },
     // 提交预约
@@ -28,6 +27,25 @@ const user = {
         const form = new FormData();
         form.append('id', orderId);
         return request.post("/delete", form, {
+            headers
+        })
+    },
+    // 电医接单接口
+    takeOrder(orderId,doctor_id) {
+        const form = new FormData();
+        form.append('id', orderId);
+        form.append('doctor_id', doctor_id);
+        form.append('status', '1');
+        return request.post("/update", form, {
+            headers
+        })
+    },
+    // 预约标记完成
+    finishOrder(orderId) {
+        const form = new FormData();
+        form.append('id', orderId);
+        form.append('status', '2');
+        return request.post("/update", form, {
             headers
         })
     },
