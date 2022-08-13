@@ -2,7 +2,7 @@
   <div class="flex items-center flex-col">
     <div class="w-11/12 py-10">
       <div class="text-primary text-4xl font-bold">我的名片</div>
-      <DoctorCard/>
+      <DoctorCard :doctorInfo="doctorInfo"/>
       <OrderCardPages
           v-for="(each,index) in orderCardPagesData.titles"
           :key="index"
@@ -24,6 +24,8 @@ import { useStore } from "vuex";
 const store = useStore()
 
 const adminOrderList = (type) => computed(() => store.getters.adminOrderListGetter(type))
+const doctorInfo = computed(() => store.getters.getUserInfo)
+
 
 // 列表数据
 const orderCardPagesData = reactive({

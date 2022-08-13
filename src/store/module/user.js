@@ -10,7 +10,16 @@ const user = {
         contact_details:"",
         sessionId:""
     }),
-    getters:{},
+    getters:{
+        getUserInfo(state) {
+            return {
+                user_id:state.user_id,
+                user_name:state.user_name,
+                level:state.level,
+                contact_details:state.contact_details
+            }
+        }
+    },
     mutations:{
         setToken(state){
             let sessionId = localStorage.getItem("token");
