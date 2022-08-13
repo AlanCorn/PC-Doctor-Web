@@ -15,7 +15,18 @@
         </div>
       </div>
       <div>
+
         <el-form :model="form" label-width="70px">
+          <el-form-item label="头像">
+            <el-upload
+                class="avatar-uploader"
+                action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
+                :show-file-list="false"
+            >
+              <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+              <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
+            </el-upload>
+          </el-form-item>
           <el-form-item label="姓名">
             <el-input
                 v-model="form.name"
@@ -53,8 +64,9 @@
 </template>
 
 <script setup>
-import {reactive} from "vue";
+import {reactive, ref} from "vue";
 import SexIcon from "../../components/SexIcon.vue";
+import { Plus } from '@element-plus/icons-vue'
 
 const infoForm = reactive({
   avatar: "https://s.gravatar.com/avatar/059edf8a64b449e8ad399de39c3309aa?s=80",
@@ -64,6 +76,29 @@ const infoForm = reactive({
   grade: "电医", // 职位
   score: "89", // 评分
 });
+
+
+
+
+const imageUrl = ref('')
+
+// const handleAvatarSuccess: UploadProps['onSuccess'] = (
+//     response,
+//     uploadFile
+// ) => {
+//   imageUrl.value = URL.createObjectURL(uploadFile.raw!)
+// }
+//
+// const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
+//   if (rawFile.type !== 'image/jpeg') {
+//     ElMessage.error('Avatar picture must be JPG format!')
+//     return false
+//   } else if (rawFile.size / 1024 / 1024 > 2) {
+//     ElMessage.error('Avatar picture size can not exceed 2MB!')
+//     return false
+//   }
+//   return true
+// }
 
 const form = reactive({
   avatar: "",
@@ -88,4 +123,39 @@ const onSubmit = () => {
 // .contactItem /deep/ .el-form-item__content{
 //   flex-direction: column;
 // }
+
+
+.avatar-uploader .avatar {
+  width: 100px;
+  height: 100px;
+  display: block;
+}
+
+.avatar-uploader {
+  border: 1px dashed var(--el-border-color);
+}
+.avatar-uploader:hover {
+  border-color: var(--el-color-primary);
+}
+
+.avatar-uploader .el-upload {
+  border: 1px dashed var(--el-border-color);
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: var(--el-transition-duration-fast);
+}
+
+.avatar-uploader .el-upload:hover {
+  border-color: var(--el-color-primary);
+}
+
+.el-icon.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 100px;
+  height: 100px;
+  text-align: center;
+}
 </style>
