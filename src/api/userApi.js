@@ -6,8 +6,13 @@ const headers = {
 }
 
 const user = {
+    // 预约历史
     getOrderHistory(params) {
         return request.get("/query", {params});
+    },
+    // 查询电医
+    getDoctorInfo(params) {
+        return request.get("/query_doctor", {params});
     },
     // 提交预约
     submitOrder(formData) {
