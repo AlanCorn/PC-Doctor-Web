@@ -15,6 +15,8 @@ const order = {
         ],
         // 当前的预约表单信息(预约详情)
         orderFormData:{},
+        // 接单电医信息
+        orderDoctorInfo:{},
         orderStatusMessage:[],
         // 用户的预约历史
         orderList:[],
@@ -88,8 +90,10 @@ const order = {
             state.cateList = cateList
         },
         setOrderFormData(state,orderFormData){
-            console.log(orderFormData)
             state.orderFormData = orderFormData
+        },
+        setOrderDoctor(state,doctorInfo){
+            state.orderDoctorInfo = doctorInfo
         },
         setOrderList(state,orderList){
             state.orderList = orderList
@@ -108,6 +112,36 @@ const order = {
             user.getOrderHistory(params).then(res =>{
                 content.commit('setOrderList', res.data.appointment_list)
                 content.commit('setOrderSize', res.data.size)
+            }).catch(err =>{
+                console.log(err)
+            })
+        },
+        // 查询表单
+        getOrderFormData(content,orderId){
+            // 使用user Api 发送异步请求，提交commit
+            user.getOrderHistory({
+                page:1,
+                id:orderId
+            }).then(res =>{
+                if (res.data.code === 0){
+                    content.commit('setOrderFormData', res.data.appointment_list[0])
+                    // 查询接单电医信息，放到orderDoctorInfo
+                    content.dispatch('getUserOrderDoctor',content.state.orderFormData.doctor_id)
+                }
+            }).catch(err =>{
+                console.log(err)
+            })
+        },
+        // 查询接单电医信息
+        getUserOrderDoctor(content,doctor_id){
+            // 使用user Api 发送异步请求，提交commit
+            user.getDoctorInfo({
+                page:1,
+                user_id:doctor_id
+            }).then(res =>{
+                if (res.data.code === 0){
+                    content.commit('setOrderDoctor', res.data.user_list[0])
+                }
             }).catch(err =>{
                 console.log(err)
             })
