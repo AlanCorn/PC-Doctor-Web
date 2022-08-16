@@ -7,7 +7,6 @@
         v-if="props.list.length > 0">
         <!-- 信息卡片： -->
         <OrderCard
-            class="transition duration-500 ease-in-out hover:bg-primary transform hover:-translate-y-1"
             v-for="(cardInfo) of props.list"
             :key="cardInfo.id"
             :cardInfo="cardInfo">

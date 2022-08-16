@@ -21,7 +21,7 @@
       <div class="tabs tabs-boxed bg-base-100 text-2xl items-start mt-5">
         <a v-for="(each,index) in cateList"
            :key="index"
-           :class="{'tab':true,'tab-active':index === filterParams.cate}"
+           :class="{'tab transition duration-500 rounded-md':true,'tab-active':index === filterParams.cate} "
            @click="changeState(index)">
           {{ each }}
         </a>
@@ -46,16 +46,17 @@
       <div class="grid grid-cols-1 my-5 lg:grid-cols-2 2xl:grid-cols-3 ">
         <!-- 信息卡片： -->
         <OrderCard
-            class="transition duration-500 ease-in-out hover:bg-primary transform hover:-translate-y-1"
             v-for="(cardInfo) of cardList"
             :key="cardInfo.id"
             :cardInfo="cardInfo">
         </OrderCard>
       </div>
-
+      <div v-if="cardList.length === 0"
+           class="flex h-1/2 items-center justify-center ">
+        <div class="text-xl ">暂无相关预约条目😊</div>
+      </div>
     </div>
   </div>
-  <div class="filter drop-shadow-2xl">测试</div>
 </template>
 
 <script setup>

@@ -46,10 +46,10 @@
       <div class="flex items-center justify-center flex-col"
            v-if="formData.status === '2'">
         <div class="grid items-center grid-cols-1 md:grid-cols-2">
-          <el-image style="width: 200px; height: 200px"
+          <el-image style="width: 150px; height: 150px"
                     :src="getImageUrl('icon-5.6s-250px.png')"
                     fit="fill"/>
-          <div class="text-4xl font-bold text-center">
+          <div class="text-3xl font-bold text-center">
             已完成！
           </div>
         </div>
@@ -105,8 +105,7 @@
            v-if="formData.status > 0">
         <div class="title-info"> 接单电医</div>
         <div>
-          todo:电医名片:接单数量，回复消息条数和及时程度，评价等
-          <!--            @todo:是否要为电医制作名片？还是仅展示基本信息-->
+          <DoctorCard :doctorInfo="orderDoctorInfo.value"></DoctorCard>
         </div>
       </div>
       <!-- 状态消息 -->
@@ -213,10 +212,16 @@ import userApi from "@/api/userApi"
 import {getOnlineImageUrl, timeFormatter, getImageUrl} from "@/utils"
 import OrderSteps from "./OrderSteps.vue"
 import {useStore} from "vuex";
-import {useRouter} from "vue-router";
+import {useRoute, useRouter} from "vue-router";
+import DoctorCard from "../../components/DoctorCard.vue";
 
 const store = useStore()
 const router = useRouter()
+const route = useRoute()
+
+// 获取预约信息
+store.dispatch('getOrderFormData',route.query.id)
+
 
 function pushRouter(path) {
   router.push(path)
@@ -227,8 +232,10 @@ function routerBack() {
 }
 // 1. 预约详情信息
 let formData = computed(() => store.state.order.orderFormData)
+let orderDoctorInfo = computed(() => store.state.order.orderDoctorInfo)
 const cateList = computed(() => {
-  return formData.value.problem_category.split(',')
+  if (formData.value.problem_category)  return formData.value.problem_category.split(',')
+  else return []
 })
 const createTime = computed(() => timeFormatter(formData.value.create_time))
 const imageUrls = computed(() => store.getters.getOrderFormDataImagesUrls)

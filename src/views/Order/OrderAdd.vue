@@ -128,7 +128,7 @@ const submitForm = () => {
     // 通过非空判断，提交表单
     userApi.submitOrder(formData).then(res => {
       store.commit('setOrderFormData',res.data.appointment)
-      router.push('/orderInfo')
+      router.push({ path: '/orderInfo', query: { id: res.data.appointment.id } })
       notify({
         type:'success',
         title:"提交成功🎉",
