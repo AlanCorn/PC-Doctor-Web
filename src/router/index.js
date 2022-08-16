@@ -69,7 +69,24 @@ const routes = [
                 path: '/document',
                 name: 'Document',
                 meta: {title: "电脑医院-文档"},
-                component: () => import('../views/Document.vue'),
+                component: () => import('../views/Document/Document.vue'),
+            },
+            // 文档浏览/文档预览
+            {
+                path: '/preview',
+                name: 'Preview',
+                meta: {title: "电脑医院-文档"},
+                component: () => import('../views/Document/DocumentPreview.vue'),
+            },
+            // 文档编辑
+            {
+                path: '/edit',
+                name: 'Edit',
+                meta: {
+                    title: "电脑医院-文档",
+                    reqLogin: true
+                },
+                component: () => import('../views/Document/DocumentEdit.vue'),
             },
             // 关于我们
             {
@@ -184,9 +201,6 @@ router.beforeEach((to, from, next) => {//beforeEach是router的钩子函数，�
         document.title = to.meta.title
     }
     if (to.meta.reqLogin) {
-        if (to.name === "OrderInfo" && !from.name) {
-            next({name: 'Index'})
-        }
         store.dispatch('updateState').then(res => {
             if (store.state.user.isLogin === false) {
                 next({name: 'Login'})
