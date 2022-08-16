@@ -50,25 +50,27 @@
 </template>
 
 <script setup>
-import {computed, reactive} from "vue";
+import {computed} from "vue";
 import SexIcon from "./SexIcon.vue";
 import MyAvatar from "./MyAvatar.vue";
 
 const props = defineProps({
-  doctorInfo:{
-    type:Object,
-    default:{
-      user_name:'无',
-      sex: "男",
-      level:'0',
-      contact_details:'QQ:xxx'
+  doctorInfo: {
+    type: Object,
+    default: {
+      user_id: "2012190330",
+      user_name: "杨志文",
+      level: "1",
+      contact_details: "QQ:1561206831",
+      user_description: "",
+      user_picture: ""
     }
   }
 })
 
-console.log('DoctorCard',props)
+
 const grade = computed(() => {
-  switch (props.doctorInfo.level){
+  switch (props.doctorInfo.level) {
     case '0':
       return '普通用户'
     case '1':
