@@ -5,10 +5,13 @@ const headers = {
     'Content-Type':'multipart/form-data'
 }
 
+
+// 文件上传APi @imgType = ['appointment','usr_pic','doc_pic'] ;
 const fileApi = {
-    uploadFile(options){
+    uploadFile(file,imgType = 'appointment'){
         const form = new FormData();
-        form.append('file',options.file)
+        form.append('file',file)
+        form.append('type',imgType)
         return request.post("/upload", form, {
             headers
         })

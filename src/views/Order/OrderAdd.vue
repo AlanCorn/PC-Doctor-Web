@@ -189,7 +189,7 @@ const beforeUploadFile = (file) => {
 }
 const uploadFile = (options) => {
   return new Promise((resolve) => {
-    fileApi.uploadFile(options).then(res => {
+    fileApi.uploadFile(options.file).then(res => {
       resolve(res)
     }).catch(err => {
       console.log(err)

@@ -349,7 +349,7 @@ const beforeUploadFile = (file) => {
 }
 const uploadFile = (options) => {
   return new Promise((resolve) => {
-    fileApi.uploadFile(options).then(res => {
+    fileApi.uploadFile(options.file).then(res => {
       resolve(res)
     }).catch(err => {
       console.log(err)
@@ -393,6 +393,7 @@ const withdrawThisOrder = () => {
 const takeOrder = () => {
   userApi.takeOrder(formData.value.id, store.state.user.user_id).then(res => {
     if (res.data.code === 0) {
+      store.dispatch('getOrderFormData',formData.value.id)
       notify({
         type: 'success',
         title: "已成功接单",
@@ -410,6 +411,7 @@ const takeOrder = () => {
 const finishOrder = () => {
   userApi.finishOrder(formData.value.id).then(res => {
     if (res.data.code === 0) {
+      store.dispatch('getOrderFormData',formData.value.id)
       notify({
         type: 'success',
         title: "预约订单完成",

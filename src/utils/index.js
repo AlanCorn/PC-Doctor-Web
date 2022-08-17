@@ -12,13 +12,13 @@ const getImageUrl = (fileName) => {
     return new URL(`../assets/image/vite-images/${fileName}`, import.meta.url).href
 }
 
-// 访问服务器中图片列表
-const getOnlineImageUrl = (originUrls) => {
+// 访问服务器中图片列表  @imgType = ['appointment','usr_pic','doc_pic'] ;
+const getOnlineImageUrl = (originUrls,imgType = 'appointment') => {
     const urls = []
     if (originUrls){
         originUrls.split(',').forEach((each) => {
             // urls.push(baseUrl + '/file/' +each)
-            urls.push(`${baseUrl.testUrl}file/${each}`)
+            urls.push(`${baseUrl.testUrl}file/${imgType}/${each}`)
         })
     }
     return urls
