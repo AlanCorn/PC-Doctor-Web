@@ -20,15 +20,15 @@ import '@kangc/v-md-editor/lib/style/base-editor.css';
 import vuepressTheme from '@kangc/v-md-editor/lib/theme/vuepress.js';
 import '@kangc/v-md-editor/lib/theme/style/vuepress.css';
 
-// highlightjs
-import hljs from 'highlight.js';
-// 选择使用主题
+// Prism语法高亮
+import Prism from 'prismjs';
+
 VMdPreview.use(vuepressTheme, {
-    Hljs: hljs,
+    Prism,
 });
 
 VMdEditor.use(vuepressTheme, {
-    Hljs: hljs,
+    Prism,
 });
 
 createApp(App)
