@@ -164,6 +164,7 @@ const handlePictureCardPreview = (file) => {
   pictureWall.previewVisible = true
 }
 const beforeUploadFile = (file) => {
+  // 文件后缀检验
   const fileSuffix = file.name.substring(file.name.lastIndexOf(".") + 1);
   const whiteList = ["jpg", "jpeg", "png", "gif"];
   // 文件类型检验
@@ -171,7 +172,7 @@ const beforeUploadFile = (file) => {
     notify({
       type:'warn',
       title: "上传失败",
-      text:"请上传jpg/jpeg/png/gif/bmp格式的文件"
+      text:"请上传jpg/jpeg/png/gif格式的文件"
     })
     return false;
   }

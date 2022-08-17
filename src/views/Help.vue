@@ -1,7 +1,6 @@
 <template>
   <div class="flex flex-col justify-center items-center min-h-screen">
     <div id="app">
-      <button @click="toggleVisible">transition</button>
       <!--方法一-->
       <transition
           appear-active-class="animate__fadeIn"
@@ -25,6 +24,8 @@
         <h2 v-show="visible" class="animate__animated" :key="2">Just-add-water CSS animations</h2>
       </transition-group>
     </div>
+    <button class="btn" @click="toggleVisible">transition</button>
+
     <div class="text-5xl">todo:帮助</div>
   </div>
 </template>
