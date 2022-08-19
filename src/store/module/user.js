@@ -49,16 +49,12 @@ const user = {
                             content.state.user_id = res.data.user_info.user_id
                             content.state.level = res.data.user_info.level
                             content.state.contact_details = res.data.user_info.contact_details
+                        }else if (res.data.code === 4) {
+                            content.commit('offToken')
                         }
                         resolve(res)
                     }).catch(err => {
                         console.log(err)
-                        notify({
-                            type: 'warn',
-                            title: '登录已过期',
-                            text: '请重新登录',
-                        })
-                        content.commit('offToken')
                         reject(err)
                     })
                 } )
