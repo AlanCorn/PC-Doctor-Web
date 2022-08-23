@@ -16,7 +16,7 @@
       </div>
       <div>
 
-        <el-form :model="form" label-width="70px">
+        <el-form :model="formData" label-width="70px">
           <el-form-item label="头像">
             <el-upload
                 class="avatar-uploader"
@@ -29,33 +29,44 @@
           </el-form-item>
           <el-form-item label="姓名">
             <el-input
-                v-model="form.name"
+                v-model="formData.user_name"
                 placeholder="尽量使用真实姓名"
                 class="name"
             />
           </el-form-item>
           <el-form-item label="性别">
-            <el-radio-group v-model="form.sex">
+            <el-radio-group v-model="formData.sex">
               <el-radio label="男"/>
               <el-radio label="女"/>
             </el-radio-group>
           </el-form-item>
           <el-form-item label="联系方式" class="contactItem">
             <div>
-              <el-radio-group style="display: block" v-model="form.radio">
+              <el-radio-group style="display: block" v-model="formData.radio">
                 <el-radio label="QQ">QQ</el-radio>
                 <el-radio label="WeChat">WeChat</el-radio>
                 <el-radio label="Phone">Phone</el-radio>
               </el-radio-group>
               <el-input
-                  v-model="form.contact"
+                  v-model="formData.contact_details"
                   class="contact"
                   placeholder="请输入联系方式(推荐使用QQ)"
               />
             </div>
           </el-form-item>
+          <el-form-item label="简介">
+            <div class="w-1/2">
+              <el-input
+                  v-model="formData.user_description"
+                  type="textarea"
+                  autosize
+                  placeholder="简单的自我介绍"
+                  class="name"
+              />
+            </div>
+          </el-form-item>
           <el-form-item>
-            <button class="btn btn-sm" @click="onSubmit">确认更新</button>
+            <button class="btn btn-primary" @click="onSubmit">确认更新</button>
           </el-form-item>
         </el-form>
       </div>
@@ -64,22 +75,38 @@
 </template>
 
 <script setup>
-import {reactive, ref} from "vue";
-import SexIcon from "../../components/SexIcon.vue";
+import {computed, onBeforeMount, reactive, ref} from "vue";
 import { Plus } from '@element-plus/icons-vue'
+import { useStore } from 'vuex'
 
-const infoForm = reactive({
-  avatar: "https://s.gravatar.com/avatar/059edf8a64b449e8ad399de39c3309aa?s=80",
-  name: "杨志文",
-  sex: "男",
-  contact: "QQ:1561206831",
-  grade: "电医", // 职位
-  score: "89", // 评分
+
+const store = useStore()
+
+// 个人信息初始化
+const user_name = computed(() => store.state.user.user_name)
+const contact_details = computed(() => store.state.user.contact_details)
+
+const formData = reactive({
+  user_name: "",
+  sex:"",
+  radio: "",
+  contact_details: "",
+  user_description:"",
+  user_picture:""     // 头像
 });
 
+onBeforeMount(() => {
+  formData.user_name = user_name.value
+  const splitIndex = contact_details.value.indexOf(':')
+  formData.radio = contact_details.value.slice(0, splitIndex)
+  formData.contact_details = contact_details.value.slice(splitIndex + 1)
+})
+
+// 查询模块
 
 
 
+//
 const imageUrl = ref('')
 
 // const handleAvatarSuccess: UploadProps['onSuccess'] = (
@@ -100,15 +127,6 @@ const imageUrl = ref('')
 //   return true
 // }
 
-const form = reactive({
-  avatar: "",
-  name: "",
-  sex: "",
-  radio: "",
-  contact: "",
-  grade: "", // 职位
-  score: "", // 评分
-});
 
 const onSubmit = () => {
   console.log("submit!");
