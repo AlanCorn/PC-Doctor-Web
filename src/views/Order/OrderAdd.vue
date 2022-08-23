@@ -93,6 +93,8 @@ import OrderSteps from "./OrderSteps.vue"
 const store  = useStore()
 const router = useRouter()
 
+store.dispatch('getProblemCate')
+
 function pushRouter(path) {
   router.push(path)
 }
@@ -108,7 +110,7 @@ let formData = reactive({
 })
 
 // store里的类别表
-const  cateList = computed(() => store.state.order.cateList)
+const  cateList = computed(() => store.getters.getFmtCateList)
 // 提交预约表单方法
 const submitForm = () => {
   console.log(formData)

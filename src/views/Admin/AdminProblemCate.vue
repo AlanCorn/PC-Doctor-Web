@@ -32,9 +32,11 @@
       </div>
 
       <div class="flex gap-2 mt-8 flex-wrap">
-        <div v-for="(each, index) in cates" :key="index" class="indicator">
+        <div v-for="(each, index) in cateList" :key="index" class="indicator">
           <div class="indicator-item">
-            <button class="btn btn-circle btn-xs">
+            <!-- 删除按钮 -->
+            <button class="btn btn-circle btn-xs"
+                    @click="deleteCate(each)">
               <svg
                   xmlns="http://www.w3.org/2000/svg"
                   class="h-4 w-4"
@@ -64,6 +66,7 @@
 import {notify} from "@kyvg/vue3-notification";
 import {computed, reactive} from "vue";
 import {useStore} from "vuex";
+import adminApi from "@/api/adminApi";
 
 const store = useStore();
 
@@ -71,23 +74,49 @@ const data = reactive({
   inputCate: "",
 });
 
-const cates = computed(() => store.state.order.cateList);
+store.dispatch('getProblemCate')
+
+// store里的类别表
+const  cateList = computed(() => store.getters.getFmtCateList)
 
 // 添加一个类别
 const addCate = () => {
   console.log(data.inputCate)
-  if (data.inputCate.length === 0) {
+  if (data.inputCate === "") {
     notify({
       type: "warn",
       title: "请输入类别名",
     });
+  } else {
+    adminApi.addProblemCate({
+      cate:data.inputCate
+    }).then(res => {
+      if (res.data.code === 0){
+        notify({
+          type: "success",
+          title: "添加成功",
+        });
+        store.dispatch('getProblemCate')
+      }
+    })
   }
   // 调用接口
 }
 
 // 删除一个类别
-const deleteCate = (cateId) => {
-  console.log(cateId)
+const deleteCate = (cate) => {
+  console.log(cate)
+  adminApi.deleteProblemCate({
+    cate:data.inputCate
+  }).then(res => {
+    if (res.data.code === 0){
+      notify({
+        type: "success",
+        title: "删除成功",
+      });
+      store.dispatch('getProblemCate')
+    }
+  })
 
 }
 </script>
