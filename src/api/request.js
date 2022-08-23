@@ -72,6 +72,26 @@ instance.interceptors.response.use(
             type: 'warn',
             title: '帐号已注册'
           });break;
+        case 8:
+          notify({
+            type: 'warn',
+            title: '请重新登录'
+          });break;
+        case 9:
+          notify({
+            type: 'warn',
+            title: '指定ID不存在'
+          });break;
+        case 10:
+          notify({
+            type: 'warn',
+            title: '该问题类型已存在'
+          });break;
+        case 11:
+          notify({
+            type: 'warn',
+            title: '指定问题类型不存在'
+          });break;
       }
       return Promise.resolve(response);
     } else {
