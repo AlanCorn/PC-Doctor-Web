@@ -1,18 +1,11 @@
-import user from '../../api/userApi'
+import userApi from '../../api/userApi'
 import { getOnlineImageUrl } from "../../utils";
 // 预约订单相关的状态，
 
 const order = {
     state: () => ({
         // 问题分类
-        cateList: [
-            '联网问题',
-            '系统问题',
-            '电脑清灰',
-            '重装系统',
-            '病毒扫描',
-            '流氓软件清理',
-        ],
+        cateList: [],
         // 当前的预约表单信息(预约详情)
         orderFormData:{},
         // 接单电医信息
@@ -83,6 +76,10 @@ const order = {
         getOrderFormDataImagesUrls(state){
             const originUrls = state.orderFormData.problem_picture
             return getOnlineImageUrl(originUrls)
+        },
+        //
+        getFmtCateList(state){
+            return state.cateList.map((each) => each.category)
         }
     },
     mutations:{
@@ -109,7 +106,7 @@ const order = {
     actions:{
         getUserOrderList(content,params){
             // 使用user Api 发送异步请求，提交commit
-            user.getOrderHistory(params).then(res =>{
+            userApi.getOrderHistory(params).then(res =>{
                 content.commit('setOrderList', res.data.appointment_list)
                 content.commit('setOrderSize', res.data.size)
             }).catch(err =>{
@@ -119,7 +116,7 @@ const order = {
         // 查询表单
         getOrderFormData(content,orderId){
             // 使用user Api 发送异步请求，提交commit
-            user.getOrderHistory({
+            userApi.getOrderHistory({
                 page:1,
                 id:orderId
             }).then(res =>{
@@ -135,7 +132,7 @@ const order = {
         // 查询接单电医信息
         getUserOrderDoctor(content,doctor_id){
             // 使用user Api 发送异步请求，提交commit
-            user.getDoctorInfo({
+            userApi.getDoctorInfo({
                 page:1,
                 user_id:doctor_id
             }).then(res =>{
@@ -147,12 +144,27 @@ const order = {
             })
         },
         getOrderStatusMessage(content,appointment_id){
-            user.getOrderStatusMessage(appointment_id).then(res =>{
+            userApi.getOrderStatusMessage(appointment_id).then(res =>{
                     content.commit('setOrderStatusMessage', res.data)
                     console.log("查询状态消息",res.data)
                 }
             ).catch(err =>{
                 console.log(err)
+            })
+        },
+        // 查询问题类型
+        getProblemCate(content) {
+            return new Promise((resolve,reject) => {
+                userApi.getProblemCate().then(res => {
+                    if (res.data.code === 0) {
+                        // 提交
+                        content.commit('setCateList',res.data.list)
+                        resolve(res)
+                    }
+                    reject(res)
+                }).catch(err => {
+                    reject(err)
+                })
             })
         }
         // updateOrderFormData(content,orderFormData){
