@@ -14,6 +14,10 @@ const user = {
     getDoctorInfo(params) {
         return request.get("/query_doctor", {params});
     },
+    // 查询问题类型
+    getProblemCate() {
+        return request.get("/query_category");
+    },
     // 提交预约
     submitOrder(formData) {
         console.log(formData)
