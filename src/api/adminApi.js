@@ -25,6 +25,23 @@ const admin = {
             headers
         })
     },
+    // 管理员修改用户身份接口
+    userUpdateLevel(params) {
+        const form = new FormData();
+        form.append('user_id', params.user_id);
+        form.append('level', params.level);
+        return request.post("/update_user", form, {
+            headers
+        })
+    },
+    // 管理员删除用户接口
+    deleteUser(user_id){
+        const form = new FormData();
+        form.append('user_id', user_id);
+        return request.post("/delete_user", form, {
+            headers
+        })
+    }
 }
 
 export default admin
