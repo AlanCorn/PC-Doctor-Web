@@ -59,17 +59,17 @@
       </div>
     </div>
     <div class="my-5 px-4 py-3  text-right sm:px-6">
-      <label for="my-modal" class="btn  btn-accent mx-1" >提交</label>
+      <label for="submitModal" class="btn  btn-accent mx-1" >提交</label>
       <button class="btn mx-1 " @click="pushRouter('/order')">取消</button>
     </div>
   </div>
-  <input type="checkbox" id="my-modal" class="modal-toggle" />
+  <input type="checkbox" id="submitModal" class="modal-toggle" />
   <div class="modal">
     <div class="modal-box">
       <h3 class="font-bold text-2xl">是否确认提交预约表单？</h3>
       <div class="modal-action">
-        <label for="my-modal" class="btn" @click="submitForm">确认</label>
-        <label for="my-modal" class="btn btn-accent">取消</label>
+        <label for="submitModal" class="btn" @click="submitForm">确认</label>
+        <label for="submitModal" class="btn btn-accent">取消</label>
       </div>
     </div>
   </div>
