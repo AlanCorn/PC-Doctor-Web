@@ -43,7 +43,7 @@
       <!--				</div>-->
     </div>
 
-    <div class="absolute top-2 right-3 badge">
+    <div :class="{'absolute top-2 right-3 badge border-none':true,'bg-primary text-white':grade === '电医','bg-pink-400 text-white':grade === '管理员'}">
       {{ grade }}
     </div>
   </div>
