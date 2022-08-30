@@ -48,14 +48,6 @@ const orderCardPagesParams = reactive({
   }],
 })
 
-const infoForm = {
-	avatar: "https://s.gravatar.com/avatar/059edf8a64b449e8ad399de39c3309aa?s=80",
-	name: "杨志文",
-	sex: "男",
-	contact: "QQ:1561206831",
-	grade: "电医", // 职位
-	score: "89", // 评分
-};
 
 onBeforeMount(() => {
   orderCardPagesParams.filterType.forEach((each,index) => {
