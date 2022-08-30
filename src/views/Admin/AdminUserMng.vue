@@ -6,7 +6,7 @@
         <el-row :gutter="20">
           <el-col :span="8">
             <!-- 搜索与添加区域 -->
-            <el-input placeholder="请输入内容">
+            <el-input placeholder="请输入内容" v-model="queryInfo.params.search">
               <template #append>
                 <el-icon>
                   <Search/>
@@ -14,9 +14,9 @@
               </template>
             </el-input>
           </el-col>
-          <el-col :span="4">
-            <el-button type="primary">添加用户</el-button>
-          </el-col>
+<!--          <el-col :span="4">-->
+<!--            <el-button type="primary">添加用户</el-button>-->
+<!--          </el-col>-->
         </el-row>
       </div>
 
@@ -77,25 +77,36 @@
           <el-table-column label="操作" width="130px" fixed="right">
             <template v-slot="scope">
               <!-- 一个确认删除按钮，防止误操作 -->
-              <el-dropdown trigger="click">
-                <el-button type="danger" size="small">
-                  <el-icon>
-                    <Delete/>
-                  </el-icon>
-                </el-button>
-                <template #dropdown>
-                  <el-dropdown-menu>
-                    <el-dropdown-item @click="handleDeleteUser(scope.row.user_id)">
-                      确认删除？
-                    </el-dropdown-item>
-                  </el-dropdown-menu>
-                </template>
-              </el-dropdown>
-              <!--              <el-button type="primary" size="small">-->
-              <!--                <el-icon>-->
-              <!--                  <Setting/>-->
-              <!--                </el-icon>-->
-              <!--              </el-button>-->
+              <div class="flex gap-1">
+                <el-dropdown trigger="click">
+                  <el-button type="danger" size="small">
+                    <el-icon>
+                      <Delete/>
+                    </el-icon>
+                  </el-button>
+                  <template #dropdown>
+                    <el-dropdown-menu>
+                      <el-dropdown-item @click="handleDeleteUser(scope.row.user_id)">
+                        确认删除？
+                      </el-dropdown-item>
+                    </el-dropdown-menu>
+                  </template>
+                </el-dropdown>
+                <el-dropdown trigger="click">
+                  <el-button type="primary" size="small">
+                    <el-icon>
+                      <Setting/>
+                    </el-icon>
+                  </el-button>
+                  <template #dropdown>
+                    <el-dropdown-menu>
+                      <el-dropdown-item @click="handleResetPwd(scope.row.user_id)">
+                        重置密码
+                      </el-dropdown-item>
+                    </el-dropdown-menu>
+                  </template>
+                </el-dropdown>
+              </div>
             </template>
           </el-table-column>
         </el-table>
@@ -127,6 +138,7 @@ let total = computed(() => store.state.admin.userList.size)
 // 查询参数与其他信息
 const queryInfo = reactive({
   params: {
+    search:"",
     level:-1
   }, // 查询参数
   pageNum: 1, // 当前页码
@@ -202,5 +214,8 @@ const handleDeleteUser = (user_id) => {
     }
   })
 }
-
+// 重置用户密码为123456 handleResetPwd
+const handleResetPwd = (user_id) => {
+  alert(`重置用户:${user_id} 密码为：123456`)
+}
 </script>
