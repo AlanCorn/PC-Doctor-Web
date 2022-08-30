@@ -8,7 +8,9 @@ const user = {
         user_id:"",
         level:"",
         contact_details:"",
-        sessionId:""
+        sessionId:"",
+        user_description:"",
+        user_picture:""
     }),
     getters:{
         getUserInfo(state) {
@@ -16,7 +18,9 @@ const user = {
                 user_id:state.user_id,
                 user_name:state.user_name,
                 level:state.level,
-                contact_details:state.contact_details
+                contact_details:state.contact_details,
+                user_description:state.user_description,
+                user_picture:state.user_picture
             }
         }
     },
@@ -49,6 +53,8 @@ const user = {
                             content.state.user_id = res.data.user_info.user_id
                             content.state.level = res.data.user_info.level
                             content.state.contact_details = res.data.user_info.contact_details
+                            content.state.user_description = res.data.user_info.user_description,
+                            content.state.user_picture = res.data.user_info.user_picture
                         }else if (res.data.code === 4) {
                             content.commit('offToken')
                         }
