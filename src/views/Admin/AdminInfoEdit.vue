@@ -15,15 +15,15 @@
         </div>
       </div>
       <div>
-
         <el-form :model="formData" label-width="70px">
           <el-form-item label="头像">
             <el-upload
                 class="avatar-uploader"
-                action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
                 :show-file-list="false"
+                :http-request="uploadFile"
+                :before-upload="beforeAvatarUpload"
             >
-              <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+              <img v-if="ImageUrl" :src="ImageUrl" class="el-avatar" />
               <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
             </el-upload>
           </el-form-item>
@@ -60,15 +60,26 @@
                   v-model="formData.user_description"
                   type="textarea"
                   autosize
+                  maxlength="50"
                   placeholder="简单的自我介绍"
                   class="name"
               />
             </div>
           </el-form-item>
           <el-form-item>
-            <button class="btn btn-primary" @click="onSubmit">确认更新</button>
+            <label for="submitModal" class="btn btn-primary">确认更新</label>
           </el-form-item>
         </el-form>
+      </div>
+    </div>
+  </div>
+  <input type="checkbox" id="submitModal" class="modal-toggle" />
+  <div class="modal">
+    <div class="modal-box">
+      <h3 class="font-bold text-2xl">确认更新个人信息？</h3>
+      <div class="modal-action">
+        <label for="submitModal" class="btn" @click="onSubmit">确认</label>
+        <label for="submitModal" class="btn btn-accent">取消</label>
       </div>
     </div>
   </div>
@@ -78,13 +89,17 @@
 import {computed, onBeforeMount, reactive, ref} from "vue";
 import { Plus } from '@element-plus/icons-vue'
 import { useStore } from 'vuex'
+import { useRouter} from "vue-router/dist/vue-router";
+import {notify} from "@kyvg/vue3-notification";
+import { getOnlineImageUrl } from '@/utils'
+import fileApi from "@/api/file";
+import userApi from "@/api/userApi";
 
-
+const router = useRouter()
 const store = useStore()
 
 // 个人信息初始化
-const user_name = computed(() => store.state.user.user_name)
-const contact_details = computed(() => store.state.user.contact_details)
+const user_info = computed(() => store.getters.getUserInfo)
 
 const formData = reactive({
   user_name: "",
@@ -95,42 +110,97 @@ const formData = reactive({
   user_picture:""     // 头像
 });
 
-onBeforeMount(() => {
-  formData.user_name = user_name.value
-  const splitIndex = contact_details.value.indexOf(':')
-  formData.radio = contact_details.value.slice(0, splitIndex)
-  formData.contact_details = contact_details.value.slice(splitIndex + 1)
-})
+// 1. 头像
+const ImageUrl = ref('')
+// 文件上传前的检验
+const beforeAvatarUpload = (rawFile) => {
+  if (rawFile.type !== 'image/jpeg' && rawFile.type !== 'image/png') {
+    notify({
+      type:"warn",
+      title:"文件格式错误",
+      text:"请上传 .jpg或.png 格式文件",
+    })
+    return false
+  } else if (rawFile.size / 1024 / 1024 > 5) {
+    notify({
+      type:"warn",
+      title:"文件大小错误",
+      text:"请上传5MB以内图像文件",
+    })
+    return false
+  }
+  return true
+}
+// 上传文件方法
+const uploadFile = (options) => {
+  return new Promise((resolve) => {
+    fileApi.uploadFile(options.file,'user_pic').then(res => {
+      resolve(res)
+    }).catch(err => {
+      notify({
+        type:'error',
+        title: "上传失败！",
+        text: "请联系管理员解决"
+      });
+    })
+  }).then(res => {
+    if (res.data.code === 0){
+      // 成功上传到服务器
+      notify({
+        type:'success',
+        title: "上传成功",
+      });
+      formData.user_picture = res.data.file_name;
+      ImageUrl.value = getOnlineImageUrl(formData.user_picture,'user_pic')[0]
+    }
+  })
+}
 
-// 查询模块
-
-
-
-//
-const imageUrl = ref('')
-
-// const handleAvatarSuccess: UploadProps['onSuccess'] = (
-//     response,
-//     uploadFile
-// ) => {
-//   imageUrl.value = URL.createObjectURL(uploadFile.raw!)
-// }
-//
-// const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
-//   if (rawFile.type !== 'image/jpeg') {
-//     ElMessage.error('Avatar picture must be JPG format!')
-//     return false
-//   } else if (rawFile.size / 1024 / 1024 > 2) {
-//     ElMessage.error('Avatar picture size can not exceed 2MB!')
-//     return false
-//   }
-//   return true
-// }
-
-
+// 2. 表单提交方法
 const onSubmit = () => {
-  console.log("submit!");
+  console.log("submit!",formData)
+  // 判空处理
+  const showInfo = (text) => {
+    notify({
+      type:'warn',
+      title:text
+    });
+  }
+  if (!formData.user_name) showInfo('请输入姓名')
+  else if (!formData.contact_details) showInfo('请输入联系方式')
+  else if (formData.user_description.length > 50) showInfo('个人简介不得超过50字')
+  else {
+    // 通过非空判断
+    const formObj = new FormData();
+    formObj.append('user_id', formData.user_id);
+    formObj.append('user_name', formData.user_name);
+    formObj.append('contact_details', formData.radio + ":" + formData.contact_details);
+    formObj.append('user_description', formData.user_description)
+    formObj.append('user_picture', formData.user_picture)
+    userApi.userUpdateDetailInfo(formObj).then(res => {
+      router.push({ path: '/admin' })
+      notify({
+        type:'success',
+        title:"修改成功",
+      })
+    }).catch(err => {
+      console.log(err)
+    })
+  }
 };
+
+
+onBeforeMount(() => {
+  // 使用原有信息填充表单
+  formData.user_id = user_info.value.user_id
+  formData.user_name = user_info.value.user_name
+  const splitIndex = user_info.value.contact_details.indexOf(':')
+  formData.radio = user_info.value.contact_details.slice(0, splitIndex)
+  formData.contact_details = user_info.value.contact_details.slice(splitIndex + 1)
+  formData.user_description = user_info.value.user_description
+  formData.user_picture = user_info.value.user_picture
+  ImageUrl.value = getOnlineImageUrl(formData.user_picture,'user_pic')[0]
+})
 </script>
 
 <style lang="scss" scoped>
@@ -143,37 +213,29 @@ const onSubmit = () => {
 // }
 
 
-.avatar-uploader .avatar {
-  width: 100px;
-  height: 100px;
+.avatar-uploader .el-avatar {
+  width: 96px;
+  height: 96px;
   display: block;
 }
 
 .avatar-uploader {
-  border: 1px dashed var(--el-border-color);
+  width: 100px;
+  height: 100px;
+  border-radius: 4px;
+  border: 2px solid var(--el-border-color);
+  background: white;
 }
 .avatar-uploader:hover {
-  border-color: var(--el-color-primary);
-}
-
-.avatar-uploader .el-upload {
-  border: 1px dashed var(--el-border-color);
-  border-radius: 6px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  transition: var(--el-transition-duration-fast);
-}
-
-.avatar-uploader .el-upload:hover {
-  border-color: var(--el-color-primary);
+  border: 2px solid var(--tw-ring-color);
+  box-shadow: var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color);
 }
 
 .el-icon.avatar-uploader-icon {
   font-size: 28px;
   color: #8c939d;
-  width: 100px;
-  height: 100px;
+  width: 98px;
+  height: 98px;
   text-align: center;
 }
 </style>
