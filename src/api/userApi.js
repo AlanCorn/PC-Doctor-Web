@@ -103,6 +103,12 @@ const user = {
             headers
         })
     },
+    // 用户更新详细信息
+    userUpdateDetailInfo(form) {
+        return request.post("/update_user", form, {
+            headers
+        })
+    },
     // 通过session_id查询自己的信息 @todo
     queryUser() {
         return request.get("/query_self");
