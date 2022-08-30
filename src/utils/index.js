@@ -12,7 +12,7 @@ const getImageUrl = (fileName) => {
     return new URL(`../assets/image/vite-images/${fileName}`, import.meta.url).href
 }
 
-// 访问服务器中图片列表  @imgType = ['appointment','usr_pic','doc_pic'] ;
+// 访问服务器中图片列表  @imgType = ['appointment','user_pic','doc_pic'] ;
 const getOnlineImageUrl = (originUrls,imgType = 'appointment') => {
     const urls = []
     if (originUrls){
