@@ -6,7 +6,7 @@ const headers = {
 }
 
 
-// 文件上传APi @imgType = ['appointment','usr_pic','doc_pic'] ;
+// 文件上传APi @imgType = ['appointment','user_pic','doc_pic'] ;
 const fileApi = {
     uploadFile(file,imgType = 'appointment'){
         const form = new FormData();
