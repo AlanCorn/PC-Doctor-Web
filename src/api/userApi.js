@@ -112,6 +112,10 @@ const user = {
     // 通过session_id查询自己的信息 @todo
     queryUser() {
         return request.get("/query_self");
+    },
+    // 查询文档接口, 默认无参数(查询全部)
+    queryDoc(params) {
+        return request.get("/query_doc", {params});
     }
 }
 
