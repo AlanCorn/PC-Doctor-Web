@@ -90,6 +90,7 @@ const order = {
             state.orderFormData = orderFormData
         },
         setOrderDoctor(state,doctorInfo){
+            console.log(doctorInfo)
             state.orderDoctorInfo = doctorInfo
         },
         setOrderList(state,orderList){
@@ -123,7 +124,7 @@ const order = {
                 if (res.data.code === 0){
                     content.commit('setOrderFormData', res.data.appointment_list[0])
                     // 查询接单电医信息，放到orderDoctorInfo
-                    content.dispatch('getUserOrderDoctor',content.state.orderFormData.doctor_id)
+                    content.dispatch('getUserOrderDoctor',res.data.appointment_list[0].doctor_id)
                 }
             }).catch(err =>{
                 console.log(err)

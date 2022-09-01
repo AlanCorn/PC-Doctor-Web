@@ -24,6 +24,10 @@ const getOnlineImageUrl = (originUrls,imgType = 'appointment') => {
     return urls
 }
 
+// 加载纯文本文件(type=text/plain的File对象)，返回的是Promise对象
+async function loadPlainTextFile(file) {
+    return await file.text()
+}
 
 export {
     timeFormatter,
