@@ -55,7 +55,7 @@
             </div>
           </el-form-item>
           <el-form-item label="简介">
-            <div class="w-1/2">
+            <div class="w-11/12 lg:w-3/4 xl:w-1/2">
               <el-input
                   v-model="formData.user_description"
                   type="textarea"
@@ -205,7 +205,7 @@ onBeforeMount(() => {
 
 <style lang="scss" scoped>
 .el-input {
-  width: 300px;
+  width: 160px;
 }
 
 // .contactItem /deep/ .el-form-item__content{
