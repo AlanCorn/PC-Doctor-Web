@@ -4,17 +4,16 @@
       <div class="mx-4 my-2 flex gap-0.5">
         <input type="text" placeholder="Type here" class="input input-bordered input-primary w-full max-w-xs" />
         <button class="btn btn-primary">搜索文档</button>
-        <button class="btn btn-secondary">新建文档</button>
+        <button v-if="isAdmin" class="btn btn-secondary" @click="pushRouter('/edit')">新建文档</button>
       </div>
       <!--        文章分类-->
       <!--        <div>-->
       <!--          <CateTabs :cateList="cateList" :onChangeState="onChangeState" />-->
       <!--        </div>-->
       <div class="grid grid-cols-1 md:grid-cols-2">
-        <DocumentCard/>
-        <DocumentCard/>
-        <DocumentCard/>
-        <DocumentCard/>
+        <div v-for="(each,index) in doc_list" :key="each.id">
+          <DocumentCard :doc="each"/>
+        </div>
       </div>
     </div>
   </div>
@@ -25,6 +24,16 @@
 <script setup>
 import DocumentCard from "@/components/DocumentCard.vue";
 import CateTabs from "@/components/CateTabs.vue";
+import {useRouter} from "vue-router";
+import {useStore} from "vuex";
+import {computed} from "vue";
+
+const router = useRouter()
+const store = useStore()
+
+store.dispatch('queryDocList')
+
+const doc_list = computed(() => store.state.doc.docList)
 
 
 // 1. 文档分类逻辑
@@ -33,5 +42,9 @@ const onChangeState = (index) => {
   console.log(index)
 }
 
+const isAdmin = computed(() => store.state.user.level === '2')
 
+function pushRouter(path) {
+  router.push(path)
+}
 </script>
