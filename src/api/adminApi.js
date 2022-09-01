@@ -41,7 +41,18 @@ const admin = {
         return request.post("/delete_user", form, {
             headers
         })
-    }
+    },
+    // 创建文档接口
+    addDocument(formData) {
+        const form = new FormData();
+        form.append('title', formData.title);
+        form.append('summary', formData.summary);
+        form.append('file', formData.file);
+        return request.post("/submit_doc", form, {
+            headers
+        })
+    },
+
 }
 
 export default admin
