@@ -105,37 +105,37 @@
            v-if="formData.status > 0">
         <div class="title-info"> 接单电医</div>
         <div>
-          <DoctorCard :doctorInfo="orderDoctorInfo.value"></DoctorCard>
+          <DoctorCard :doctorInfo="orderDoctor"></DoctorCard>
         </div>
       </div>
       <!-- 状态消息 -->
-      <div class="flex flex-col"
-           v-if="formData.status === '1' || statusMessage.length > 0 && formData.status === '2'">
-        <div class="title-info"> 状态消息</div>
-        <ul class="steps steps-vertical">
-          <li class="step"
-              v-for="(each,index) in statusMessage"
-              :key="each.id">
-            <div class="text-left">
-              <div><span class="font-bold">{{ each.user_name }} </span> 发送于：{{ sendTime(each.time) }}</div>
-              <div class="flex items-center">
-                <div class="text-center">{{ each.message }}</div>
-                <button class="btn btn-ghost border-base-200 btn-sm ml-2"
-                        v-if="each.picture.length > 0"
-                        @click="handleMsgPicPreview(each,index)">查看图片
-                </button>
-              </div>
-            </div>
-          </li>
-          <li class="step"
-              v-if="formData.status === '1'"
-          >
-            <div>
-              <label for="addMessageDialog" class="btn border-base-200 mx-1">添加消息</label>
-            </div>
-          </li>
-        </ul>
-      </div>
+<!--      <div class="flex flex-col"-->
+<!--           v-if="formData.status === '1' || statusMessage.length > 0 && formData.status === '2'">-->
+<!--        <div class="title-info"> 状态消息</div>-->
+<!--        <ul class="steps steps-vertical">-->
+<!--          <li class="step"-->
+<!--              v-for="(each,index) in statusMessage"-->
+<!--              :key="each.id">-->
+<!--            <div class="text-left">-->
+<!--              <div><span class="font-bold">{{ each.user_name }} </span> 发送于：{{ sendTime(each.time) }}</div>-->
+<!--              <div class="flex items-center">-->
+<!--                <div class="text-center">{{ each.message }}</div>-->
+<!--                <button class="btn btn-ghost border-base-200 btn-sm ml-2"-->
+<!--                        v-if="each.picture.length > 0"-->
+<!--                        @click="handleMsgPicPreview(each,index)">查看图片-->
+<!--                </button>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </li>-->
+<!--          <li class="step"-->
+<!--              v-if="formData.status === '1'"-->
+<!--          >-->
+<!--            <div>-->
+<!--              <label for="addMessageDialog" class="btn border-base-200 mx-1">添加消息</label>-->
+<!--            </div>-->
+<!--          </li>-->
+<!--        </ul>-->
+<!--      </div>-->
       <!-- 操作按钮 接单按钮 status：排队中 电医可见 -->
       <div class="flex justify-center gap-1.5"
            v-if="formData.status === '0' && isPCDoctor">
@@ -232,7 +232,7 @@ function routerBack() {
 }
 // 1. 预约详情信息
 let formData = computed(() => store.state.order.orderFormData)
-let orderDoctorInfo = computed(() => store.state.order.orderDoctorInfo)
+let orderDoctor = computed(() => store.state.order.orderDoctorInfo)
 const cateList = computed(() => {
   if (formData.value.problem_category)  return formData.value.problem_category.split(',')
   else return []
