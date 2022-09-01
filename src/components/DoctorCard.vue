@@ -60,16 +60,16 @@ const props = defineProps({
   doctorInfo: {
     type: Object,
     default: {
-      user_id: "2012190330",
-      user_name: "杨志文",
+      user_id: "",
+      user_name: "未匹配到电医",
       level: "1",
-      contact_details: "QQ:1561206831",
+      contact_details: "QQ:123456789",
       user_description: "",
       user_picture: ""
     }
   }
 })
-
+console.log(props.doctorInfo)
 const grade = computed(() => {
   switch (props.doctorInfo.level) {
     case '0':
@@ -82,6 +82,4 @@ const grade = computed(() => {
 })
 
 const imgUrl = computed(() => getOnlineImageUrl(props.doctorInfo.user_picture,'user_pic')[0])
-console.log(typeof(imgUrl))
-console.log(imgUrl)
 </script>
