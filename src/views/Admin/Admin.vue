@@ -50,11 +50,11 @@
 	</div>
 	<!-- 页面主体部分，有一个侧边菜单栏 -->
 	<div class="drawer drawer-mobile">
-		<input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
+		<input v-model="pageInfo.ifShowDrawerSide" id="my-drawer-2" type="checkbox" class="drawer-toggle" />
 		<div class="drawer-content">
 			<!-- Page content here -->
       <router-view v-slot="{Component}">
-        <transition enter-active-class="animate__animated animate__fadeIn" >
+        <transition enter-active-class="animate__animated animate__fadeIn" leave-active-class="animate__animated animate__fadeOut">
           <component :is="Component" />
         </transition>
       </router-view>
@@ -62,17 +62,29 @@
 		<div class="drawer-side">
 			<label for="my-drawer-2" class="drawer-overlay"></label>
 			<ul class="menu p-4 overflow-y-auto w-72 bg-slate-200 text-base-content">
-				<li><router-link to="/dashboard">面板</router-link></li>
-				<li><router-link to="/adminInfoEdit">个人信息</router-link></li>
-				<li><a>预约管理(root)</a></li>
-				<li><router-link to="/adminProblemCate">问题类别(root)</router-link></li>
-        <li><router-link to="/adminDoctorMng">电医管理(root)</router-link></li>
-        <li><router-link to="/adminUserMng">用户管理(root)</router-link></li>
+				<li><a @click="pushRouter('/dashboard')">面板</a></li>
+				<li><a @click="pushRouter('/adminInfoEdit')">个人信息</a></li>
+<!--				<li><a>预约管理(root)</a></li>-->
+				<li><a @click="pushRouter('/adminProblemCate')">问题类别(root)</a></li>
+<!--        <li><router-link to="/adminDoctorMng">电医管理(root)</router-link></li>-->
+        <li><a @click="pushRouter('/adminUserMng')">用户管理(root)</a></li>
 			</ul>
 		</div>
 	</div>
 </template>
+
 <script setup>
+import {reactive} from "vue";
+import {useRouter} from "vue-router";
 
+const router = useRouter()
 
+const pageInfo = reactive({
+  ifShowDrawerSide:false
+})
+
+const pushRouter = (path) => {
+  router.push(path)
+  pageInfo.ifShowDrawerSide = false
+}
 </script>
