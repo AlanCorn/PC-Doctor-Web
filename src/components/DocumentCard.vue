@@ -1,10 +1,10 @@
 <template>
   <div class="card bg-base-100 shadow-xl m-2 border border-solid border-2 transition duration-500 hover:ring"
-       @click="pushRouter('/preview')">
+       @click="posCardClick">
     <div class="card-body p-4 lg:p-6">
       <div
           class=" title card-title text-gray-700 lg:text-2xl transition duration-500 ease-in-out hover:text-primary">
-        Markdown基本语法
+        {{ props.doc.title }}
       </div>
       <div class="divider my-0"></div>
       <div class="flex gap-1.5">
@@ -29,7 +29,7 @@
                   d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
                   clip-rule="evenodd"></path>
           </svg>
-          <div>时间</div>
+          <div>{{ fmtTime }}</div>
         </div>
       </div>
     </div>
@@ -38,11 +38,30 @@
 
 <script setup>
 import {useRouter} from "vue-router";
+import {timeFormatter} from "@/utils"
+import {computed} from "vue";
 
 const router = useRouter()
 
-function pushRouter(path) {
-  router.push(path)
+const props = defineProps({
+  doc: {
+    type: Object,
+    default: {
+      id: -1,
+      create_time: "2022-08-31T23:34:36",
+      title: "Template Tittle",
+      summary: "Summary",
+      file: "1661960076941.md"
+    }
+  }
+})
+
+const fmtTime = computed(() => timeFormatter(props.doc.create_time))
+
+const posCardClick = () => {
+  if (props.doc.id !== -1){
+    router.push({ path: '/preview', query: { id : props.doc.id } })
+  }
 }
 </script>
 
