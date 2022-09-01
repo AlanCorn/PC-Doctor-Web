@@ -1,5 +1,6 @@
 import request from './request'
 import FormData from 'form-data'
+import baseUrl from './urls'
 
 const headers = {
     'Content-Type':'multipart/form-data'
@@ -15,6 +16,9 @@ const fileApi = {
         return request.post("/upload", form, {
             headers
         })
+    },
+    getPlainTextFile(fileName){
+        return request.get(`${ baseUrl.testUrl }file/doc/${ fileName }`)
     },
 }
 
