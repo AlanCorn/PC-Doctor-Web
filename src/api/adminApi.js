@@ -52,7 +52,25 @@ const admin = {
             headers
         })
     },
-
+    // 修改/更新文档接口
+    updateDocument(formData) {
+        const form = new FormData();
+        form.append('id', formData.id);
+        form.append('title', formData.title);
+        form.append('summary', formData.summary);
+        form.append('file', formData.file);
+        return request.post("/update_doc", form, {
+            headers
+        })
+    },
+    // 删除文档接口
+    deleteDocument(id) {
+        const form = new FormData();
+        form.append('id', id);
+        return request.post("/delete_doc", form, {
+            headers
+        })
+    },
 }
 
 export default admin
