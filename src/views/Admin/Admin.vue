@@ -54,7 +54,7 @@
 		<div class="drawer-content">
 			<!-- Page content here -->
       <router-view v-slot="{Component}">
-        <transition enter-active-class="animate__animated animate__fadeIn" leave-active-class="animate__animated animate__fadeOut">
+        <transition enter-active-class="animate__animated animate__fadeIn">
           <component :is="Component" />
         </transition>
       </router-view>
@@ -68,6 +68,8 @@
 				<li><a @click="pushRouter('/adminProblemCate')">问题类别(root)</a></li>
 <!--        <li><router-link to="/adminDoctorMng">电医管理(root)</router-link></li>-->
         <li><a @click="pushRouter('/adminUserMng')">用户管理(root)</a></li>
+        <li v-if="pageInfo.ifShowDrawerSide"><a @click="pushRouter('/')">回到前台</a>
+        </li>
 			</ul>
 		</div>
 	</div>
