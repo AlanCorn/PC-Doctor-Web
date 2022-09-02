@@ -56,7 +56,7 @@ const props = defineProps({
   }
 })
 
-const fmtTime = computed(() => timeFormatter(props.doc.create_time))
+const fmtTime = computed(() => timeFormatter(props.doc.create_time,'YYYY年MM月DD日'))
 
 const posCardClick = () => {
   if (props.doc.id !== -1){
