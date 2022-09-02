@@ -28,11 +28,11 @@ cd pc-doctor-Web
 ```shell
 npm i           // yarn
 ```
-2. 运行
+3. 运行
 ```shell
 npm run dev     // yarn run dev
 ```
-3. 构建
+4. 构建
 ```shell
 npm run build   // yarn run build
 ```
