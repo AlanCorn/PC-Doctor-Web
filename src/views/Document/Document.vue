@@ -1,17 +1,17 @@
 <template>
   <div class="flex flex-col items-center ">
-    <div class="w-11/12 mt-10">
+    <div class="sm:mx-1 md:w-11/12 mt-10">
       <div class="mx-4 my-2 flex gap-0.5">
         <input type="text" placeholder="Type here" class="input input-bordered input-primary w-full max-w-xs" />
         <button class="btn btn-primary">搜索文档</button>
-        <button v-if="isAdmin" class="btn btn-secondary" @click="pushRouter('/edit')">新建文档</button>
+        <button v-if="isAdmin" class="btn btn-secondary" @click="handleClickCreateDoc">新建文档</button>
       </div>
       <!--        文章分类-->
       <!--        <div>-->
       <!--          <CateTabs :cateList="cateList" :onChangeState="onChangeState" />-->
       <!--        </div>-->
       <div class="grid grid-cols-1 md:grid-cols-2">
-        <div v-for="(each,index) in doc_list" :key="each.id">
+        <div v-for="(each) in doc_list" :key="each.id">
           <DocumentCard :doc="each"/>
         </div>
       </div>
@@ -44,7 +44,9 @@ const onChangeState = (index) => {
 
 const isAdmin = computed(() => store.state.user.level === '2')
 
-function pushRouter(path) {
-  router.push(path)
+
+const handleClickCreateDoc = () => {
+  store.commit('offNowDoc')
+  router.push('edit')
 }
 </script>
