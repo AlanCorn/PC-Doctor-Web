@@ -4,8 +4,8 @@ import baseUrl from "../api/urls";
 // function pushRouter(path){
 //     router.push(path)
 //
-const timeFormatter = (datetime) => {
-    return moment(datetime).format('YYYY-MM-DD HH:mm:ss')
+const timeFormatter = (datetime,template = 'YYYY-MM-DD HH:mm:ss') => {
+    return moment(datetime).format(template)
 }
 // Vite 下的静态资源获取方法(webpack的require无法使用)
 const getImageUrl = (fileName) => {
