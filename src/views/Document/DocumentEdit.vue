@@ -25,7 +25,7 @@
         <label class="label">
           <span class="label-text">简介</span>
         </label>
-        <textarea  v-model="pageInfo.formData.summary" class="textarea textarea-bordered h-24" placeholder="请输入简介(50字以内)"></textarea>
+        <textarea  v-model="pageInfo.formData.summary" class="textarea textarea-bordered h-24" placeholder="请输入简介(200字以内)"></textarea>
       </div>
       <div class="modal-action">
         <label for="confirmUpdateModal" class="btn btn-primary" @click="confirmUpdate">确认</label>
@@ -36,17 +36,28 @@
 </template>
 
 <script setup>
-import {reactive, ref} from 'vue'
+import {computed, onBeforeMount, reactive, ref} from 'vue'
 // import { ArrowLeft } from '@element-plus/icons-vue'
 import fileApi from "../../api/file";
 import adminApi from "@/api/adminApi";
-
 import {getOnlineImageUrl} from "@/utils"
 import {notify} from "@kyvg/vue3-notification";
+import {useStore} from "vuex";
+import {useRouter} from "vue-router";
 
+const store = useStore()
+const router = useRouter()
 
+const now_doc = computed(() => store.state.doc.nowDoc)
+const now_docText = computed(() => store.state.doc.nowDocText)
+
+notify({
+  title: "温馨提示",
+  text: "推荐使用电脑以及编辑器全屏模式编辑"
+})
 const pageInfo = reactive({
   formData:{
+    id:'',
     title:'',       // 文档标题
     summary:'',     // 文档简介
     file:''         // 服务器上的文件名
@@ -118,25 +129,72 @@ const confirmUpdate = () => {
   const file = new File([pageInfo.text], "Markdown基本语法.md", {
     type: "text/plain",
   });
-  new Promise((resolve) => {
-    fileApi.uploadFile(file,'doc').then(res => {
-      resolve(res)
-    }).catch(err => {
-      console.log(err)
-      notify({
-        type: 'error',
-        title: "上传失败！",
-        text: "请联系管理员解决"
-      });
-    })
-  }).then(res => {
-    if (res.data.code === 0) {
-      pageInfo.formData.file = res.data.file_name
-      // 文件已上传成功，提交表单
-      adminApi.addDocument(pageInfo.formData).then(res => {
-        console.log(res)
+  if (checkBeforeSubmit()) {
+    // new一个Promise对象进行文件上传操作
+    new Promise((resolve) => {
+      fileApi.uploadFile(file,'doc').then(res => {
+        resolve(res)
+      }).catch(err => {
+        console.log(err)
+        notify({
+          type: 'error',
+          title: "上传失败！",
+          text: "请联系管理员解决"
+        });
       })
-    }
-  })
+    }).then(res => {
+      if (res.data.code === 0) {
+        pageInfo.formData.file = res.data.file_name
+        // 文件已上传成功，提交表单
+        // 判断是要 新建 or 编辑 文档
+        if (pageInfo.formData.id === '') {
+          // 调用新建文档接口
+          adminApi.addDocument(pageInfo.formData).then(res => {
+            if (res.data.code === 0){
+              router.push('/document')
+              notify({
+                type: 'success',
+                title: "已成功创建文档",
+              });
+            }
+          })
+        }else {
+          // 调用更新文档接口
+          adminApi.updateDocument(pageInfo.formData).then(res => {
+            if (res.data.code === 0){
+              router.push({ path: '/preview', query: { id : pageInfo.formData.id } })
+              notify({
+                type: 'success',
+                title: "已保存修改",
+              });
+            }
+          })
+        }
+      }
+    })
+  }
 }
+
+const checkBeforeSubmit = () => {
+  const showInfo = (text) => {
+    notify({
+      type:'warn',
+      title:text
+    });
+    return false
+  }
+  if (!pageInfo.formData.title) showInfo('请输入标题')
+  else if (!pageInfo.formData.summary.length > 200) showInfo('简介不得超过200字')
+  else return true
+}
+
+onBeforeMount(() => {
+  if (now_doc.value.id) {
+    pageInfo.formData.id = now_doc.value.id
+    pageInfo.formData.title = now_doc.value.title
+    pageInfo.formData.file = now_doc.value.file
+    pageInfo.formData.summary = now_doc.value.summary
+    pageInfo.text = now_docText.value
+  }
+})
 </script>
