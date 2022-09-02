@@ -84,6 +84,7 @@ const routes = [
                 name: 'Edit',
                 meta: {
                     title: "电脑医院-文档",
+                    reqAdmin: true,
                     reqLogin: true
                 },
                 component: () => import('../views/Document/DocumentEdit.vue'),
