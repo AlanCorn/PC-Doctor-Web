@@ -17,12 +17,16 @@ const doc = {
         setNowDoc(state, doc) {
             state.nowDoc = doc
         },
-        nowDocText(state, text) {
+        setNowDocText(state, text) {
             state.nowDocText = text
         },
         setDocList(state, list) {
             state.docList = list
         },
+        offNowDoc(state) {
+            state.nowDoc = {}
+            state.nowDocText = ""
+        }
     },
     actions: {
         // 根据id请求文档
@@ -43,7 +47,7 @@ const doc = {
             }).then(fileName => {
                 console.log(fileName)
                 fileApi.getPlainTextFile(fileName).then(res =>
-                    content.commit('nowDocText',res.data)
+                    content.commit('setNowDocText',res.data)
                 )
             })
         },
