@@ -25,6 +25,7 @@ const props = defineProps({
   },
   name: {
     type:String,
+    default:"无"
   }
 })
 
