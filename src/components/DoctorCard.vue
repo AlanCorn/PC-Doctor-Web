@@ -69,7 +69,7 @@ const props = defineProps({
     }
   }
 })
-console.log(props.doctorInfo)
+
 const grade = computed(() => {
   switch (props.doctorInfo.level) {
     case '0':

@@ -32,7 +32,6 @@ const doc = {
         // 根据id请求文档
         queryDocById(content, id) {
             // 使用user Api 发送异步请求，提交commit
-            console.log(id)
             new Promise(resolve => {
                 userApi.queryDoc({
                     id:id
@@ -45,7 +44,6 @@ const doc = {
                     console.log(err)
                 })
             }).then(fileName => {
-                console.log(fileName)
                 fileApi.getPlainTextFile(fileName).then(res =>
                     content.commit('setNowDocText',res.data)
                 )
