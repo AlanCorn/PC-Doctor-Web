@@ -72,13 +72,17 @@
         <div>
           <div class="ml-2 text-xl lg:text-2xl">{{ formData.problem_description }}</div>
           <div class="ml-2 badge bg-secondary text-base-100 border-none badge-lg mx-0.5 my-3" v-for="(each,index) in cateList" :key="index">{{ each }}</div>
-          <div class="flex px-1">
-            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-              <path fill-rule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
-                    clip-rule="evenodd"></path>
-            </svg>
-            <div>{{ createTime }}</div>
+          <div class="flex px-1 gap-3">
+            <div class="flex">
+              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
+                      clip-rule="evenodd"></path>
+              </svg>
+              <div>{{ createTime }}</div>
+            </div>
+            <div><div class="inline font-bold">预约人:</div>{{ formData.user_name }}</div>
+            <div>{{ formData.contact_details }}</div>
           </div>
         </div>
         <!-- 图片 -->
@@ -136,16 +140,11 @@
 <!--          </li>-->
 <!--        </ul>-->
 <!--      </div>-->
-      <!-- 操作按钮 接单按钮 status：排队中 电医可见 -->
-      <div class="flex justify-center gap-1.5"
-           v-if="formData.status === '0' && isPCDoctor">
-        <div class="btn btn-primary" @click="takeOrder">接单</div>
-        <div class="btn" @click="routerBack">返回</div>
-      </div>
-      <!-- 操作按钮 标记完成 status：正在处理 电医与用户可见 -->
-      <div class="flex justify-center gap-1.5"
-           v-if="formData.status === '1' && (isPCDoctor || isMyOwnOrder)">
-        <div class="btn btn-primary" @click="finishOrder">预约完成</div>
+      <div class="flex justify-center gap-1.5">
+        <!-- 操作按钮 接单按钮 status：排队中 电医可见 -->
+        <div class="btn btn-primary" @click="takeOrder" v-if="formData.status === '0' && isPCDoctor">接单</div>
+        <!-- 操作按钮 标记完成 status：正在处理 “接单的那个”电医与用户可见 -->
+        <div class="btn btn-primary" @click="finishOrder" v-if="formData.status === '1' && (isOrderPCDoctor || isMyOwnOrder)">预约完成</div>
         <div class="btn" @click="routerBack">返回</div>
       </div>
     </div>
@@ -243,6 +242,10 @@ const imageUrls = computed(() => store.getters.getOrderFormDataImagesUrls)
 const isMyOwnOrder = computed(() => formData.value.user_id ===  store.state.user.user_id)
 // 检验是否是电医
 const isPCDoctor = computed(() => store.state.user.level === "1")
+// 检验是否是“接单的那个”电医
+const isOrderPCDoctor = computed(() =>
+    store.state.user.level === "1" && store.state.user.user_id === store.state.order.orderFormData.doctor_id
+)
 // 步骤条状态码计算属性
 const statusToNum = computed(() => parseInt(formData.value.status) + 1)
 
