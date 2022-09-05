@@ -8,7 +8,7 @@
           <p class="mb-5 text-xl text-base-200 order-title-shadow">——致力于提供最优质的公益维修服务</p>
           <div class="flex items-center flex-col">
             <a @click="pushRouter('/addOrder')" class="btn btn-primary my-1 w-48">立即预约</a>
-            <a @click="clickHistory" class="btn btn-info my-1 w-48">预约历史</a>
+            <a @click="clickHistory" class="btn btn-info my-1 w-48">预约记录</a>
           </div>
         </div>
       </div>
@@ -16,7 +16,7 @@
 
     <div class="w-11/12 pt-14" id="orderHistory">
       <h1 class="text-primary">
-        预约历史
+        预约记录
       </h1>
       <div class="tabs tabs-boxed bg-base-100 text-2xl items-start mt-5">
         <a v-for="(each,index) in cateList"
@@ -72,7 +72,7 @@ function pushRouter(path) {
   router.push(path)
 }
 
-// 对预约历史进行简单分类
+// 对预约记录进行简单分类
 const cateList = ['全部', '排队中', '正在处理', '已完成',]
 // 筛选功能
 const filterParams = reactive({
