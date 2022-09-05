@@ -46,6 +46,26 @@
     </svg>
     帮助
   </a></li>
+  <li class="rounded-md"
+      v-if="isLogin && (level === '1' || level === '2')">
+    <a @click="props.pushRouter('/admin')">
+      <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+      >
+        <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+        />
+      </svg>
+      后台管理
+    </a>
+  </li>
   <li class="rounded-md" v-if="!isLogin"><a @click="props.pushRouter('/login')" class="font-bold">
     <svg t="1659410683382" class="fill-current h-4 w-4" viewBox="0 0 1024 1024" version="1.1"
          xmlns="http://www.w3.org/2000/svg" p-id="2599" width="128" height="128">
@@ -73,26 +93,6 @@
 <!--    </svg>-->
     个人信息
   </a></li>
-  <li class="rounded-md"
-      v-if="level === '1' || level === '2'">
-    <a @click="props.pushRouter('/admin')">
-      <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-5 w-5"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-      >
-        <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-        />
-      </svg>
-      后台管理
-    </a>
-  </li>
 </template>
 
 <script setup>
