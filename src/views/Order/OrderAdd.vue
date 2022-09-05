@@ -80,10 +80,9 @@ import { computed, reactive } from "vue";
 import { notify } from "@kyvg/vue3-notification";
 import { Plus } from '@element-plus/icons-vue'
 // axios请求接口
-import baseUrl from "@/api/urls"
 import fileApi from "@/api/file"
 import userApi from "@/api/userApi"
-import { getOnlineImageUrl } from "../../utils";
+import { getOnlineImageUrl } from "@/utils";
 
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
@@ -153,7 +152,7 @@ const pictureWallPreview = computed(() => getOnlineImageUrl(formData.problem_pic
 // 得到照片墙中某个文件的索引
 const currentIndex = (file) => pictureWall.fileList.findIndex((checkItem) => checkItem.name === file.name)
 // 接受的文件类型
-const acceptFiletype = '.jpg,.jpeg,.png,.gif,.JPG,.JPEG,.PBG,.GIF'
+const acceptFiletype = '.jpg,.jpeg,.png,.JPG,.JPEG,.PNG'
 // 照片墙钩子
 const handleBeforeRemove = (uploadFile,uploadFiles) => {
   // 删除某张图片
@@ -168,13 +167,13 @@ const handlePictureCardPreview = (file) => {
 const beforeUploadFile = (file) => {
   // 文件后缀检验
   const fileSuffix = file.name.substring(file.name.lastIndexOf(".") + 1);
-  const whiteList = ["jpg", "jpeg", "png", "gif"];
+  const whiteList = ["jpg", "jpeg", "png"];
   // 文件类型检验
   if (whiteList.indexOf(fileSuffix) === -1) {
     notify({
       type:'warn',
       title: "上传失败",
-      text:"请上传jpg/jpeg/png/gif格式的文件"
+      text:"请上传jpg/jpeg/png格式的文件"
     })
     return false;
   }

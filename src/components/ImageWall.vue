@@ -31,7 +31,7 @@ import { Plus } from '@element-plus/icons-vue'
 // axios请求接口
 import baseUrl from "@/api/urls"
 import fileApi from "@/api/file"
-import { getOnlineImageUrl } from "../utils";
+import { getOnlineImageUrl } from "@/utils";
 
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
