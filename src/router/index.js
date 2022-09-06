@@ -143,14 +143,14 @@ const routes = [
             },
             // 问题类别管理
             {
-                path: '/adminProblemCate',
-                name: 'AdminProblemCate',
+                path: '/adminGeneral',
+                name: 'AdminGeneral',
                 meta: {
                     title: "电脑医院-管理员-问题类别",
                     reqAdmin: true,
                     reqLogin: true
                 },
-                component: () => import('../views/Admin/AdminProblemCate.vue'),
+                component: () => import('../views/Admin/AdminGeneral.vue'),
             },
             // 管理员个人信息编辑
             {

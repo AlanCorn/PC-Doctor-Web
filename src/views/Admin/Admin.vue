@@ -64,9 +64,9 @@
 			<ul class="menu p-4 overflow-y-auto w-72 bg-slate-200 text-base-content">
 				<li><a @click="pushRouter('/dashboard')">面板</a></li>
 				<li><a @click="pushRouter('/adminInfoEdit')">个人信息</a></li>
-<!--				<li><a>预约管理(root)</a></li>-->
-				<li><a @click="pushRouter('/adminProblemCate')">问题类别(root)</a></li>
-<!--        <li><router-link to="/adminDoctorMng">电医管理(root)</router-link></li>-->
+				<li><a @click="pushRouter('/adminGeneral')">通用(root)</a></li>
+        <li><a>预约管理(root)</a></li>
+        <!--        <li><router-link to="/adminDoctorMng">电医管理(root)</router-link></li>-->
         <li><a @click="pushRouter('/adminUserMng')">用户管理(root)</a></li>
         <li v-if="pageInfo.ifShowDrawerSide"><a @click="pushRouter('/')">回到前台</a>
         </li>
