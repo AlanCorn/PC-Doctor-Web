@@ -26,6 +26,13 @@
           {{ each }}
         </a>
       </div>
+      <!-- 是否只显示与我相关 -->
+      <div class="form-control mt-1 ml-3" @click="changeBelong">
+        <label class="label cursor-pointer justify-start  gap-2 ">
+          <span class="label-text text-gray-500">仅查看我的记录</span>
+          <input v-model="filterParams.isOnlyShowMine" type="checkbox" class="toggle toggle-sm" checked />
+        </label>
+      </div>
     </div>
     <!-- 加载动画 -->
     <div class="flex items-center min-h-screen text-5xl font-bold justify-center"
@@ -40,16 +47,19 @@
         </div>
       </div>
     </div>
-    <div class="min-h-screen w-11/12"
+    <div class="min-h-screen w-11/12 mb-20"
          v-if="isOrderListLoaded">
       <!-- 使用grid布局卡片  -->
-      <div class="grid grid-cols-1 my-5 lg:grid-cols-2 2xl:grid-cols-3 ">
+      <div class="grid grid-cols-1 my-2 lg:grid-cols-2 2xl:grid-cols-3 ">
         <!-- 信息卡片： -->
         <OrderCard
             v-for="(cardInfo) of cardList"
             :key="cardInfo.id"
             :cardInfo="cardInfo">
         </OrderCard>
+      </div>
+      <div class="flex justify-center">
+        <div class="btn btn-link" v-if="isCardListEnds" @click="queryMoreOrder">🔎加载更多...</div>
       </div>
       <div v-if="cardList.length === 0"
            class="flex h-1/2 items-center justify-center ">
@@ -72,22 +82,44 @@ function pushRouter(path) {
   router.push(path)
 }
 
+const user_id = computed(() => store.state.user.user_id)
+const cardList = computed(() => store.state.order.orderList)
+const isCardListEnds = computed(() => store.state.order.orderList.length < store.state.order.orderListSize)
+const isOrderListLoaded = computed(() => store.getters.isOrderListLoaded)
+
 // 对预约记录进行简单分类
 const cateList = ['全部', '排队中', '正在处理', '已完成',]
 // 筛选功能
 const filterParams = reactive({
   cate: 0,   // 默认状态为 0 ：全部， 1：排队中 ,2:正在处理 3:已完成
-  page: 1
+  page: 1,
+  isOnlyShowMine:false
 })
 const changeState = (index) => {
   filterParams.cate = index
+  filterParams.page = 1
   store.state.order.isOrderListLoaded = false
-  if (filterParams.cate > 0) {
-    store.dispatch('getUserOrderList', {
-      page: filterParams.page,
-      status: filterParams.cate - 1
-    })
-  } else store.dispatch('getUserOrderList', {page: filterParams.page})
+
+  store.dispatch('getUserOrderList', getQueryParams())
+}
+// 仅显示与我提交的订单
+const changeBelong = () => {
+  filterParams.page = 1
+  filterParams.isOnlyShowMine = !filterParams.isOnlyShowMine
+  store.state.order.isOrderListLoaded = false
+  store.dispatch('getUserOrderList', getQueryParams())
+}
+// 加载更多订单
+const queryMoreOrder = () => {
+  filterParams.page += 1
+  store.dispatch('appendUserOrderList', getQueryParams())
+}
+const getQueryParams = () => {
+  return {
+    page: filterParams.page,
+    status: filterParams.cate > 0?filterParams.cate - 1 : null,
+    user_id:filterParams.isOnlyShowMine ? user_id.value : null
+  }
 }
 
 // 使页面滚动到history锚点
@@ -102,8 +134,6 @@ const clickHistory = () => {
   }
 };
 
-const cardList = computed(() => store.state.order.orderList)
-const isOrderListLoaded = computed(() => store.getters.isOrderListLoaded)
 
 const imgUrlList = [
   'https://w.wallhaven.cc/full/39/wallhaven-39gjlv.jpg',
