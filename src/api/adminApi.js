@@ -71,6 +71,21 @@ const admin = {
             headers
         })
     },
+    /** 更新通知群群号 */
+    queryInformGroupID() {
+        return request.get("/query_group")
+    },
+    /** 更新通知群群号
+     * @id = 群号
+     * */
+    updateInformGroupID(id) {
+        const form = new FormData();
+        form.append('id', id);
+        return request.post("/update_group", form, {
+            headers
+        })
+    },
+
 }
 
 export default admin
