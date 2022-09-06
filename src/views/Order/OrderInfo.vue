@@ -82,8 +82,10 @@
               <div>{{ createTime }}</div>
             </div>
             <!-- 预约人信息仅自己与电医可见 -->
-            <div v-if="isMyOwnOrder || isPCDoctor"><div class="inline font-bold">预约人:</div>{{ formData.user_name }}</div>
-            <div>{{ formData.contact_details }}</div>
+            <div v-if="isMyOwnOrder || isPCDoctor">
+              <div ><div class="inline font-bold">预约人:</div>{{ formData.user_name }}</div>
+              <div>{{ formData.contact_details }}</div>
+            </div>
           </div>
         </div>
         <!-- 图片 -->
