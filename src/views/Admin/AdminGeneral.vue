@@ -1,7 +1,7 @@
 <template>
   <div class="flex items-center flex-col">
     <div class="w-11/12 pt-10">
-      <div class="text-primary text-4xl font-bold">问题类别</div>
+      <div class="text-primary text-4xl font-bold">问题类别管理</div>
       <!-- 一条提示 -->
       <div class="alert bg-base-100">
         <div>
@@ -28,9 +28,8 @@
             class="input input-bordered w-full max-w-xs"
             v-model="data.inputCate"
         />
-        <button class="btn" @click="addCate">添加</button>
+        <button class="btn btn-primary" @click="addCate">添加</button>
       </div>
-
       <div class="flex gap-2 mt-8 flex-wrap">
         <div v-for="(each, index) in cateList" :key="index" class="indicator">
           <div class="indicator-item">
@@ -59,6 +58,24 @@
         </div>
       </div>
     </div>
+    <div class="w-11/12 pt-10">
+      <div class="text-primary text-4xl font-bold">预约通知群修改</div>
+      <div class="text-md">
+
+      </div>
+      <div class="alert bg-base-100">
+        预约通知将发送至QQ群: {{ groupID }}
+      </div>
+      <div class="flex flex-row gap-2">
+        <input
+            type="text"
+            placeholder="想将通知发送到哪个群？"
+            class="input input-bordered w-full max-w-xs"
+            v-model="data.inputGroupId"
+        />
+        <button class="btn btn-primary" @click="updateGroupID">修改</button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -72,6 +89,7 @@ const store = useStore();
 
 const data = reactive({
   inputCate: "",
+  inputGroupId:""
 });
 
 store.dispatch('getProblemCate')
@@ -117,6 +135,21 @@ const deleteCate = (cate) => {
       store.dispatch('getProblemCate')
     }
   })
+}
 
+// 预约通知群号
+const groupID = computed(() => store.state.admin.informGroupID)
+store.dispatch('getInformGroupID')
+
+// 预约通知群号修改
+const updateGroupID = async () => {
+  const res = await adminApi.updateInformGroupID(data.inputGroupId)
+  if (res.data.code === 0) {
+    notify({
+      type: "success",
+      title: "修改成功",
+    });
+    await store.dispatch('getInformGroupID')
+  }
 }
 </script>
