@@ -27,10 +27,10 @@
         </a>
       </div>
       <!-- 是否只显示与我相关 -->
-      <div class="form-control mt-1 ml-3" @click="changeBelong">
+      <div class="form-control mt-1 ml-3 w-fit" >
         <label class="label cursor-pointer justify-start  gap-2 ">
           <span class="label-text text-gray-500">仅查看我的记录</span>
-          <input v-model="filterParams.isOnlyShowMine" type="checkbox" class="toggle toggle-sm" checked />
+          <input @click="changeBelong" v-model="filterParams.isOnlyShowMine" type="checkbox" class="toggle toggle-sm" checked />
         </label>
       </div>
     </div>
