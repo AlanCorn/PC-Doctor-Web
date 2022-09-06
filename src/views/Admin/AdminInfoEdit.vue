@@ -78,8 +78,8 @@
     <div class="modal-box">
       <h3 class="font-bold text-2xl">确认更新个人信息？</h3>
       <div class="modal-action">
-        <label for="submitModal" class="btn" @click="onSubmit">确认</label>
-        <label for="submitModal" class="btn btn-accent">取消</label>
+        <label for="submitModal" class="btn btn-primary" @click="onSubmit">确认</label>
+        <label for="submitModal" class="btn">取消</label>
       </div>
     </div>
   </div>
