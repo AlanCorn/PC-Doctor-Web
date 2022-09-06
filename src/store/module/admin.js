@@ -20,7 +20,9 @@ const admin = {
         userList: {
             list: [],
             size: 0
-        }
+        },
+        // 通知群号
+        informGroupID:''
     }),
     getters: {
         adminOrderListGetter: (state) => (type) => {
@@ -50,11 +52,16 @@ const admin = {
         setUserList(state, data) {
             state.userList.list = data.list
             state.userList.size = data.size
-        }
+        },
+        setInformGroupID(state, groupID) {
+            state.informGroupID = groupID
+        },
     },
     actions: {
-        // 参数说明: @params=发送/query请求的参数     @listType=对应三个列表的mutations
         // 获取电医管理的三个列表
+        /** @params=发送/query请求的参数
+         * @listType=对应三个列表的mutations
+         * */
         getAdminOrderList(content, data) {
             // 使用user Api 发送异步请求，提交commit
             userApi.getOrderHistory(data.params).then(res => {
@@ -81,7 +88,17 @@ const admin = {
             }).catch(err => {
                 console.log(err)
             })
-        }
+        },
+        //
+        getInformGroupID(content) {
+            adminApi.queryInformGroupID().then(res => {
+                if (res.data.code === 0){
+                    content.commit('setInformGroupID', res.data.group)
+                }
+            }).catch(err => {
+                console.log(err)
+            })
+        },
     }
 }
 
