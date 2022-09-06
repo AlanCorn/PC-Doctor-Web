@@ -50,6 +50,10 @@ const order = {
             state.orderList = orderList
             state.isOrderListLoaded = true
         },
+        appendOrderList(state,orderList){
+            state.orderList = state.orderList.concat(orderList)
+            state.isOrderListLoaded = true
+        },
         setOrderSize(state,num){
             state.orderListSize = num
         },
@@ -58,10 +62,24 @@ const order = {
         }
     },
     actions:{
+        /** @params = 查询参数
+         * @isAppend = 为true时，使用append模式
+         * */
         getUserOrderList(content,params){
             // 使用user Api 发送异步请求，提交commit
             userApi.getOrderHistory(params).then(res =>{
                 content.commit('setOrderList', res.data.appointment_list)
+                content.commit('setOrderSize', res.data.size)
+            }).catch(err =>{
+                console.log(err)
+            })
+        },
+        /** @params = 查询参数
+         * 使用append模式查询
+         * */
+        appendUserOrderList(content,params,isAppend=false){
+            userApi.getOrderHistory(params).then(res =>{
+                content.commit('appendOrderList', res.data.appointment_list)
                 content.commit('setOrderSize', res.data.size)
             }).catch(err =>{
                 console.log(err)
