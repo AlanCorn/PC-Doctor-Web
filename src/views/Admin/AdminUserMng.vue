@@ -1,43 +1,44 @@
 <template>
-  <div class="flex items-center flex-col">
-    <div class="w-11/12 pt-10">
-      <div class="text-primary text-4xl font-bold">用户管理</div>
-      <div class="mt-3">
-        <el-row :gutter="20">
-          <el-col :span="8">
-            <!-- 搜索与添加区域 -->
-            <el-input placeholder="请输入内容" v-model="queryInfo.params.search">
-              <template #append>
-                <el-icon>
-                  <Search/>
-                </el-icon>
-              </template>
-            </el-input>
-          </el-col>
-<!--          <el-col :span="4">-->
-<!--            <el-button type="primary">添加用户</el-button>-->
-<!--          </el-col>-->
-        </el-row>
-      </div>
+  <div>
+    <div class="flex items-center flex-col">
+      <div class="w-11/12 pt-10">
+        <div class="text-primary text-4xl font-bold">用户管理</div>
+        <div class="mt-3">
+          <el-row :gutter="20">
+            <el-col :span="8">
+              <!-- 搜索与添加区域 -->
+              <el-input placeholder="请输入内容" v-model="queryInfo.params.search">
+                <template #append>
+                  <el-icon>
+                    <Search/>
+                  </el-icon>
+                </template>
+              </el-input>
+            </el-col>
+            <!--          <el-col :span="4">-->
+            <!--            <el-button type="primary">添加用户</el-button>-->
+            <!--          </el-col>-->
+          </el-row>
+        </div>
 
-      <div class="flex mt-1 gap-5">
-        <!-- 简单的角色分类筛选 -->
-        <el-radio-group v-model="queryInfo.params.level" @change="handleLevelChange">
-          <el-radio :label="-1">全部</el-radio>
-          <el-radio :label="0">普通用户</el-radio>
-          <el-radio :label="1">电医</el-radio>
-          <el-radio :label="2">管理员</el-radio>
-        </el-radio-group>
-      </div>
-      <!-- 用户列表区域  -->
-      <div class="card mt-2 my-1">
-        <el-table :data="userList" border stripe>
-          <el-table-column type="index"></el-table-column>
-          <el-table-column label="帐号" prop="user_id" width="180px"></el-table-column>
-          <el-table-column label="姓名/昵称" prop="user_name" width="200px"></el-table-column>
-          <el-table-column label="角色" prop="level" width="120px" align="center"          >
-            <template #default="scope">
-              <el-dropdown @command="handleLevelChangeCommand">
+        <div class="flex mt-1 gap-5">
+          <!-- 简单的角色分类筛选 -->
+          <el-radio-group v-model="queryInfo.params.level" @change="handleLevelChange">
+            <el-radio :label="-1">全部</el-radio>
+            <el-radio :label="0">普通用户</el-radio>
+            <el-radio :label="1">电医</el-radio>
+            <el-radio :label="2">管理员</el-radio>
+          </el-radio-group>
+        </div>
+        <!-- 用户列表区域  -->
+        <div class="card mt-2 my-1">
+          <el-table :data="userList" border stripe>
+            <el-table-column type="index"></el-table-column>
+            <el-table-column label="帐号" prop="user_id" width="180px"></el-table-column>
+            <el-table-column label="姓名/昵称" prop="user_name" width="200px"></el-table-column>
+            <el-table-column label="角色" prop="level" width="120px" align="center"          >
+              <template #default="scope">
+                <el-dropdown @command="handleLevelChangeCommand">
                 <span class="el-dropdown-link">
                   <div
                       :class="{'badge border-none':true,'bg-primary text-white':scope.row.level === '1','bg-pink-400 text-white':scope.row.level === '2'}">
@@ -47,77 +48,78 @@
                     <arrow-down/>
                   </el-icon>
                 </span>
-                <template #dropdown>
-                  <el-dropdown-menu>
-                    <!-- 通过官方的command Api传对象给点击事件 -->
-                    <el-dropdown-item :command="{
+                  <template #dropdown>
+                    <el-dropdown-menu>
+                      <!-- 通过官方的command Api传对象给点击事件 -->
+                      <el-dropdown-item :command="{
                         level:'0',
                         user_id:scope.row.user_id
                       }">
-                      普通用户
-                    </el-dropdown-item>
-                    <el-dropdown-item :command="{
+                        普通用户
+                      </el-dropdown-item>
+                      <el-dropdown-item :command="{
                         level:'1',
                         user_id:scope.row.user_id
                       }">
-                      电医
-                    </el-dropdown-item>
-                    <el-dropdown-item :command="{
+                        电医
+                      </el-dropdown-item>
+                      <el-dropdown-item :command="{
                         level:'2',
                         user_id:scope.row.user_id
                       }">
-                      管理员
-                    </el-dropdown-item>
-                  </el-dropdown-menu>
-                </template>
-              </el-dropdown>
-            </template>
-          </el-table-column>
-          <el-table-column label="联系方式" prop="contact_details"></el-table-column>
-          <el-table-column label="操作" width="130px" fixed="right">
-            <template v-slot="scope">
-              <!-- 一个确认删除按钮，防止误操作 -->
-              <div class="flex gap-1">
-                <el-dropdown trigger="click">
-                  <el-button type="danger" size="small">
-                    <el-icon>
-                      <Delete/>
-                    </el-icon>
-                  </el-button>
-                  <template #dropdown>
-                    <el-dropdown-menu>
-                      <el-dropdown-item @click="handleDeleteUser(scope.row.user_id)">
-                        确认删除？
+                        管理员
                       </el-dropdown-item>
                     </el-dropdown-menu>
                   </template>
                 </el-dropdown>
-                <el-dropdown trigger="click">
-                  <el-button type="primary" size="small">
-                    <el-icon>
-                      <Setting/>
-                    </el-icon>
-                  </el-button>
-                  <template #dropdown>
-                    <el-dropdown-menu>
-                      <el-dropdown-item @click="handleResetPwd(scope.row.user_id)">
-                        重置密码
-                      </el-dropdown-item>
-                    </el-dropdown-menu>
-                  </template>
-                </el-dropdown>
-              </div>
-            </template>
-          </el-table-column>
-        </el-table>
+              </template>
+            </el-table-column>
+            <el-table-column label="联系方式" prop="contact_details"></el-table-column>
+            <el-table-column label="操作" width="130px" fixed="right">
+              <template v-slot="scope">
+                <!-- 一个确认删除按钮，防止误操作 -->
+                <div class="flex gap-1">
+                  <el-dropdown trigger="click">
+                    <el-button type="danger" size="small">
+                      <el-icon>
+                        <Delete/>
+                      </el-icon>
+                    </el-button>
+                    <template #dropdown>
+                      <el-dropdown-menu>
+                        <el-dropdown-item @click="handleDeleteUser(scope.row.user_id)">
+                          确认删除？
+                        </el-dropdown-item>
+                      </el-dropdown-menu>
+                    </template>
+                  </el-dropdown>
+                  <el-dropdown trigger="click">
+                    <el-button type="primary" size="small">
+                      <el-icon>
+                        <Setting/>
+                      </el-icon>
+                    </el-button>
+                    <template #dropdown>
+                      <el-dropdown-menu>
+                        <el-dropdown-item @click="handleResetPwd(scope.row.user_id)">
+                          重置密码
+                        </el-dropdown-item>
+                      </el-dropdown-menu>
+                    </template>
+                  </el-dropdown>
+                </div>
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
+        <el-pagination class="mt-3"
+                       :current-page="queryInfo.pageNum"
+                       @current-change="handleCurrentChange"
+                       :page-size="10" layout="total, prev, pager, next, jumper"
+                       :total="total"
+        >
+        </el-pagination>
       </div>
-      <el-pagination class="mt-3"
-                     :current-page="queryInfo.pageNum"
-                     @current-change="handleCurrentChange"
-                     :page-size="10" layout="total, prev, pager, next, jumper"
-                     :total="total"
-      >
-      </el-pagination>
     </div>
   </div>
 </template>
@@ -156,33 +158,25 @@ const grade = (level) => {
   }
 }
 // 重载列表
-const reloadList = (level = -1) => {
-  if (level !== -1) {
-    store.dispatch('getUserList', {
-      level: level,
-      page: queryInfo.pageNum
-    })
-  }else {
-    store.dispatch('getUserList', {
-      page: queryInfo.pageNum
-    })
-  }
+const reloadList = () => {
+  store.dispatch('getUserList', {
+    level: queryInfo.params.level !== -1 ? queryInfo.params.level:null,
+    page: queryInfo.pageNum
+  })
 }
 // 初始化调用
 reloadList()
 
 // 1.查询操作：
 const handleLevelChange = (level) => {
-  reloadList(level)
+  queryInfo.params.level = level
+  reloadList()
 }
 
 // 2. 分页：监听 页码值 改变的事件
 function handleCurrentChange(newPage) {
   queryInfo.pageNum = newPage
-  console.log(newPage)
-  store.dispatch('getUserList', {
-    page: queryInfo.pageNum
-  })
+  reloadList()
 }
 
 // 3. 表格操作：下拉菜单的点击事件，改变用户身份
@@ -190,9 +184,7 @@ const handleLevelChangeCommand = (command) => {
   // command是对象，当作params直接传即可
   adminApi.userUpdateLevel(command).then(res => {
     if (res.data.code === 0) {
-      store.dispatch('getUserList', {
-        page: queryInfo.pageNum
-      })
+      reloadList()
       notify({
         type: 'success',
         title: '操作成功'
@@ -204,9 +196,7 @@ const handleLevelChangeCommand = (command) => {
 const handleDeleteUser = (user_id) => {
   adminApi.deleteUser(user_id).then(res => {
     if (res.data.code === 0) {
-      store.dispatch('getUserList', {
-        page: queryInfo.pageNum
-      })
+      reloadList()
       notify({
         type: 'success',
         title: '操作成功'
