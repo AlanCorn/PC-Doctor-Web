@@ -8,7 +8,7 @@
         <div class="inline font-bold mr-1">
           {{ props.doctorInfo.user_name }}
         </div>
-        <SexIcon sex="男"/>
+        <SexIcon :sex="props.doctorInfo.sex"/>
       </div>
       <div>
         {{ props.doctorInfo.contact_details }}
@@ -62,6 +62,7 @@ const props = defineProps({
     default: {
       user_id: "",
       user_name: "未匹配到电医",
+      sex: "男",
       level: "1",
       contact_details: "QQ:123456789",
       user_description: "",
