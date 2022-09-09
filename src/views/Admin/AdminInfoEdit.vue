@@ -1,85 +1,88 @@
 <template>
-  <div class="flex items-center flex-col">
-    <div class="w-11/12 pt-10">
-      <!-- 编辑信息 -->
-      <div class="text-primary text-4xl font-bold">更新信息</div>
-      <!-- 一条提示 -->
-      <div class="alert bg-base-100">
-        <div>
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-               class="stroke-current flex-shrink-0 w-6 h-6 text-primary">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-          </svg>
-          <span>请认真填写个人信息，信息对委托人可见</span>
+  <div>
+    <div class="flex items-center flex-col">
+      <div class="w-11/12 pt-10">
+        <!-- 编辑信息 -->
+        <div class="text-primary text-4xl font-bold">更新信息</div>
+        <!-- 一条提示 -->
+        <div class="alert bg-base-100">
+          <div>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                 class="stroke-current flex-shrink-0 w-6 h-6 text-primary">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <span>请认真填写个人信息，信息对委托人可见</span>
+          </div>
         </div>
-      </div>
-      <div>
-        <el-form :model="formData" label-width="70px">
-          <el-form-item label="头像">
-            <el-upload
-                class="avatar-uploader"
-                :show-file-list="false"
-                :http-request="uploadFile"
-                :before-upload="beforeAvatarUpload"
-            >
-              <img v-if="ImageUrl" :src="ImageUrl" class="el-avatar" />
-              <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
-            </el-upload>
-          </el-form-item>
-          <el-form-item label="姓名">
-            <el-input
-                v-model="formData.user_name"
-                placeholder="尽量使用真实姓名"
-                class="name"
-            />
-          </el-form-item>
-          <el-form-item label="性别">
-            <el-radio-group v-model="formData.sex">
-              <el-radio label="男"/>
-              <el-radio label="女"/>
-            </el-radio-group>
-          </el-form-item>
-          <el-form-item label="联系方式" class="contactItem">
-            <div>
-              <el-radio-group style="display: block" v-model="formData.radio">
-                <el-radio label="QQ">QQ</el-radio>
-                <el-radio label="WeChat">WeChat</el-radio>
-                <el-radio label="Phone">Phone</el-radio>
-              </el-radio-group>
+        <div>
+          <el-form :model="formData" label-width="70px">
+            <el-form-item label="头像">
+              <el-upload
+                  class="avatar-uploader"
+                  :show-file-list="false"
+                  :http-request="uploadFile"
+                  :before-upload="beforeAvatarUpload"
+              >
+                <img v-if="ImageUrl" :src="ImageUrl" class="el-avatar" />
+                <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
+              </el-upload>
+            </el-form-item>
+            <el-form-item label="姓名">
               <el-input
-                  v-model="formData.contact_details"
-                  class="contact"
-                  placeholder="请输入联系方式(推荐使用QQ)"
-              />
-            </div>
-          </el-form-item>
-          <el-form-item label="简介">
-            <div class="w-11/12 lg:w-3/4 xl:w-1/2">
-              <el-input
-                  v-model="formData.user_description"
-                  type="textarea"
-                  autosize
-                  maxlength="50"
-                  placeholder="简单的自我介绍"
+                  v-model="formData.user_name"
+                  placeholder="尽量使用真实姓名"
                   class="name"
               />
-            </div>
-          </el-form-item>
-          <el-form-item>
-            <label for="submitModal" class="btn btn-primary">确认更新</label>
-          </el-form-item>
-        </el-form>
+            </el-form-item>
+            <el-form-item label="性别">
+              <el-radio-group v-model="formData.sex">
+                <el-radio label="男"/>
+                <el-radio label="女"/>
+                <el-radio label="未知"/>
+              </el-radio-group>
+            </el-form-item>
+            <el-form-item label="联系方式" class="contactItem">
+              <div>
+                <el-radio-group style="display: block" v-model="formData.radio">
+                  <el-radio label="QQ">QQ</el-radio>
+                  <el-radio label="WeChat">WeChat</el-radio>
+                  <el-radio label="Phone">Phone</el-radio>
+                </el-radio-group>
+                <el-input
+                    v-model="formData.contact_details"
+                    class="contact"
+                    placeholder="请输入联系方式(推荐使用QQ)"
+                />
+              </div>
+            </el-form-item>
+            <el-form-item label="简介">
+              <div class="w-11/12 lg:w-3/4 xl:w-1/2">
+                <el-input
+                    v-model="formData.user_description"
+                    type="textarea"
+                    autosize
+                    maxlength="50"
+                    placeholder="简单的自我介绍"
+                    class="name"
+                />
+              </div>
+            </el-form-item>
+            <el-form-item>
+              <label for="submitModal" class="btn btn-primary">确认更新</label>
+            </el-form-item>
+          </el-form>
+        </div>
       </div>
     </div>
-  </div>
-  <input type="checkbox" id="submitModal" class="modal-toggle" />
-  <div class="modal">
-    <div class="modal-box">
-      <h3 class="font-bold text-2xl">确认更新个人信息？</h3>
-      <div class="modal-action">
-        <label for="submitModal" class="btn btn-primary" @click="onSubmit">确认</label>
-        <label for="submitModal" class="btn">取消</label>
+    <input type="checkbox" id="submitModal" class="modal-toggle" />
+    <div class="modal">
+      <div class="modal-box">
+        <h3 class="font-bold text-2xl">确认更新个人信息？</h3>
+        <div class="modal-action">
+          <label for="submitModal" class="btn btn-primary" @click="onSubmit">确认</label>
+          <label for="submitModal" class="btn">取消</label>
+        </div>
       </div>
     </div>
   </div>
@@ -174,6 +177,7 @@ const onSubmit = () => {
     const formObj = new FormData();
     formObj.append('user_id', formData.user_id);
     formObj.append('user_name', formData.user_name);
+    formObj.append('sex', formData.sex);
     formObj.append('contact_details', formData.radio + ":" + formData.contact_details);
     formObj.append('user_description', formData.user_description)
     formObj.append('user_picture', formData.user_picture)
@@ -194,6 +198,7 @@ onBeforeMount(() => {
   // 使用原有信息填充表单
   formData.user_id = user_info.value.user_id
   formData.user_name = user_info.value.user_name
+  formData.sex = user_info.value.sex
   const splitIndex = user_info.value.contact_details.indexOf(':')
   formData.radio = user_info.value.contact_details.slice(0, splitIndex)
   formData.contact_details = user_info.value.contact_details.slice(splitIndex + 1)
