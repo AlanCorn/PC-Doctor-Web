@@ -13,57 +13,59 @@
         </div>
       </div>
     </div>
-
-    <div class="w-11/12 pt-14" id="orderHistory">
-      <h1 class="text-primary">
-        预约记录
-      </h1>
-      <div class="tabs tabs-boxed bg-base-100 text-2xl items-start mt-5">
-        <a v-for="(each,index) in cateList"
-           :key="index"
-           :class="{'tab transition duration-500 rounded-md':true,'tab-active':index === filterParams.cate} "
-           @click="changeState(index)">
-          {{ each }}
-        </a>
-      </div>
-      <!-- 是否只显示与我相关 -->
-      <div class="form-control mt-1 ml-3 w-fit" >
-        <label class="label cursor-pointer justify-start  gap-2 ">
-          <span class="label-text text-gray-500">仅查看我的记录</span>
-          <input @click="changeBelong" v-model="filterParams.isOnlyShowMine" type="checkbox" class="toggle toggle-sm" checked />
-        </label>
-      </div>
-    </div>
-    <!-- 加载动画 -->
-    <div class="flex items-center min-h-screen text-5xl font-bold justify-center"
-         v-if="!isOrderListLoaded">
-      <div class="flex items-center">
-        <img
-            src="../../assets/image/SVG/Rolling-1s-200px.svg"
-            class="w-10 h-10"
-        />
-        <div class="text-2xl">
-          正在加载
+    <div class="min-h-screen w-11/12">
+      <div class="pt-14" id="orderHistory">
+        <h1 class="text-primary">
+          预约记录
+        </h1>
+        <div class="tabs tabs-boxed bg-base-100 text-2xl items-start mt-5">
+          <a v-for="(each,index) in cateList"
+             :key="index"
+             :class="{'tab transition duration-500 rounded-md':true,'tab-active':index === filterParams.cate} "
+             @click="changeState(index)">
+            {{ each }}
+          </a>
+        </div>
+        <!-- 是否只显示与我相关 -->
+        <div class="form-control mt-1 ml-3 w-fit" >
+          <label class="label cursor-pointer justify-start  gap-2 ">
+            <span class="label-text text-gray-500">仅查看我的记录</span>
+            <input @click="changeBelong" v-model="filterParams.isOnlyShowMine" type="checkbox" class="toggle toggle-sm" checked />
+          </label>
         </div>
       </div>
-    </div>
-    <div class="min-h-screen w-11/12 mb-20"
-         v-if="isOrderListLoaded">
-      <!-- 使用grid布局卡片  -->
-      <div class="grid grid-cols-1 my-2 lg:grid-cols-2 2xl:grid-cols-3 ">
-        <!-- 信息卡片： -->
-        <OrderCard
-            v-for="(cardInfo) of cardList"
-            :key="cardInfo.id"
-            :cardInfo="cardInfo">
-        </OrderCard>
-      </div>
-      <div class="flex justify-center">
-        <div class="btn btn-link" v-if="isCardListEnds" @click="queryMoreOrder">🔎加载更多...</div>
-      </div>
-      <div v-if="cardList.length === 0"
-           class="flex h-1/2 items-center justify-center ">
-        <div class="text-xl ">暂无相关预约条目😊</div>
+      <!-- 加载动画 -->
+<!--      <div class="flex items-center text-5xl font-bold justify-center"-->
+<!--           v-if="!isOrderListLoaded">-->
+<!--        <div class="flex items-center">-->
+<!--          <img-->
+<!--              src="../../assets/image/SVG/Rolling-1s-200px.svg"-->
+<!--              class="w-10 h-10"-->
+<!--          />-->
+<!--          <div class="text-2xl">-->
+<!--            正在加载-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+      <div class="mb-10"
+           v-if="isOrderListLoaded">
+        <!-- 使用grid布局卡片  -->
+        <div class="grid grid-cols-1 my-2 lg:grid-cols-2 2xl:grid-cols-3"
+             v-if="cardList.length > 0">
+          <!-- 信息卡片： -->
+          <OrderCard
+              v-for="(cardInfo) of cardList"
+              :key="cardInfo.id"
+              :cardInfo="cardInfo">
+          </OrderCard>
+        </div>
+        <div class="flex justify-center">
+          <div class="btn btn-link" v-if="isCardListEnds" @click="queryMoreOrder">🔎加载更多...</div>
+        </div>
+        <div v-if="cardList.length === 0"
+             class="flex items-center justify-center h-96">
+          <div class="text-xl ">暂无相关预约条目😊</div>
+        </div>
       </div>
     </div>
   </div>
