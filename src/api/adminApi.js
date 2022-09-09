@@ -85,7 +85,16 @@ const admin = {
             headers
         })
     },
-
+    /** 删除一条预约信息
+    *  @orderId=预约id
+    * */
+    deleteOrder(orderId) {
+        const form = new FormData();
+        form.append('id', orderId);
+        return request.post("/delete", form, {
+            headers
+        })
+    },
 }
 
 export default admin
