@@ -72,7 +72,7 @@
         <div>
           <div class="ml-2 text-xl lg:text-2xl">{{ formData.problem_description }}</div>
           <div class="ml-2 badge bg-secondary text-base-100 border-none badge-lg mx-0.5 my-3" v-for="(each,index) in cateList" :key="index">{{ each }}</div>
-          <div class="flex px-1 gap-3">
+          <div class="flex px-1 gap-4">
             <div class="flex">
               <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd"
@@ -82,8 +82,8 @@
               <div>{{ createTime }}</div>
             </div>
             <!-- 预约人信息仅自己与电医可见 -->
-            <div v-if="isMyOwnOrder || isPCDoctor">
-              <div ><div class="inline font-bold">预约人:</div>{{ formData.user_name }}</div>
+            <div v-if="isMyOwnOrder || isPCDoctor || isAdmin" class="flex gap-5">
+              <div><div class="inline font-bold">预约人:</div>{{ formData.user_name }}</div>
               <div>{{ formData.contact_details }}</div>
             </div>
           </div>
@@ -148,6 +148,8 @@
         <div class="btn btn-primary" @click="takeOrder" v-if="formData.status === '0' && isPCDoctor">接单</div>
         <!-- 操作按钮 标记完成 status：正在处理 “接单的那个”电医与用户可见 -->
         <div class="btn btn-primary" @click="finishOrder" v-if="formData.status === '1' && (isOrderPCDoctor || isMyOwnOrder)">预约完成</div>
+        <!-- 操作按钮 删除预约 status：all -->
+        <label for="deleteConfirmDialog" class="btn btn-error" v-if="isAdmin">删除</label>
         <div class="btn" @click="routerBack">返回</div>
       </div>
     </div>
@@ -193,6 +195,22 @@
       </div>
     </div>
   </div>
+  <!-- 对话框-管理员删除确认 -->
+  <input type="checkbox" id="deleteConfirmDialog" class="modal-toggle"/>
+  <label for="deleteConfirmDialog" class="modal cursor-pointer">
+    <div class="modal-box p-5">
+      <div class="font-bold text-2xl">确认删除？</div>
+      <div class="font-light text-md mt-3">确认删除该预约？操作将不可反悔</div>
+      <div class="modal-action">
+        <label for="deleteConfirmDialog"
+               class="btn btn-error"
+               @click="confirmDeleteOrder">
+          确认
+        </label>
+        <label for="deleteConfirmDialog" class="btn">取消</label>
+      </div>
+    </div>
+  </label>
   <!-- 图片预览 -->
   <el-image-viewer
       @close="handleViewerClose"
@@ -211,6 +229,7 @@ import { Plus } from '@element-plus/icons-vue'
 // axios请求接口
 import fileApi from "@/api/file"
 import userApi from "@/api/userApi"
+import adminApi from "@/api/adminApi"
 import {getOnlineImageUrl, timeFormatter, getImageUrl} from "@/utils"
 import OrderSteps from "./OrderSteps.vue"
 import {useStore} from "vuex";
@@ -245,6 +264,8 @@ const imageUrls = computed(() => store.getters.getOrderFormDataImagesUrls)
 const isMyOwnOrder = computed(() => formData.value.user_id ===  store.state.user.user_id)
 // 检验是否是电医
 const isPCDoctor = computed(() => store.state.user.level === "1")
+// 检验是否是管理员
+const isAdmin = computed(() => store.state.user.level === "2")
 // 检验是否是“接单的那个”电医
 const isOrderPCDoctor = computed(() =>
     store.state.user.level === "1" && store.state.user.user_id === store.state.order.orderFormData.doctor_id
@@ -392,10 +413,26 @@ const withdrawThisOrder = () => {
       type: 'fail',
       title: "撤销失败",
     })
-    console.log(err)
   })
 }
-// 2. 电医接单
+// 2. 删除预约
+const confirmDeleteOrder = () => {
+  adminApi.deleteOrder(formData.value.id).then(res => {
+    if (res.data.code === 0) {
+      pushRouter('/order')
+      notify({
+        type: 'success',
+        title: "已删除预约",
+      })
+    }
+  }).catch(err => {
+    notify({
+      type: 'fail',
+      title: "撤销失败",
+    })
+  })
+}
+// 3. 电医接单
 const takeOrder = () => {
   userApi.takeOrder(formData.value.id, store.state.user.user_id).then(res => {
     if (res.data.code === 0) {
@@ -413,7 +450,7 @@ const takeOrder = () => {
     console.log(err)
   })
 }
-// 3. 标记完成
+// 4. 标记完成
 const finishOrder = () => {
   userApi.finishOrder(formData.value.id).then(res => {
     if (res.data.code === 0) {
