@@ -22,7 +22,7 @@
     </div>
     <div class="drawer-side">
       <label for="my-drawer-3" class="drawer-overlay"></label>
-      <ul class="menu p-4 overflow-y-auto w-80 bg-base-100">
+      <ul class="menu p-4 overflow-y-auto w-60 bg-base-100">
         <!-- Sidebar content here -->
         <label for="my-drawer-3">
           <IndexNavigation :sideBarMenu="true" :pushRouter="pushRouter"/>
