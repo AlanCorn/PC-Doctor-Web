@@ -24,7 +24,18 @@
             type="textarea"
             maxlength="250"
             autosize
-            placeholder="描述你遇到的问题，并留下希望电脑医生帮助你解决问题的时间、地点。"
+            placeholder="描述你遇到的问题"
+        />
+      </div>
+      <div>
+        <label class="title-info"> 预约时间 </label>
+        <el-input
+            v-model="formData.available_time"
+            :rows="2"
+            type="textarea"
+            maxlength="250"
+            autosize
+            placeholder="留下希望电脑医生帮助你解决问题的时间段、地点"
         />
       </div>
       <div>
@@ -59,7 +70,7 @@
       </div>
     </div>
     <div class="my-5 px-4 py-3  text-right sm:px-6">
-      <label for="submitModal" class="btn  btn-accent mx-1" >提交</label>
+      <label for="submitModal" class="btn  btn-primary mx-1" >提交</label>
       <button class="btn mx-1 " @click="pushRouter('/order')">取消</button>
     </div>
   </div>
@@ -104,6 +115,7 @@ let formData = reactive({
   // radio:'QQ',
   // contact_details:'',
   problem_description:'',
+  available_time:'',
   problem_category:[],
   problem_picture:[],
 })
@@ -123,13 +135,14 @@ const submitForm = () => {
   // if (!formData.name) showInfo('请输入姓名')
   // else if (!formData.contact_details) showInfo('请输入联系方式')
   if (!formData.problem_description) showInfo('请输入问题描述')
+  else if (!formData.available_time) showInfo('请输入预约解决问题的时间段')
   else if (formData.problem_category.length === 0) showInfo('请选择问题类别')
   else if (formData.problem_description.length > 250) showInfo('问题描述文本长度不得超过250')
   else {
     // 通过非空判断，提交表单
     userApi.submitOrder(formData).then(res => {
       store.commit('setOrderFormData',res.data.appointment)
-      router.push({ path: '/orderInfo', query: { id: res.data.appointment.id } })
+      router.push({ path: '/orderInfo', replace: true, query: { id: res.data.appointment.id } })
       notify({
         type:'success',
         title:"提交成功🎉",

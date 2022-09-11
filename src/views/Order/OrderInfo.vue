@@ -71,8 +71,11 @@
         <div class="title-info"> 预约信息</div>
         <div>
           <div class="ml-2 text-xl lg:text-2xl">{{ formData.problem_description }}</div>
+          <div>
+            <div class="ml-2 text-md font-thin lg:text-lg">{{ formData.available_time }}</div>
+          </div>
           <div class="ml-2 badge bg-secondary text-base-100 border-none badge-lg mx-0.5 my-3" v-for="(each,index) in cateList" :key="index">{{ each }}</div>
-          <div class="flex px-1 gap-4">
+          <div class="flex px-1 gap-4 flex-wrap">
             <div class="flex">
               <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd"
@@ -82,7 +85,7 @@
               <div>{{ createTime }}</div>
             </div>
             <!-- 预约人信息仅自己与电医可见 -->
-            <div v-if="isMyOwnOrder || isPCDoctor || isAdmin" class="flex gap-5">
+            <div v-if="isMyOwnOrder || isPCDoctor || isAdmin" class="flex gap-5 flex-wrap">
               <div><div class="inline font-bold">预约人:</div>{{ formData.user_name }}</div>
               <div>{{ formData.contact_details }}</div>
             </div>
@@ -150,7 +153,7 @@
         <div class="btn btn-primary" @click="finishOrder" v-if="formData.status === '1' && (isOrderPCDoctor || isMyOwnOrder)">预约完成</div>
         <!-- 操作按钮 删除预约 status：all -->
         <label for="deleteConfirmDialog" class="btn btn-error" v-if="isAdmin">删除</label>
-        <div class="btn" @click="routerBack">返回</div>
+        <div class="btn" @click="backRouter">返回</div>
       </div>
     </div>
   </div>
@@ -248,7 +251,7 @@ function pushRouter(path) {
   router.push(path)
 }
 
-function routerBack() {
+function backRouter() {
   router.back()
 }
 // 1. 预约详情信息
