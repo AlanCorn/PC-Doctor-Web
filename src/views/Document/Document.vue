@@ -2,8 +2,8 @@
   <div class="flex flex-col items-center ">
     <div class="sm:mx-1 md:w-11/12 mt-10">
       <div class="mx-4 my-2 flex gap-0.5">
-        <input type="text" placeholder="Type here" class="input input-bordered input-primary w-full max-w-xs" />
-        <button class="btn btn-primary">搜索文档</button>
+        <input type="text" v-model="pageInfo.searchStr" placeholder="输入内容以搜索" class="input input-bordered input-primary w-full max-w-xs" />
+        <button class="btn btn-primary" @click="handleSearchDoc">搜索文档</button>
         <button v-if="isAdmin" class="btn btn-secondary" @click="handleClickCreateDoc">新建文档</button>
       </div>
       <!--        文章分类-->
@@ -26,7 +26,11 @@ import DocumentCard from "@/components/DocumentCard.vue";
 import CateTabs from "@/components/CateTabs.vue";
 import {useRouter} from "vue-router";
 import {useStore} from "vuex";
-import {computed} from "vue";
+import {computed, reactive} from "vue";
+
+const pageInfo = reactive({
+  searchStr:''
+})
 
 const router = useRouter()
 const store = useStore()
@@ -44,6 +48,11 @@ const onChangeState = (index) => {
 
 const isAdmin = computed(() => store.state.user.level === '2')
 
+const handleSearchDoc = () => {
+  store.dispatch('queryDocList',{
+    title:pageInfo.searchStr
+  })
+}
 
 const handleClickCreateDoc = () => {
   store.commit('offNowDoc')
