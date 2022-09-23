@@ -2,10 +2,9 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from "./router";      // vue-router
 import store from "./store";        // vuex
-import './index.css'                // tailwind 全局样式表
-// ElementPlus组件库
-import ElementPlus from 'element-plus'
-import 'element-plus/dist/index.css'
+import './style/tailwind/index.css'          // tailwind 全局样式表
+
+// 模板通知，比Element的通知更容易改样式
 import Notifications from '@kyvg/vue3-notification'
 // 一个css动画库
 import animate from 'animate.css'
@@ -32,7 +31,6 @@ VMdEditor.use(vuepressTheme, {
 });
 
 createApp(App)
-    .use(ElementPlus)
     .use(animate)
     .use(store)
     .use(router)
