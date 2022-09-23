@@ -47,7 +47,7 @@
 <!--          </div>-->
 <!--        </div>-->
 <!--      </div>-->
-      <div class="mb-10"
+      <div
            v-if="isOrderListLoaded">
         <!-- 使用grid布局卡片  -->
         <div class="grid grid-cols-1 my-2 lg:grid-cols-2 2xl:grid-cols-3"
@@ -127,7 +127,6 @@ const getQueryParams = () => {
 // 使页面滚动到history锚点
 const clickHistory = () => {
   // 获取DOM元素
-  console.log("使页面滚动到history锚点")
   let target = document.querySelector('#orderHistory');
   if (target) {
     target.scrollIntoView({
@@ -157,7 +156,7 @@ onBeforeMount(() => {
 </script>
 
 
-<style>
+<style scoped>
 .order-title-shadow {
   text-shadow: 1px 1px 20px rgba(59, 130, 246, 1);
 }

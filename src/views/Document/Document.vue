@@ -1,6 +1,6 @@
 <template>
-  <div class="flex flex-col items-center ">
-    <div class="sm:mx-1 md:w-11/12 mt-10">
+  <div class="flex flex-col items-center my-10">
+    <div class="sm:mx-1 md:w-11/12">
       <div class="mx-4 my-2 flex gap-0.5">
         <input type="text" v-model="pageInfo.searchStr" placeholder="输入内容以搜索" class="input input-bordered input-primary w-full max-w-xs" />
         <button class="btn btn-primary" @click="handleSearchDoc">搜索文档</button>
