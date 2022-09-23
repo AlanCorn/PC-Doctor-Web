@@ -41,7 +41,10 @@ const routes = [
 
                 path: '/order',
                 name: 'Order',
-                meta: {title: "电脑医院-首页"},
+                meta: {
+                    title: "电脑医院-首页",
+                    group:'Order'
+                },
                 component: () => import('../views/Order/Order.vue'),
             },
             // 预约页面
@@ -68,8 +71,20 @@ const routes = [
             {
                 path: '/document',
                 name: 'Document',
-                meta: {title: "电脑医院-文档"},
+                meta: {
+                    title: "电脑医院-文档",
+                    group:'Document'
+                },
                 component: () => import('../views/Document/Document.vue'),
+            },
+            {
+                path: '/space',
+                name: 'Space',
+                meta: {
+                    title: "电脑医院-我的",
+                    group:'Space'
+                },
+                component: () => import('../views/Login/Space.vue'),
             },
             // 文档浏览/文档预览
             {
