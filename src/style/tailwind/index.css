@@ -15,4 +15,11 @@
     .title-info {
         @apply block font-bold my-3 text-primary text-xl lg:text-2xl
     }
+
+    .btm-nav-active {
+        @apply bg-gray-300 border-t-primary border-t-4 p-2
+    }
 }
+
+
+
