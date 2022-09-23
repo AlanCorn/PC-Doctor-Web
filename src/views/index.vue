@@ -1,44 +1,50 @@
 <template>
-  <div class="drawer">
-    <input id="my-drawer-3" type="checkbox" class="drawer-toggle" />
-    <div class="drawer-content flex flex-col">
-      <!-- Navbar -->
-      <div class="w-full navbar shadow-xl bg-blue-300">
-        <div class="flex-none lg:hidden">
-          <label for="my-drawer-3" class="btn btn-square btn-ghost">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-6 h-6 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
-          </label>
-        </div>
-        <div class="flex-1 px-2 mx-2"><router-link class="btn btn-ghost normal-case text-xl" to="/">PC Doctor</router-link></div>
-        <div class="flex-none hidden lg:block">
-          <ul class="menu menu-horizontal">
-            <!-- Navbar menu content here -->
-            <IndexNavigation :pushRouter="pushRouter"/>
-          </ul>
-        </div>
-      </div>
-<!--      router-view-->
-      <router-view></router-view>
-    </div>
-    <div class="drawer-side">
-      <label for="my-drawer-3" class="drawer-overlay"></label>
-      <ul class="menu p-4 overflow-y-auto w-60 bg-base-100">
-        <!-- Sidebar content here -->
-        <label for="my-drawer-3">
-          <IndexNavigation :sideBarMenu="true" :pushRouter="pushRouter"/>
+  <!-- Navbar -->
+  <div class="w-full navbar shadow-xl bg-blue-300">
+    <!-- 顶部栏左侧下拉菜单 -->
+    <div class="flex-none lg:hidden">
+      <div class="dropdown">
+        <label tabindex="0" class="btn btn-square btn-ghost">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+               class="inline-block w-6 h-6 stroke-current">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
         </label>
+        <ul id="navMenuList" tabindex="0" class="dropdown-content p-2 bg-base-100 rounded-box w-36">
+          <IndexNavigation :pushRouter="pushRouter"/>
+        </ul>
+      </div>
+    </div>
+    <div class="flex-1 px-2 mx-2">
+      <router-link class="btn btn-ghost normal-case text-xl" to="/">PC Doctor</router-link>
+    </div>
+    <div class="flex-none hidden lg:block">
+      <ul class="menu-horizontal">
+        <!-- Navbar menu content here -->
+        <IndexNavigation :pushRouter="pushRouter"/>
       </ul>
     </div>
   </div>
+  <!-- router-view-->
+  <router-view></router-view>
 </template>
 <script setup>
-  import IndexNavigation from "../components/IndexNavigation.vue";
-  import {useRouter} from "vue-router/dist/vue-router";
+import IndexNavigation from "../components/IndexNavigation.vue";
+import {useRouter} from "vue-router";
+import {reactive} from "vue";
 
-  const router = useRouter()
-  function pushRouter(path){
-    router.push(path)
-  }
+const router = useRouter()
+
+const pageInfo = reactive({
+  tabIndex: 0
+})
+
+function pushRouter(path) {
+  // 失去焦点毛，即让下拉菜单隐藏
+  const navMenu = document.querySelector('#navMenuList')
+  navMenu.blur()
+  router.push(path)
+}
 </script>
 <style scoped>
 </style>
