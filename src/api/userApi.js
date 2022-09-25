@@ -104,6 +104,15 @@ const user = {
             headers
         })
     },
+    // 用户修改密码
+    userResetPwd(params) {
+        const form = new FormData();
+        form.append('user_id', params.user_id);
+        form.append('pwd_md5', md5(params.password).toUpperCase());
+        return request.post("/update_user", form, {
+            headers
+        })
+    },
     // 用户更新详细信息
     userUpdateDetailInfo(form) {
         return request.post("/update_user", form, {
