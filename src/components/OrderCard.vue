@@ -1,5 +1,5 @@
 <template>
-  <div class="shadow-xl my-2 mx-1 card  border border-solid border-2 transition duration-500 hover:ring"
+  <div class="shadow-xl my-2 mx-1 card bg-white transition duration-500 hover:ring"
        @click="posCardClick">
     <div class="flex flex-row card-body p-5">
       <div class="flex flex-col justify-between">

@@ -11,7 +11,7 @@
           </svg>
         </label>
         <ul id="navMenuList" tabindex="0" class="dropdown-content p-2 bg-base-100 rounded-box w-36">
-          <IndexNavigation :pushRouter="pushRouter"/>
+          <IndexNavigation :pushRouter="pushRouter" :isUseAvatar="false"/>
         </ul>
       </div>
     </div>

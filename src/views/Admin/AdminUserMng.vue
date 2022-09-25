@@ -7,7 +7,7 @@
           <el-row :gutter="20">
             <el-col :span="8">
               <!-- 搜索与添加区域 -->
-              <el-input placeholder="请输入内容" v-model="queryInfo.params.search">
+              <el-input placeholder="请输入帐号" v-model="queryInfo.params.search">
                 <template #append>
                   <el-icon>
                     <Search/>

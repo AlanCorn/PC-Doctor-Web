@@ -1,5 +1,5 @@
 <template>
-  <div class="card bg-base-100 shadow-xl m-2 border border-solid border-2 transition duration-500 hover:ring"
+  <div class="card bg-white shadow-xl m-2 transition duration-500 hover:ring"
        @click="posCardClick">
     <div class="card-body p-4 lg:p-6">
       <div
