@@ -1,6 +1,6 @@
 import {createRouter, createWebHistory} from 'vue-router'
 import {notify} from "@kyvg/vue3-notification";
-import {myStore} from '@/store/index'
+import {myStore} from '@/store'
 
 const store = myStore();
 
@@ -30,6 +30,14 @@ const routes = [
                 meta: {title: "电脑医院-注册"},
                 component: () => import('../views/Login/Register.vue')
             },
+            // 修改密码页面
+            {
+                path: '/resetPwd',
+                name: 'ResetPwd',
+                meta: {title: "电脑医院-修改密码"},
+                component: () => import('../views/Login/ResetPwd.vue')
+            },
+            // 个人信息页面
             {
                 path: '/profile',
                 name: 'Profile',
@@ -82,7 +90,8 @@ const routes = [
                 name: 'Space',
                 meta: {
                     title: "电脑医院-我的",
-                    group:'Space'
+                    group:'Space',
+                    reqLogin: true
                 },
                 component: () => import('../views/Login/Space.vue'),
             },
@@ -109,7 +118,10 @@ const routes = [
 
                 path: '/about',
                 name: 'About',
-                meta: {title: "电脑医院-关于我们"},
+                meta: {
+                    title: "电脑医院-关于我们",
+                    group: "Space"
+                },
                 component: () => import('../views/AboutUs.vue')
             },
             // 意见
