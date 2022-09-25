@@ -29,7 +29,7 @@
                   />
                 </div>
                 <div class="flex justify-between">
-                  <label class="block text-gray-500 font-bold my-4">
+                  <label class="block text-gray-500 font-bold my-2 flex items-center">
                     <input
                         type="checkbox"
                         v-model="loginForm.isRemember"
@@ -38,13 +38,19 @@
 											记住我
 										</span>
                   </label>
-                  <label class="block text-gray-500 font-bold my-4">
-                    <router-link
-                        to="/register"
-                        class="cursor-pointer tracking-tighter text-black border-b-2 border-gray-200 hover:border-gray-400"
-                    ><span>没有帐号？立即注册</span>
-                    </router-link>
-                  </label>
+                  <div class="flex gap-2">
+                    <label class="block text-gray-500 font-bold my-2 flex items-center"
+                      @click="showTipInfo">
+                      <span>忘记密码？</span>
+                    </label>
+                    <label class="block text-gray-500 font-bold my-2 flex items-center">
+                      <router-link
+                          to="/register"
+                          class="cursor-pointer tracking-tighter text-primary border-b-2 border-gray-200 hover:border-gray-400"
+                      ><span>注册</span>
+                      </router-link>
+                    </label>
+                  </div>
                 </div>
               </form>
               <button
@@ -71,6 +77,13 @@ import {useStore} from "vuex";
 
 const router = useRouter()
 const store = useStore()
+
+const showTipInfo = () => {
+  notify({
+    title:'请联系管理员重置密码',
+    text:'联系QQ:1561206831进行人工验证身份，也可以另外创建一个帐号'
+  })
+}
 
 const loginForm = reactive({
   username: "",
