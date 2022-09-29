@@ -6,16 +6,18 @@
       <div class="p-4 md:p-12 text-center lg:text-left">
         <!-- Image for mobile view-->
         <!--        <div class="" style="background-image: url('https://source.unsplash.com/MP0IUfwrn0A')"></div>-->
-        <div class="lg:flex lg:items-center lg:gap-3">
+        <div class="lg:flex lg:items-center lg:gap-3 lg:flex-wrap">
           <MyAvatar :imgSrc="imgUrl" :name="userInfo.user_name"/>
-          <h1 class="text-3xl min-w-fit font-bold pt-8 lg:pt-0 opacity-75">{{ userInfo.user_name }}</h1>
+          <h1 class="text-2xl min-w-fit font-bold pt-8 lg:pt-0 opacity-75">{{ userInfo.user_name }}</h1>
         </div>
         <div class="mx-auto lg:mx-0 w-4/5 pt-3 border-b-2 border-primary opacity-25"></div>
         <p class="pt-8 text-sm">{{ userInfo.user_description }}</p>
         <div class="flex w-full max-w-xs py-4 opacity-75">
           <ul class="flex flex-col w-full">
-            <li class="my-px">
-              <a class="flex flex-row items-center h-12 px-4 rounded-lg text-gray-600 bg-gray-100">
+            <!-- Dashboard -->
+            <li class="my-px hover:cursor-pointer">
+              <a class="flex flex-row items-center h-12 px-4 rounded-lg text-gray-600 bg-gray-100"
+                 @click="pushRouter('/dashboard')">
                 <span class="flex items-center justify-center text-lg text-gray-500">
                   <svg fill="none"
                        stroke-linecap="round"
@@ -31,12 +33,13 @@
                 <span class="ml-3 min-w-fit">Dashboard</span>
               </a>
             </li>
+            <!-- 账户 -->
             <li class="my-px">
               <span class="flex font-medium text-sm text-gray-400 px-4 my-4 uppercase">账户</span>
             </li>
-            <li class="my-px">
+            <li class="my-px hover:cursor-pointer">
               <a class="flex flex-row items-center h-12 px-4 rounded-lg text-gray-500 hover:bg-gray-200"
-                  @click="pageInfo.currentTab = InfoEditor">
+                 @click="pushRouter('/profile')">
 						    <span class="flex items-center justify-center text-lg text-gray-500">
                   <svg fill="none"
                        stroke-linecap="round"
@@ -51,9 +54,9 @@
                 <span class="ml-3 min-w-fit">个人信息</span>
               </a>
             </li>
-            <li class="my-px">
+            <li class="my-px hover:cursor-pointer">
               <a class="flex flex-row items-center h-12 px-4 rounded-lg text-gray-500 hover:bg-gray-200"
-                 @click="pageInfo.currentTab = ResetPwd">
+                 @click="pushRouter('/resetPwd')">
                 <span class="flex items-center justify-center text-lg text-gray-500">
                   <svg fill="none"
                        stroke-linecap="round"
@@ -70,7 +73,7 @@
                 <span class="ml-3 min-w-fit">设置密码</span>
               </a>
             </li>
-            <li class="my-px">
+            <li class="my-px hover:cursor-pointer">
               <label for="logoutModal">
                 <a class="flex flex-row items-center h-12 px-4 rounded-lg text-gray-500 hover:bg-gray-200">
                   <span class="flex items-center justify-center text-lg text-red-400">
@@ -85,14 +88,72 @@
                           d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"></path>
                     </svg>
                   </span>
-                  <label class="ml-3 min-w-fit">退出登录</label>
+                  <div class="ml-3 min-w-fit">退出登录</div>
                 </a>
               </label>
             </li>
+            <!-- 管理 -->
+            <li v-if="isLogin && level === '2'" class="my-px">
+              <span class="flex font-medium text-sm text-gray-400 px-4 my-4 uppercase">管理员</span>
+            </li>
+            <li v-if="isLogin && level === '2'" class="my-px hover:cursor-pointer">
+              <a class="flex flex-row items-center h-12 px-4 rounded-lg text-gray-500 hover:bg-gray-200"
+                 @click="pushRouter('/adminGeneral')">
+						    <span class="flex items-center justify-center text-lg text-gray-500">
+                  <svg fill="none"
+                       stroke-linecap="round"
+                       stroke-linejoin="round"
+                       stroke-width="2"
+                       viewBox="0 0 24 24"
+                       stroke="currentColor"
+                       class="h-6 w-6">
+                    <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                  </svg>
+                </span>
+                <span class="ml-3 min-w-fit">通用</span>
+              </a>
+            </li>
+            <li v-if="false" class="my-px hover:cursor-pointer">
+              <a class="flex flex-row items-center h-12 px-4 rounded-lg text-gray-500 hover:bg-gray-200"
+                 @click="pushRouter('/adminDoctorMng')">
+                <span class="flex items-center justify-center text-lg text-gray-500">
+                  <svg fill="none"
+                       stroke-linecap="round"
+                       stroke-linejoin="round"
+                       stroke-width="2"
+                       viewBox="0 0 24 24"
+                       stroke="currentColor"
+                       class="h-6 w-6">
+                    <path
+                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                  </svg>
+                </span>
+                <span class="ml-3 min-w-fit">电医管理</span>
+              </a>
+            </li>
+            <li v-if="isLogin && level === '2'" class="my-px hover:cursor-pointer">
+              <a class="flex flex-row items-center h-12 px-4 rounded-lg text-gray-500 hover:bg-gray-200"
+                 @click="pushRouter('/adminUserMng')">
+                <span class="flex items-center justify-center text-lg text-gray-500">
+                  <svg fill="none"
+                       stroke-linecap="round"
+                       stroke-linejoin="round"
+                       stroke-width="2"
+                       viewBox="0 0 24 24"
+                       stroke="currentColor"
+                       class="h-6 w-6">
+                    <path
+                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                  </svg>
+                </span>
+                <span class="ml-3 min-w-fit">用户管理</span>
+              </a>
+            </li>
+            <!-- 其他 -->
             <li class="my-px">
               <span class="flex font-medium text-sm text-gray-400 px-4 my-4 uppercase">其他</span>
             </li>
-            <li class="my-px">
+            <li class="my-px hover:cursor-pointer">
               <a class="flex flex-row items-center h-12 px-4 rounded-lg text-gray-500 hover:bg-gray-200"
                  v-if="isLogin && (level === '1' || level === '2')"
                  @click="pushRouter('/admin')">
@@ -110,7 +171,7 @@
                 <span class="ml-3 min-w-fit">后台管理</span>
               </a>
             </li>
-            <li class="my-px">
+            <li class="my-px hover:cursor-pointer">
               <a class="flex flex-row items-center h-12 px-4 rounded-lg text-gray-500 hover:bg-gray-200">
                 <span class="flex items-center justify-center text-lg text-gray-500">
                   <svg fill="none"
@@ -127,7 +188,7 @@
                 <span class="ml-3 min-w-fit">帮助</span>
               </a>
             </li>
-            <li class="my-px">
+            <li class="my-px hover:cursor-pointer">
               <a class="flex flex-row items-center h-12 px-4 rounded-lg text-gray-500 hover:bg-gray-200"
                  @click="pushRouter('/about')">
 						<span class="flex items-center justify-center text-lg text-gray-500">
@@ -142,7 +203,7 @@
                     d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
 							</svg>
 						</span>
-                <span class="ml-3 min-w-fit" >关于我们</span>
+                <span class="ml-3 min-w-fit">关于我们</span>
               </a>
             </li>
           </ul>
@@ -151,11 +212,12 @@
     </div>
     <div id="content"
          class="w-full md:w-8/12 overflow-auto rounded-lg min-h-full lg:rounded-l-lg lg:rounded-l-none shadow-2xl bg-white mx-6 lg:mx-0">
-      <component :is="pageInfo.currentTab"></component>
+<!--      <component :is="pageInfo.currentTab"></component>-->
+      <router-view></router-view>
     </div>
   </div>
   <!-- 确认对话框 -->
-  <input type="checkbox" id="logoutModal" class="modal-toggle" />
+  <input type="checkbox" id="logoutModal" class="modal-toggle"/>
   <div class="modal">
     <div class="modal-box">
       <h3 class="font-bold text-2xl">确认退出登录？</h3>
@@ -175,7 +237,7 @@ import {getOnlineImageUrl} from "@/utils";
 import {notify} from "@kyvg/vue3-notification";
 import MyAvatar from "@/components/MyAvatar.vue";
 
-import InfoEditor from "@/views/Admin/AdminInfoEdit.vue";
+import InfoEditor from "@/views/Login/InfoEdit.vue";
 import ResetPwd from "@/views/Login/ResetPwd.vue";
 
 
@@ -183,8 +245,8 @@ const router = useRouter()
 const store = useStore()
 
 const pageInfo = reactive({
-  currentTab:ResetPwd,
-  tabs:[InfoEditor,ResetPwd]
+  currentTab: ResetPwd,
+  tabs: [InfoEditor, ResetPwd]
 })
 
 const userInfo = computed(() => store.getters.getUserInfo)
@@ -209,7 +271,7 @@ const logout = () => {
 notify({
   type: 'warn',
   title: '提示',
-  text:'本页面尚未完工，部分功能缺失'
+  text: '本页面尚未完工，部分功能缺失'
 })
 
 
