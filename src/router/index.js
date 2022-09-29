@@ -21,29 +21,16 @@ const routes = [
                 path: '/login',
                 name: 'Login',
                 meta: {title: "电脑医院-登录"},
-                component: () => import('../views/Login/Login.vue')
+                component: () => import('../views/User/Login.vue')
             },
             // 注册页面
             {
                 path: '/register',
                 name: 'Register',
                 meta: {title: "电脑医院-注册"},
-                component: () => import('../views/Login/Register.vue')
+                component: () => import('../views/User/Register.vue')
             },
-            // 修改密码页面
-            {
-                path: '/resetPwd',
-                name: 'ResetPwd',
-                meta: {title: "电脑医院-修改密码"},
-                component: () => import('../views/Login/ResetPwd.vue')
-            },
-            // 个人信息页面
-            {
-                path: '/profile',
-                name: 'Profile',
-                meta: {title: "电脑医院-个人信息"},
-                component: () => import('../views/Login/UserInfo.vue')
-            },
+
             // 首页
             {
 
@@ -85,6 +72,7 @@ const routes = [
                 },
                 component: () => import('../views/Document/Document.vue'),
             },
+            // 个人空间
             {
                 path: '/space',
                 name: 'Space',
@@ -93,7 +81,67 @@ const routes = [
                     group:'Space',
                     reqLogin: true
                 },
-                component: () => import('../views/Login/Space.vue'),
+                component: () => import('../views/User/Space.vue'),
+                redirect: to => {
+                    return {path: '/profile'}
+                },
+                children:[
+                    // 面板
+                    {
+                        path: '/dashboard',
+                        name: 'Dashboard',
+                        meta: {title: "电脑医院-个人空间"},
+                        component: () => import('../views/User/SpaceDashBoard.vue')
+                    },
+                    // 个人信息
+                    {
+                        path: '/profile',
+                        name: 'Profile',
+                        meta: {title: "电脑医院-个人信息"},
+                        component: () => import('../views/User/InfoEdit.vue')
+                    },
+                    // 修改密码页面
+                    {
+                        path: '/resetPwd',
+                        name: 'ResetPwd',
+                        meta: {title: "电脑医院-修改密码"},
+                        component: () => import('../views/User/ResetPwd.vue')
+                    },
+                    // 管理员
+                    // 问题类别管理
+                    {
+                        path: '/adminGeneral',
+                        name: 'AdminGeneral',
+                        meta: {
+                            title: "电脑医院-管理员-问题类别",
+                            reqAdmin: true,
+                            reqLogin: true
+                        },
+                        component: () => import('../views/Admin/AdminGeneral.vue'),
+                    },
+                    // 电医管理
+                    {
+                        path: '/adminDoctorMng',
+                        name: 'AdminDoctorMng',
+                        meta: {
+                            title: "电脑医院-管理员-电医管理",
+                            reqAdmin: true,
+                            reqLogin: true
+                        },
+                        component: () => import('../views/Admin/AdminDoctorMng.vue'),
+                    },
+                    // 用户管理
+                    {
+                        path: '/adminUserMng',
+                        name: 'AdminUserMng',
+                        meta: {
+                            title: "电脑医院-管理员-用户管理",
+                            reqAdmin: true,
+                            reqLogin: true
+                        },
+                        component: () => import('../views/Admin/AdminUserMng.vue'),
+                    },
+                ]
             },
             // 文档浏览/文档预览
             {
@@ -143,77 +191,6 @@ const routes = [
             }
         ]
     },
-    // 管理员页面
-    {
-        path: '/admin',
-        name: 'Admin',
-        meta: {
-            title: "电脑医院-管理员",
-            reqAdmin: true,
-            reqLogin: true
-        },
-        component: () => import('../views/Admin/Admin.vue'),
-        redirect: to => {
-            return {path: '/dashboard'}
-        },
-        children: [
-            // 管理员首页
-            {
-                path: '/dashboard',
-                name: 'AdminDashBoard',
-                meta: {
-                    title: "电脑医院-管理员",
-                    reqAdmin: true,
-                    reqLogin: true
-                },
-                component: () => import('../views/Admin/AdminDashboard.vue'),
-            },
-            // 问题类别管理
-            {
-                path: '/adminGeneral',
-                name: 'AdminGeneral',
-                meta: {
-                    title: "电脑医院-管理员-问题类别",
-                    reqAdmin: true,
-                    reqLogin: true
-                },
-                component: () => import('../views/Admin/AdminGeneral.vue'),
-            },
-            // 管理员个人信息编辑
-            {
-                path: '/adminInfoEdit',
-                name: 'AdminInfoEdit',
-                meta: {
-                    title: "电脑医院-管理员-个人信息编辑",
-                    reqAdmin: true,
-                    reqLogin: true
-                },
-                component: () => import('../views/Admin/AdminInfoEdit.vue'),
-            },
-            // 电医管理
-            {
-                path: '/adminDoctorMng',
-                name: 'AdminDoctorMng',
-                meta: {
-                    title: "电脑医院-管理员-电医管理",
-                    reqAdmin: true,
-                    reqLogin: true
-                },
-                component: () => import('../views/Admin/AdminDoctorMng.vue'),
-            },
-            // 用户管理
-            {
-                path: '/adminUserMng',
-                name: 'AdminUserMng',
-                meta: {
-                    title: "电脑医院-管理员-用户管理",
-                    reqAdmin: true,
-                    reqLogin: true
-                },
-                component: () => import('../views/Admin/AdminUserMng.vue'),
-            },
-        ]
-    }
 ]
 
 const router = createRouter({
