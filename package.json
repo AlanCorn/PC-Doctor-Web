@@ -20,6 +20,7 @@
     "npm": "^8.15.0",
     "path-parse": "^1.0.7",
     "vue": "^3.2.25",
+    "vue-loading-overlay": "^5.0",
     "vue-router": "^4.1.2",
     "vuex": "^4.0.2"
   },
