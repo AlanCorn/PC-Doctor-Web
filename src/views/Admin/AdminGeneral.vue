@@ -1,9 +1,9 @@
 <template>
-  <div class="flex items-center flex-col">
+  <div class="flex items-center flex-col mb-10">
     <div class="w-11/12 pt-10">
       <div class="text-primary text-4xl font-bold">问题类别管理</div>
       <!-- 一条提示 -->
-      <div class="alert bg-base-100">
+      <div class="alert bg-base-100 mt-3">
         <div>
           <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -21,7 +21,7 @@
           <span>管理用户在创建预约时可选择的问题类别</span>
         </div>
       </div>
-      <div class="flex flex-row gap-2">
+      <div class="flex flex-row gap-2 mt-5">
         <input
             type="text"
             placeholder="输入一个新的类别"
@@ -60,13 +60,10 @@
     </div>
     <div class="w-11/12 pt-10">
       <div class="text-primary text-4xl font-bold">预约通知群修改</div>
-      <div class="text-md">
-
-      </div>
-      <div class="alert bg-base-100">
+      <div class="alert bg-base-100 mt-3">
         预约通知将发送至QQ群: {{ groupID }}
       </div>
-      <div class="flex flex-row gap-2">
+      <div class="flex flex-row gap-2 my-5">
         <input
             type="text"
             placeholder="想将通知发送到哪个群？"
