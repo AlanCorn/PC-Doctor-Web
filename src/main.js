@@ -4,6 +4,10 @@ import router from "./router";      // vue-router
 import store from "./store";        // vuex
 import './style/tailwind/index.css'          // tailwind 全局样式表
 
+// VueLoading
+import VueLoading from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/vue-loading.css';
+
 // 模板通知，比Element的通知更容易改样式
 import Notifications from '@kyvg/vue3-notification'
 // 一个css动画库
@@ -31,6 +35,7 @@ VMdEditor.use(vuepressTheme, {
 });
 
 createApp(App)
+    .use(VueLoading)
     .use(animate)
     .use(store)
     .use(router)
