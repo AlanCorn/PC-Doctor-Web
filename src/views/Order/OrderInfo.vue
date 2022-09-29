@@ -236,15 +236,14 @@ import adminApi from "@/api/adminApi"
 import {getOnlineImageUrl, timeFormatter, getImageUrl} from "@/utils"
 import OrderSteps from "./OrderSteps.vue"
 import {useStore} from "vuex";
-import {useRoute, useRouter} from "vue-router";
+import {onBeforeRouteUpdate, useRoute, useRouter} from "vue-router";
 import DoctorCard from "../../components/DoctorCard.vue";
 
 const store = useStore()
 const router = useRouter()
 const route = useRoute()
 
-// 获取预约信息
-store.dispatch('getOrderFormData',route.query.id)
+
 
 
 function pushRouter(path) {
@@ -279,7 +278,7 @@ const statusToNum = computed(() => parseInt(formData.value.status) + 1)
 // 2. 状态消息
 const statusMessage = computed(() => store.state.order.orderStatusMessage)
 const sendTime = (time) => timeFormatter(time)
-if (formData.value.status > 0) store.dispatch('getOrderStatusMessage', formData.value.id)
+// if (formData.value.status > 0) store.dispatch('getOrderStatusMessage', formData.value.id)
 const handleMsgPicPreview = (msg, index) => {
   pictureWall.type = 1
   pictureWall.indexOfMsg = index
