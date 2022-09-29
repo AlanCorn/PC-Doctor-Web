@@ -92,22 +92,28 @@ const isOrderListLoaded = computed(() => store.getters.isOrderListLoaded)
 // 对预约记录进行简单分类
 const cateList = ['全部', '排队中', '正在处理', '已完成',]
 // 筛选功能
-const filterParams = reactive({
-  cate: 0,   // 默认状态为 0 ：全部， 1：排队中 ,2:正在处理 3:已完成
-  page: 1,
-  isOnlyShowMine:false
-})
+// const filterParams = reactive({
+//   cate: 0,   // 默认状态为 0 ：全部， 1：排队中 ,2:正在处理 3:已完成
+//   page: 1,
+//   isOnlyShowMine:false
+// })
+const filterParams = computed(() => store.state.user.filterParams)
 const changeState = (index) => {
-  filterParams.cate = index
-  filterParams.page = 1
+  store.commit('setFilterParams',{
+    cate: index,
+    page: 1,
+    isOnlyShowMine:false
+  })
   store.state.order.isOrderListLoaded = false
-
   store.dispatch('getUserOrderList', getQueryParams())
 }
 // 仅显示与我提交的订单
 const changeBelong = () => {
-  filterParams.page = 1
-  filterParams.isOnlyShowMine = !filterParams.isOnlyShowMine
+  store.commit('setFilterParams',{
+    cate: filterParams.value.cate,
+    page: 1,
+    isOnlyShowMine: !filterParams.value.isOnlyShowMine
+  })
   store.state.order.isOrderListLoaded = false
   store.dispatch('getUserOrderList', getQueryParams())
 }
@@ -118,9 +124,9 @@ const queryMoreOrder = () => {
 }
 const getQueryParams = () => {
   return {
-    page: filterParams.page,
-    status: filterParams.cate > 0?filterParams.cate - 1 : null,
-    user_id:filterParams.isOnlyShowMine ? user_id.value : null
+    page: filterParams.value.page,
+    status: filterParams.value.cate > 0?filterParams.value.cate - 1 : null,
+    user_id:filterParams.value.isOnlyShowMine ? user_id.value : null
   }
 }
 
@@ -149,9 +155,7 @@ const imgUrl = computed(() => {
 
 onBeforeMount(() => {
   // 默认查询状态为 0 (正在排队/待受理) 的记录
-  store.dispatch('getUserOrderList', {
-    page: filterParams.page
-  })
+  store.dispatch('getUserOrderList' , getQueryParams())
 })
 </script>
 
