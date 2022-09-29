@@ -2,8 +2,15 @@ import {createRouter, createWebHistory} from 'vue-router'
 import {notify} from "@kyvg/vue3-notification";
 import {myStore} from '@/store'
 
-const store = myStore();
+import {useLoading} from 'vue-loading-overlay'
 
+// 路由加载动画
+const $loading = useLoading()
+let loader
+let loadingTimer
+let timeoutTimer
+
+const store = myStore();
 // @@@ 注意： 在vite脚手架中, 引入时忽略.vue扩展名将导致错误
 
 const routes = [
@@ -61,6 +68,14 @@ const routes = [
                     reqLogin: true
                 },
                 component: () => import('../views/Order/OrderInfo.vue'),
+                beforeEnter: (to, from, next) => {
+                    // 获取预约信息
+                    store.dispatch('getOrderFormData', to.query.id).then(res => {
+                        next()
+                    }).catch(err => {
+                        return false
+                    })
+                }
             },
             // 文档页面
             {
@@ -229,8 +244,25 @@ router.beforeEach((to, from, next) => {//beforeEach是router的钩子函数，�
             } next()
         })
     } else next()
-
+    // 定时器(300毫秒未完成跳转就显示loading界面)
+    loadingTimer = setTimeout(() => {
+        loader = $loading.show({
+            loader: 'bars',
+            color: '#3C83F6',
+        })
+    },300)
+    timeoutTimer = setTimeout(() => {
+        notify({
+            title:'加载缓慢',
+            text:'请检查网络情况',
+        })
+    },5000)
 })
 
+router.afterEach((to, from) => {
+    clearTimeout(loadingTimer)
+    clearTimeout(timeoutTimer)
+    loader.hide()
+})
 
 export default router
