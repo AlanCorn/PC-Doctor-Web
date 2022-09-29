@@ -1,5 +1,6 @@
 import userApi from '../../api/userApi'
 import { notify } from "@kyvg/vue3-notification";
+import {reactive} from "vue";
 
 const user = {
     state: () => ({
@@ -11,7 +12,12 @@ const user = {
         contact_details:"",
         sessionId:"",
         user_description:"",
-        user_picture:""
+        user_picture:"",
+        filterParams : {
+            cate: 0,   // 默认状态为 0 ：全部， 1：排队中 ,2:正在处理 3:已完成
+            page: 1,
+            isOnlyShowMine:false
+        }
     }),
     getters:{
         getUserInfo(state) {
@@ -27,6 +33,9 @@ const user = {
         }
     },
     mutations:{
+        setFilterParams(state,data){
+            state.filterParams = data
+        },
         setToken(state){
             let sessionId = localStorage.getItem("token");
             // 如果在localStorage中没找到就去sessionStorage找
