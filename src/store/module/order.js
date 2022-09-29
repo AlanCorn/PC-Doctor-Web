@@ -25,7 +25,7 @@ const order = {
         },
         // orderList是否加载完成
         isOrderListLoaded(state){
-            return state.isOrderListLoaded === true || state.orderList.length > 0;
+            return state.isOrderListLoaded === true;
         },
         getOrderFormDataImagesUrls(state){
             const originUrls = state.orderFormData.problem_picture
@@ -88,18 +88,23 @@ const order = {
         // 查询表单
         getOrderFormData(content,orderId){
             // 使用user Api 发送异步请求，提交commit
-            userApi.getOrderHistory({
-                page:1,
-                id:orderId
-            }).then(res =>{
-                if (res.data.code === 0){
-                    content.commit('setOrderFormData', res.data.appointment_list[0])
-                    // 查询接单电医信息，放到orderDoctorInfo
-                    content.dispatch('getUserOrderDoctor',res.data.appointment_list[0].doctor_id)
-                }
-            }).catch(err =>{
-                console.log(err)
+            return new Promise((resolve,reject) => {
+                userApi.getOrderHistory({
+                    page:1,
+                    id:orderId
+                }).then(async res => {
+                    if (res.data.code === 0) {
+                        content.commit('setOrderFormData', res.data.appointment_list[0])
+                        // 查询接单电医信息，放到orderDoctorInfo
+                        const r = await content.dispatch('getUserOrderDoctor', res.data.appointment_list[0].doctor_id)
+                        resolve(r)
+                    }
+                    reject(res)
+                }).catch(err =>{
+                    reject(err)
+                })
             })
+
         },
         // 查询接单电医信息
         getUserOrderDoctor(content,doctor_id){

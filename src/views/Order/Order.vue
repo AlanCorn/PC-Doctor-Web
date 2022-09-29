@@ -30,23 +30,10 @@
         <div class="form-control mt-1 ml-3 w-fit" >
           <label class="label cursor-pointer justify-start  gap-2 ">
             <span class="label-text text-gray-500">仅查看我的记录</span>
-            <input @click="changeBelong" v-model="filterParams.isOnlyShowMine" type="checkbox" class="toggle toggle-sm" checked />
+            <input @click="changeBelong" type="checkbox" class="toggle toggle-sm"/>
           </label>
         </div>
       </div>
-      <!-- 加载动画 -->
-<!--      <div class="flex items-center text-5xl font-bold justify-center"-->
-<!--           v-if="!isOrderListLoaded">-->
-<!--        <div class="flex items-center">-->
-<!--          <img-->
-<!--              src="../../assets/image/SVG/Rolling-1s-200px.svg"-->
-<!--              class="w-10 h-10"-->
-<!--          />-->
-<!--          <div class="text-2xl">-->
-<!--            正在加载-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      </div>-->
       <div
            v-if="isOrderListLoaded">
         <!-- 使用grid布局卡片  -->
@@ -64,7 +51,7 @@
         </div>
         <div v-if="cardList.length === 0"
              class="flex items-center justify-center h-96">
-          <div class="text-xl ">暂无相关预约条目😊</div>
+          <div class="text-xl">暂无相关预约条目😊</div>
         </div>
       </div>
     </div>
