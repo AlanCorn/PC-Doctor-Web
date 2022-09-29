@@ -15,7 +15,7 @@
         <div class="flex w-full max-w-xs py-4 opacity-75">
           <ul class="flex flex-col w-full">
             <!-- Dashboard -->
-            <li class="my-px hover:cursor-pointer">
+            <li v-if="isLogin && level === '2'" class="my-px hover:cursor-pointer">
               <a class="flex flex-row items-center h-12 px-4 rounded-lg text-gray-600 bg-gray-100"
                  @click="pushRouter('/dashboard')">
                 <span class="flex items-center justify-center text-lg text-gray-500">
@@ -99,7 +99,7 @@
             <li v-if="isLogin && level === '2'" class="my-px hover:cursor-pointer">
               <a class="flex flex-row items-center h-12 px-4 rounded-lg text-gray-500 hover:bg-gray-200"
                  @click="pushRouter('/adminGeneral')">
-						    <span class="flex items-center justify-center text-lg text-gray-500">
+                <span class="flex items-center justify-center text-lg text-gray-500">
                   <svg fill="none"
                        stroke-linecap="round"
                        stroke-linejoin="round"
@@ -107,7 +107,7 @@
                        viewBox="0 0 24 24"
                        stroke="currentColor"
                        class="h-6 w-6">
-                    <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                    <path d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path>
                   </svg>
                 </span>
                 <span class="ml-3 min-w-fit">通用</span>
@@ -152,24 +152,6 @@
             <!-- 其他 -->
             <li class="my-px">
               <span class="flex font-medium text-sm text-gray-400 px-4 my-4 uppercase">其他</span>
-            </li>
-            <li class="my-px hover:cursor-pointer">
-              <a class="flex flex-row items-center h-12 px-4 rounded-lg text-gray-500 hover:bg-gray-200"
-                 v-if="isLogin && (level === '1' || level === '2')"
-                 @click="pushRouter('/admin')">
-                <span class="flex items-center justify-center text-lg text-gray-500">
-                  <svg fill="none"
-                       stroke-linecap="round"
-                       stroke-linejoin="round"
-                       stroke-width="2"
-                       viewBox="0 0 24 24"
-                       stroke="currentColor"
-                       class="h-6 w-6">
-                    <path d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path>
-                  </svg>
-                </span>
-                <span class="ml-3 min-w-fit">后台管理</span>
-              </a>
             </li>
             <li class="my-px hover:cursor-pointer">
               <a class="flex flex-row items-center h-12 px-4 rounded-lg text-gray-500 hover:bg-gray-200">
@@ -237,8 +219,8 @@ import {getOnlineImageUrl} from "@/utils";
 import {notify} from "@kyvg/vue3-notification";
 import MyAvatar from "@/components/MyAvatar.vue";
 
-import InfoEditor from "@/views/Login/InfoEdit.vue";
-import ResetPwd from "@/views/Login/ResetPwd.vue";
+import InfoEditor from "@/views/User/InfoEdit.vue";
+import ResetPwd from "@/views/User/ResetPwd.vue";
 
 
 const router = useRouter()
