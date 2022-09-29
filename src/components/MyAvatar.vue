@@ -12,7 +12,7 @@
          v-if="ifSrc">
       <div :class="{'rounded-full bg-accent-content/50':true,
                     'w-20 h-20 lg:w-22 lg:h-22':props.size === 'default',
-                    'w-20 h-20 lg:w-22 lg:h-22':props.size === 'small',
+                    'w-10 h-10 lg:w-12 lg:h-12':props.size === 'small',
                   }">
         <span class="text-2xl">{{ props.name.slice(0,1) }}</span>
       </div>
