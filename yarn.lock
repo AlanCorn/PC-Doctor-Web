@@ -5593,7 +5593,7 @@ vue-demi@*:
   resolved "https://mirrors.cloud.tencent.com/npm/vue-demi/-/vue-demi-0.13.5.tgz#d5eddbc9eaefb89ce5995269d1fa6b0486312092"
   integrity sha512-tO3K2bML3AwiHmVHeKCq6HLef2st4zBXIV5aEkoJl6HZ+gJWxWv2O8wLH8qrA3SX3lDoTDHNghLX1xZg83MXvw==
 
-vue-loading-overlay@^5.0:
+vue-loading-overlay@^5.0.3:
   version "5.0.3"
   resolved "https://mirrors.cloud.tencent.com/npm/vue-loading-overlay/-/vue-loading-overlay-5.0.3.tgz#2838297fe9c7e8b2a1e1ce3415c115487885933a"
   integrity sha512-6JWZalwlHF4do3HXsFZGt6PcWYseAI5FuNKpveEkljkzqskDWRr7rYmYHVx2kKu4qIvK0vLpL25T/hpFMNoevQ==
