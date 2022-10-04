@@ -7,11 +7,13 @@
           <el-row :gutter="20">
             <el-col :span="8">
               <!-- 搜索与添加区域 -->
-              <el-input placeholder="请输入帐号" v-model="queryInfo.params.search">
+              <el-input placeholder="请输入帐号或用户名" v-model="queryInfo.params.search">
                 <template #append>
-                  <el-icon>
-                    <Search/>
-                  </el-icon>
+                  <el-button @click="handleSearch">
+                    <el-icon >
+                      <Search/>
+                    </el-icon>
+                  </el-button>
                 </template>
               </el-input>
             </el-col>
@@ -207,5 +209,20 @@ const handleDeleteUser = (user_id) => {
 // 重置用户密码为123456 handleResetPwd
 const handleResetPwd = (user_id) => {
   alert(`重置用户:${user_id} 密码为：123456`)
+}
+
+// 4. 搜索 (优先查找帐号，帐号没找到再调用接口模糊查询用户名)
+const handleSearch = () => {
+  queryInfo.params.level = -1
+  queryInfo.pageNum = 1
+  store.dispatch('getUserList', {
+    user_id : queryInfo.params.search
+  }).then((res) => {
+    if (res.data.size === 0){
+      store.dispatch('getUserList', {
+        user_name : queryInfo.params.search
+      })
+    }
+  })
 }
 </script>
