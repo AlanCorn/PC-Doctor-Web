@@ -2,10 +2,8 @@
   <div class="md:w-4/5 flex flex-wrap gap-10 items-start mx-auto py-10">
     <!-- 个人信息 -->
     <div id="profile"
-         class="w-full  lg:w-1/4 rounded-lg lg:rounded-l-lg lg:rounded-r-none shadow-2xl bg-white mx-6 lg:mx-0">
+         class="flex-shrink w-full lg:w-1/4 rounded-lg lg:rounded-l-lg lg:rounded-r-none shadow-2xl bg-white mx-6 lg:mx-0">
       <div class="p-4 md:p-12 text-center lg:text-left">
-        <!-- Image for mobile view-->
-        <!--        <div class="" style="background-image: url('https://source.unsplash.com/MP0IUfwrn0A')"></div>-->
         <div class="lg:flex lg:items-center lg:gap-3 lg:flex-wrap">
           <MyAvatar :imgSrc="imgUrl" :name="userInfo.user_name"/>
           <h1 class="text-2xl min-w-fit font-bold pt-8 lg:pt-0 opacity-75">{{ userInfo.user_name }}</h1>
@@ -193,7 +191,7 @@
       </div>
     </div>
     <div id="content"
-         class="w-full md:w-8/12 overflow-auto rounded-lg min-h-full lg:rounded-l-lg lg:rounded-l-none shadow-2xl bg-white mx-6 lg:mx-0">
+         class="flex-grow w-full md:w-8/12 overflow-auto rounded-lg min-h-full lg:rounded-l-lg lg:rounded-l-none shadow-2xl bg-white mx-6 lg:mx-0">
 <!--      <component :is="pageInfo.currentTab"></component>-->
       <router-view></router-view>
     </div>
@@ -226,18 +224,20 @@ import ResetPwd from "@/views/User/ResetPwd.vue";
 const router = useRouter()
 const store = useStore()
 
-const pageInfo = reactive({
-  currentTab: ResetPwd,
-  tabs: [InfoEditor, ResetPwd]
-})
 
 const userInfo = computed(() => store.getters.getUserInfo)
 const imgUrl = computed(() => getOnlineImageUrl(userInfo.value.user_picture, 'user_pic')[0])
 const level = computed(() => store.state.user.level)
 const isLogin = computed(() => store.state.user.isLogin)
 
-function pushRouter(path) {
-  router.push(path)
+async function pushRouter(path) {
+  await router.push(path)
+  let target = document.querySelector('#content');
+  if (target) {
+    target.scrollIntoView({
+      behavior: 'smooth'
+    })
+  }
 }
 
 const logout = () => {
