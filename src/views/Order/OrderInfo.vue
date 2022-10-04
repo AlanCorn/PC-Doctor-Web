@@ -16,7 +16,7 @@
         </div>
       </div>
       <!-- tip 2： 属于自己的订单 - 正在排队提示 -->
-      <div class="alert shadow-lg bg-base-200"
+      <div class="alert shadow-lg bg-white flex-row p-3"
            v-if="formData.status === '0' && isMyOwnOrder">
         <div>
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -24,10 +24,10 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                   d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
           </svg>
-          <span>已创建预约，请耐心等待</span>
+          <span>已创建预约</span>
         </div>
-        <div class="flex-none">
-          <button class="btn btn-sm btn-ghost" @click="withdrawThisOrder">撤销</button>
+        <div class="my-auto">
+          <label class="btn btn-sm btn-ghost hover:cursor-pointer" for="withdrawThisOrder">撤销</label>
         </div>
       </div>
       <!-- tip 3： 电医 - 接单说明 -->
@@ -68,11 +68,12 @@
       </div>
       <!-- 预约信息 -->
       <div class="flex flex-col">
-        <div class="title-info"> 预约信息</div>
+        <div class="title-info"> 📬 预约信息</div>
         <div>
-          <div class="ml-2 text-xl lg:text-2xl">{{ formData.problem_description }}</div>
-          <div>
-            <div class="ml-2 text-md font-thin lg:text-lg">{{ formData.available_time }}</div>
+          <div class="ml-2 mb-2 text-xl lg:text-2xl font-medium">{{ formData.problem_description }}</div>
+          <div class="flex flex-wrap">
+            <div class="ml-2 text-md font-thin lg:text-lg"> 📅 {{ formData.available_time }}</div>
+            <div class="ml-2 text-md font-thin lg:text-lg" v-if="formData.appointment_location"> 🌏 {{ formData.appointment_location }}</div>
           </div>
           <div class="ml-2 badge bg-secondary text-base-100 border-none badge-lg mx-0.5 my-3" v-for="(each,index) in cateList" :key="index">{{ each }}</div>
           <div class="flex px-1 gap-4 flex-wrap">
@@ -209,6 +210,22 @@
                class="btn btn-error"
                @click="confirmDeleteOrder">
           确认
+        </label>
+        <label for="deleteConfirmDialog" class="btn">取消</label>
+      </div>
+    </div>
+  </label>
+  <!-- 对话框-确认撤销 -->
+  <input type="checkbox" id="withdrewConfirmDialog" class="modal-toggle"/>
+  <label for="withdrewConfirmDialog" class="modal cursor-pointer">
+    <div class="modal-box p-5">
+      <div class="font-bold text-2xl">确认撤销？</div>
+      <div class="font-light text-md mt-3">确认撤销该预约？操作将不可反悔</div>
+      <div class="modal-action">
+        <label for="deleteConfirmDialog"
+               class="btn btn-error"
+               @click="withdrawThisOrder">
+          确认撤销
         </label>
         <label for="deleteConfirmDialog" class="btn">取消</label>
       </div>
