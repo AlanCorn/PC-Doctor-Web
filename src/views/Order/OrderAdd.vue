@@ -17,7 +17,7 @@
 <!--        <el-input v-model="formData.contact_details" placeholder="请输入联系方式(QQ/微信/手机号)" />-->
 <!--      </div>-->
       <div>
-        <label class="title-info"> 问题描述 </label>
+        <label class="title-info"> 🤔 问题描述 </label>
         <el-input
             v-model="formData.problem_description"
             :rows="2"
@@ -28,24 +28,71 @@
         />
       </div>
       <div>
-        <label class="title-info"> 预约时间 </label>
-        <el-input
-            v-model="formData.available_time"
-            :rows="2"
-            type="textarea"
-            maxlength="250"
-            autosize
-            placeholder="留下希望电脑医生帮助你解决问题的时间段、地点"
-        />
+        <label class="title-info"> 📅 预约时间 </label>
+<!--        <el-input-->
+<!--            v-model="formData.available_time"-->
+<!--            :rows="2"-->
+<!--            type="textarea"-->
+<!--            maxlength="250"-->
+<!--            autosize-->
+<!--            placeholder="留下希望电脑医生帮助你解决问题的时间段、地点"-->
+<!--        />-->
+        <el-form>
+          <el-form-item label="推荐时间">
+            <el-checkbox-group v-model="formData.expectedTimeForm.recommendTime">
+              <el-checkbox label="周三下午"/>
+              <el-checkbox label="周末" />
+            </el-checkbox-group>
+          </el-form-item>
+          <el-form-item label="其他时间">
+            <el-input
+                v-model="formData.expectedTimeForm.otherTime"
+                :rows="2"
+                maxlength="250"
+                autosize
+                placeholder="选择推荐“时间”能更快被电医接单哦~"
+            />
+          </el-form-item>
+        </el-form>
       </div>
       <div>
-        <label class="title-info"> 问题分类 </label>
+        <label class="title-info"> 🌏 预约地点 </label>
+<!--        <el-input-->
+<!--            v-model="formData.appointment_location"-->
+<!--            :rows="2"-->
+<!--            type="textarea"-->
+<!--            maxlength="250"-->
+<!--            autosize-->
+<!--            placeholder="留下希望电脑医生帮助你解决问题的地点"-->
+<!--        />-->
+        <el-form>
+          <el-form-item label="推荐地点">
+            <el-checkbox-group v-model="formData.expectedLocationForm.recommendLocation">
+              <el-checkbox label="师生之家"/>
+              <el-checkbox label="行云/流水外场" />
+              <el-checkbox label="钱江湾29栋一楼" />
+              <el-checkbox label="钱江湾39栋一楼" />
+            </el-checkbox-group>
+          </el-form-item>
+          <el-form-item label="其他地点">
+            <el-input
+                v-model="formData.expectedLocationForm.otherLocation"
+                :rows="2"
+                maxlength="250"
+                autosize
+                placeholder="使用推荐“地点”更容易被电医接单哦~"
+            />
+          </el-form-item>
+        </el-form>
+      </div>
+      <div>
+        <label class="title-info"> 🏷 问题分类 </label>
         <el-checkbox-group v-model="formData.problem_category" >
           <el-checkbox v-for="(each,index) in cateList" :key="index" :label="each" />
         </el-checkbox-group>
       </div>
       <div>
-        <label class="title-info"> 图片 </label>
+        <label class="title-info"> 🖼 图片 </label>
         <div>
           <el-upload
               v-model:file-list="pictureWall.fileList"
@@ -115,9 +162,26 @@ let formData = reactive({
   // radio:'QQ',
   // contact_details:'',
   problem_description:'',
-  available_time:'',
+  available_time:computed(() => {
+    let recommendList = formData.expectedTimeForm.recommendTime
+    let other = formData.expectedTimeForm.otherTime
+    return other === '' ? recommendList.join('/') : `${recommendList.join('/')}/${other}`
+  }),                         // 期望预约的时间
+  appointment_location: computed(() => {
+    let recommendList = formData.expectedLocationForm.recommendLocation
+    let other = formData.expectedLocationForm.otherLocation
+    return other === '' ? recommendList.join('/') : `${recommendList.join('/')}/${other}`
+  }),                         // 期望预约的地点
   problem_category:[],
   problem_picture:[],
+  expectedTimeForm:{          // 期望预约的时间表单，最终生成available_time
+    recommendTime:[],
+    otherTime:'',
+  },
+  expectedLocationForm:{      // 期望预约的地点表单，最终生成appointment_location
+    recommendLocation: [],
+    otherLocation: '',
+  },
 })
 
 // store里的类别表
@@ -135,7 +199,8 @@ const submitForm = () => {
   // if (!formData.name) showInfo('请输入姓名')
   // else if (!formData.contact_details) showInfo('请输入联系方式')
   if (!formData.problem_description) showInfo('请输入问题描述')
-  else if (!formData.available_time) showInfo('请输入预约解决问题的时间段')
+  else if (!formData.available_time) showInfo('请输入预约解决问题的时间')
+  else if (!formData.appointment_location) showInfo('请输入预约解决问题的地点')
   else if (formData.problem_category.length === 0) showInfo('请选择问题类别')
   else if (formData.problem_description.length > 250) showInfo('问题描述文本长度不得超过250')
   else {
