@@ -6,9 +6,23 @@ import {useLoading} from 'vue-loading-overlay'
 
 // 路由加载动画
 const $loading = useLoading()
-let loader
-let loadingTimer
-let timeoutTimer
+let loader = null;
+let loaderTimer = null
+function hideLoader(){
+    if(loader) {
+        loader.hide();
+        loader = null;
+    }
+}
+
+function showLoader(){
+    hideLoader();
+    loader = $loading.show({
+        container:null,
+        loader: 'bars',
+        color: '#3C83F6',
+    })
+}
 
 const store = myStore();
 // @@@ 注意： 在vite脚手架中, 引入时忽略.vue扩展名将导致错误
@@ -211,11 +225,21 @@ const routes = [
 const router = createRouter({
     // history: createWebHashHistory(),     // url中带井号
     history: createWebHistory(),            // url中不带井号
-    routes
+    routes,
+    scrollBehavior(to, from, savedPosition) {
+        if (savedPosition) {
+            return savedPosition;
+        } else {
+            return { top: 0 };
+        }
+    },
 })
 
 //todo 全局路由守卫，内部做一些登录验证处理
-router.beforeEach((to, from, next) => {//beforeEach是router的钩子函数，在进入路由前执行
+router.beforeEach((to, from, next) => {
+    loaderTimer = setTimeout(() => {
+        showLoader()
+    },300)
     // 再次检验登录
     if (to.meta.title) {
         document.title = to.meta.title
@@ -241,28 +265,14 @@ router.beforeEach((to, from, next) => {//beforeEach是router的钩子函数，�
                     title: "提示",
                     text: "您不具备管理员权限"
                 })
-            } next()
+            } else next()
         })
     } else next()
-    // 定时器(300毫秒未完成跳转就显示loading界面)
-    loadingTimer = setTimeout(() => {
-        loader = $loading.show({
-            loader: 'bars',
-            color: '#3C83F6',
-        })
-    },300)
-    timeoutTimer = setTimeout(() => {
-        notify({
-            title:'加载缓慢',
-            text:'请检查网络情况',
-        })
-    },5000)
 })
 
 router.afterEach((to, from) => {
-    clearTimeout(loadingTimer)
-    clearTimeout(timeoutTimer)
-    loader.hide()
+    clearTimeout(loaderTimer)
+    hideLoader()
 })
 
 export default router
