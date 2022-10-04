@@ -77,16 +77,19 @@ const admin = {
         },
         // 获取用户列表，管理员(2)进行用户管理
         getUserList(content, params) {
-            adminApi.getUserList(params).then(res => {
-                console.log(res.data.user_list)
-                if (res.data.code === 0){
-                    content.commit('setUserList', {
-                        list: res.data.user_list,
-                        size: res.data.size
-                    })
-                }
-            }).catch(err => {
-                console.log(err)
+            return new Promise((resolve, reject) => {
+                adminApi.getUserList(params).then(res => {
+                    if (res.data.code === 0){
+                        content.commit('setUserList', {
+                            list: res.data.user_list,
+                            size: res.data.size
+                        })
+                        resolve(res)
+                    }
+                    reject('error')
+                }).catch(err => {
+                    reject(err)
+                })
             })
         },
         //
