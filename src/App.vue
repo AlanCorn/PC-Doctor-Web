@@ -33,6 +33,7 @@
       <span class="btm-nav-label">我的</span>
     </a>
   </div>
+  <el-backtop :right="30" :bottom="100" />
 </template>
 
 <script setup>
