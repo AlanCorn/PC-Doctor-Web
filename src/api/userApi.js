@@ -24,6 +24,7 @@ const user = {
         const form = new FormData();
         form.append('problem_description', formData.problem_description);
         form.append('available_time', formData.available_time);
+        form.append('appointment_location', formData.appointment_location);
         form.append('problem_category', formData.problem_category.toString());
         if (formData.problem_picture.length !== 0) {
             form.append('problem_picture', formData.problem_picture.toString());
