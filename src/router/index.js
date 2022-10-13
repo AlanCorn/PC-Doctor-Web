@@ -237,9 +237,7 @@ const router = createRouter({
 
 //todo 全局路由守卫，内部做一些登录验证处理
 router.beforeEach((to, from, next) => {
-    loaderTimer = setTimeout(() => {
-        showLoader()
-    },300)
+    showLoader()
     // 再次检验登录
     if (to.meta.title) {
         document.title = to.meta.title
@@ -271,7 +269,6 @@ router.beforeEach((to, from, next) => {
 })
 
 router.afterEach((to, from) => {
-    clearTimeout(loaderTimer)
     hideLoader()
 })
 
