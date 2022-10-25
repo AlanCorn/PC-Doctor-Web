@@ -30,7 +30,7 @@
         <div class="form-control mt-1 ml-3 w-fit" >
           <label class="label cursor-pointer justify-start  gap-2 ">
             <span class="label-text text-gray-500">仅查看我的记录</span>
-            <input @click="changeBelong" type="checkbox" class="toggle toggle-sm"/>
+            <input @click="changeBelong" v-model="filterParams.isOnlyShowMine" type="checkbox" class="toggle toggle-sm"/>
           </label>
         </div>
       </div>
@@ -107,6 +107,7 @@ const changeBelong = () => {
 // 加载更多订单
 const queryMoreOrder = () => {
   filterParams.page += 1
+  store.commit('setFilterParamsNextPage')
   store.dispatch('appendUserOrderList', getQueryParams())
 }
 const getQueryParams = () => {
@@ -130,7 +131,6 @@ const clickHistory = () => {
 
 
 const imgUrlList = [
-  'https://w.wallhaven.cc/full/39/wallhaven-39gjlv.jpg',
   'https://w.wallhaven.cc/full/dp/wallhaven-dpo38l.jpg',
   // 'https://w.wallhaven.cc/full/pk/wallhaven-pkogdp.jpg',
 ]
@@ -144,6 +144,9 @@ onBeforeMount(() => {
   // 默认查询状态为 0 (正在排队/待受理) 的记录
   store.dispatch('getUserOrderList' , getQueryParams())
 })
+
+let height = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+console.log('height',height)
 </script>
 
 

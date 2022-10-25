@@ -36,6 +36,9 @@ const user = {
         setFilterParams(state,data){
             state.filterParams = data
         },
+        setFilterParamsNextPage(state){
+            state.filterParams.page += 1
+        },
         setToken(state){
             let sessionId = localStorage.getItem("token");
             // 如果在localStorage中没找到就去sessionStorage找
