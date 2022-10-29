@@ -1,14 +1,12 @@
 <template>
-  <div
-      class="card border bg-white shadow-md px-3 py-2 my-3 max-w-md flex-row gap-3"
-  >
-    <MyAvatar :imgSrc="imgUrl" :name="props.doctorInfo.user_name"/>
+  <div class="card border bg-white shadow-md px-3 py-2 my-3 max-w-md flex-row gap-3">
+    <MyAvatar :imgSrc="imgUrl" :name="props.doctorInfo.user_name" />
     <div class="flex flex-col justify-center">
       <div class="flex">
         <div class="inline font-bold mr-1">
           {{ props.doctorInfo.user_name }}
         </div>
-        <SexIcon :sex="props.doctorInfo.sex"/>
+        <SexIcon :sex="props.doctorInfo.sex" />
       </div>
       <div>
         {{ props.doctorInfo.contact_details }}
@@ -43,14 +41,15 @@
       <!--				</div>-->
     </div>
 
-    <div :class="{'absolute top-2 right-3 badge border-none':true,'bg-primary text-white':grade === '电医','bg-pink-400 text-white':grade === '管理员'}">
+    <div
+      :class="{ 'absolute top-2 right-3 badge border-none': true, 'bg-primary text-white': grade === '电医', 'bg-pink-400 text-white': grade === '管理员' }">
       {{ grade }}
     </div>
   </div>
 </template>
 
 <script setup>
-import {computed} from "vue";
+import { computed } from "vue";
 import SexIcon from "./SexIcon.vue";
 import MyAvatar from "./MyAvatar.vue";
 import { getOnlineImageUrl } from '@/utils'
@@ -82,5 +81,5 @@ const grade = computed(() => {
   }
 })
 
-const imgUrl = computed(() => getOnlineImageUrl(props.doctorInfo.user_picture,'user_pic')[0])
+const imgUrl = computed(() => getOnlineImageUrl(props.doctorInfo.user_picture, 'user_pic')[0])
 </script>

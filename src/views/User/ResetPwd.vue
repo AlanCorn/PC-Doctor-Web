@@ -6,39 +6,20 @@
       <div class="mt-10">
         <el-form label-width="70px" class="w-fit">
           <el-form-item label="帐号">
-            <el-input
-                disabled
-                v-model="pageInfo.account"
-                type="text"
-                placeholder="请输入帐号"
-                size="large"
-                maxlength="16"
-            />
+            <el-input disabled v-model="pageInfo.account" type="text" placeholder="请输入帐号" size="large" maxlength="16" />
           </el-form-item>
           <div class="flex justify-end inline text-sm font-thin text-red-500 ml-2"
-               v-show="!checkPwdValid || pageInfo.pwd === ''">10～30位的字母、数字、小数点
+            v-show="!checkPwdValid || pageInfo.pwd === ''">10～30位的字母、数字、小数点
           </div>
           <el-form-item label="新密码">
-            <el-input
-                v-model="pageInfo.brandPwd"
-                type="password"
-                placeholder="请输入新的密码"
-                size="large"
-                maxlength="30"
-                show-password
-            />
+            <el-input v-model="pageInfo.brandPwd" type="password" placeholder="请输入新的密码" size="large" maxlength="30"
+              show-password />
           </el-form-item>
-          <div class="flex justify-end inline text-sm font-light text-red-500 ml-2"
-               v-show="!checkPwdAgain">密码不一致
+          <div class="flex justify-end inline text-sm font-light text-red-500 ml-2" v-show="!checkPwdAgain">密码不一致
           </div>
           <el-form-item label="确认密码" class="contactItem">
-            <el-input
-                v-model="pageInfo.repeatBrandPwd"
-                type="password"
-                placeholder="请再次输入密码"
-                size="large"
-                show-password
-            />
+            <el-input v-model="pageInfo.repeatBrandPwd" type="password" placeholder="请再次输入密码" size="large"
+              show-password />
           </el-form-item>
           <el-form-item>
             <label for="resetPwdModal" class="btn btn-primary">确认更新</label>
@@ -60,10 +41,10 @@
 </template>
 
 <script setup>
-import {computed, reactive} from "vue";
+import { computed, reactive } from "vue";
 import userApi from "@/api/userApi";
-import {notify} from "@kyvg/vue3-notification";
-import {useStore} from "vuex";
+import { notify } from "@kyvg/vue3-notification";
+import { useStore } from "vuex";
 
 const store = useStore()
 

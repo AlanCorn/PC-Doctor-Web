@@ -1,26 +1,15 @@
 <!-- @@@ 未使用的组件，有封装的想法，但还不太会-->
 
 <template>
-  <el-upload
-      v-model:file-list="pictureWall.fileList"
-      :action="url"
-      :accept="acceptFiletype"
-      list-type="picture-card"
-      :before-upload="beforeUploadFile"
-      :http-request="uploadFile"
-      :on-preview="handlePictureCardPreview"
-      :before-remove="handleBeforeRemove"
-      :on-remove="handleRemove"
-      :on-exceed="handleCountExceed"
-      :limit="10"
-  >
-    <el-icon><Plus /></el-icon>
+  <el-upload v-model:file-list="pictureWall.fileList" :action="url" :accept="acceptFiletype" list-type="picture-card"
+    :before-upload="beforeUploadFile" :http-request="uploadFile" :on-preview="handlePictureCardPreview"
+    :before-remove="handleBeforeRemove" :on-remove="handleRemove" :on-exceed="handleCountExceed" :limit="10">
+    <el-icon>
+      <Plus />
+    </el-icon>
   </el-upload>
-  <el-image-viewer
-      @close="pictureWall.previewVisible = false"
-      :url-list="pictureWallPreview"
-      v-if="pictureWall.previewVisible"
-      :initial-index="pictureWall.previewIndex">
+  <el-image-viewer @close="pictureWall.previewVisible = false" :url-list="pictureWallPreview"
+    v-if="pictureWall.previewVisible" :initial-index="pictureWall.previewIndex">
   </el-image-viewer>
 </template>
 
@@ -37,14 +26,14 @@ import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 
 
-const store  = useStore()
+const store = useStore()
 const router = useRouter()
 
 // Element Plus 照片墙数据
 const pictureWall = reactive({
-  fileList:[],
-  previewVisible :false,
-  previewIndex : 0
+  fileList: [],
+  previewVisible: false,
+  previewIndex: 0
 })
 // 照片墙预览 urls
 const pictureWallPreview = computed(() => getOnlineImageUrl(formData.problem_picture.toString()))
@@ -55,11 +44,11 @@ const acceptFiletype = '.jpg,.jpeg,.png,.gif,.JPG,.JPEG,.PBG,.GIF'
 // 照片墙上传api地址
 const url = baseUrl.testUrl + '/upload'
 // 照片墙钩子
-const handleBeforeRemove = (uploadFile,uploadFiles) => {
+const handleBeforeRemove = (uploadFile, uploadFiles) => {
   // 删除某张图片
   const deleteIndex = currentIndex(uploadFile)
-  console.log('uploadFile在fileList中的index',deleteIndex)
-  formData.problem_picture = formData.problem_picture.filter((checkItem,index) => index !== deleteIndex)
+  console.log('uploadFile在fileList中的index', deleteIndex)
+  formData.problem_picture = formData.problem_picture.filter((checkItem, index) => index !== deleteIndex)
 }
 const handleRemove = (uploadFile, uploadFiles) => {
   console.log(uploadFile, uploadFiles)
@@ -74,9 +63,9 @@ const beforeUploadFile = (file) => {
   // 文件类型检验
   if (whiteList.indexOf(fileSuffix) === -1) {
     notify({
-      type:'warn',
+      type: 'warn',
       title: "上传失败",
-      text:"请上传jpg/jpeg/png/gif/bmp格式的文件"
+      text: "请上传jpg/jpeg/png/gif/bmp格式的文件"
     })
     return false;
   }
@@ -85,9 +74,9 @@ const beforeUploadFile = (file) => {
 
   if (!isLt10M) {
     notify({
-      type:'warn',
+      type: 'warn',
       title: "上传失败",
-      text:"文件大小不能超过 10MB"
+      text: "文件大小不能超过 10MB"
     })
     return false;
   }
@@ -99,7 +88,7 @@ const uploadFile = (options) => {
     }).catch(err => {
       console.log(err)
       notify({
-        type:'error',
+        type: 'error',
         title: "上传失败！",
         text: "请联系管理员解决"
       });
@@ -111,9 +100,9 @@ const uploadFile = (options) => {
 }
 const handleCountExceed = () => {
   notify({
-    type:'warn',
+    type: 'warn',
     title: "上传失败",
-    text:"图片上限为10张"
+    text: "图片上限为10张"
   });
 }
 </script>

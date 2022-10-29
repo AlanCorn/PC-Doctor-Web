@@ -2,18 +2,13 @@
   <div class="flex flex-col items-center">
     <!--    <el-page-header :icon="ArrowLeft" content="文档" />-->
     <div class="card w-11/12 my-10">
-      <v-md-editor
-          v-model="pageInfo.text"
-          height="800px"
-          left-toolbar="undo redo clear | h bold italic strikethrough quote | ul ol table hr | link tip image code | save"
-          :disabled-menus="[]"
-          @save="handleClickSave"
-          @upload-image="handleUploadImage"
-      ></v-md-editor>
+      <v-md-editor v-model="pageInfo.text" height="800px"
+        left-toolbar="undo redo clear | h bold italic strikethrough quote | ul ol table hr | link tip image code | save"
+        :disabled-menus="[]" @save="handleClickSave" @upload-image="handleUploadImage"></v-md-editor>
     </div>
   </div>
   <!-- 点击保存-显示对话框 -->
-  <input v-model="pageInfo.ifShowModel" type="checkbox" id="confirmUpdateModal" class="modal-toggle"/>
+  <input v-model="pageInfo.ifShowModel" type="checkbox" id="confirmUpdateModal" class="modal-toggle" />
   <div class="modal modal-bottom sm:modal-middle">
     <div class="modal-box">
       <div class="font-bold text-2xl">确认修改？</div>
@@ -21,11 +16,13 @@
         <label class="label">
           <span class="label-text">标题</span>
         </label>
-        <input v-model="pageInfo.formData.title" type="text" placeholder="请输入标题" class="input input-bordered w-full max-w-xs" />
+        <input v-model="pageInfo.formData.title" type="text" placeholder="请输入标题"
+          class="input input-bordered w-full max-w-xs" />
         <label class="label">
           <span class="label-text">简介</span>
         </label>
-        <textarea  v-model="pageInfo.formData.summary" class="textarea textarea-bordered h-24" placeholder="请输入简介(200字以内)"></textarea>
+        <textarea v-model="pageInfo.formData.summary" class="textarea textarea-bordered h-24"
+          placeholder="请输入简介(200字以内)"></textarea>
       </div>
       <div class="modal-action">
         <label for="confirmUpdateModal" class="btn btn-primary" @click="confirmUpdate">确认</label>
@@ -36,14 +33,14 @@
 </template>
 
 <script setup>
-import {computed, onBeforeMount, reactive, ref} from 'vue'
+import { computed, onBeforeMount, reactive, ref } from 'vue'
 // import { ArrowLeft } from '@element-plus/icons-vue'
 import fileApi from "../../api/file";
 import adminApi from "@/api/adminApi";
-import {getOnlineImageUrl} from "@/utils"
-import {notify} from "@kyvg/vue3-notification";
-import {useStore} from "vuex";
-import {useRouter} from "vue-router";
+import { getOnlineImageUrl } from "@/utils"
+import { notify } from "@kyvg/vue3-notification";
+import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 
 const store = useStore()
 const router = useRouter()
@@ -56,14 +53,14 @@ notify({
   text: "推荐使用电脑以及编辑器全屏模式编辑"
 })
 const pageInfo = reactive({
-  formData:{
-    id:'',
-    title:'',       // 文档标题
-    summary:'',     // 文档简介
-    file:''         // 服务器上的文件名
+  formData: {
+    id: '',
+    title: '',       // 文档标题
+    summary: '',     // 文档简介
+    file: ''         // 服务器上的文件名
   },
-  text:'',          // 文档编辑内容
-  ifShowModel:false   // 对话框显示与隐藏
+  text: '',          // 文档编辑内容
+  ifShowModel: false   // 对话框显示与隐藏
 })
 
 // 上传图片相关的回调函数
@@ -132,7 +129,7 @@ const confirmUpdate = () => {
   if (checkBeforeSubmit()) {
     // new一个Promise对象进行文件上传操作
     new Promise((resolve) => {
-      fileApi.uploadFile(file,'doc').then(res => {
+      fileApi.uploadFile(file, 'doc').then(res => {
         resolve(res)
       }).catch(err => {
         console.log(err)
@@ -150,7 +147,7 @@ const confirmUpdate = () => {
         if (pageInfo.formData.id === '') {
           // 调用新建文档接口
           adminApi.addDocument(pageInfo.formData).then(res => {
-            if (res.data.code === 0){
+            if (res.data.code === 0) {
               router.push('/document')
               notify({
                 type: 'success',
@@ -158,11 +155,11 @@ const confirmUpdate = () => {
               });
             }
           })
-        }else {
+        } else {
           // 调用更新文档接口
           adminApi.updateDocument(pageInfo.formData).then(res => {
-            if (res.data.code === 0){
-              router.push({ path: '/preview', query: { id : pageInfo.formData.id } })
+            if (res.data.code === 0) {
+              router.push({ path: '/preview', query: { id: pageInfo.formData.id } })
               notify({
                 type: 'success',
                 title: "已保存修改",
@@ -178,8 +175,8 @@ const confirmUpdate = () => {
 const checkBeforeSubmit = () => {
   const showInfo = (text) => {
     notify({
-      type:'warn',
-      title:text
+      type: 'warn',
+      title: text
     });
     return false
   }

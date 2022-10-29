@@ -27,19 +27,19 @@ import '@kangc/v-md-editor/lib/theme/style/vuepress.css';
 import Prism from 'prismjs';
 
 VMdPreview.use(vuepressTheme, {
-    Prism,
+  Prism,
 });
 
 VMdEditor.use(vuepressTheme, {
-    Prism,
+  Prism,
 });
 
 createApp(App)
-    .use(VueLoading)
-    .use(animate)
-    .use(store)
-    .use(router)
-    .use(Notifications)
-    .use(VMdPreview)
-    .use(VMdEditor)
-    .mount('#app')
+  .use(VueLoading)
+  .use(animate)
+  .use(store)
+  .use(router)
+  .use(Notifications)
+  .use(VMdPreview)
+  .use(VMdEditor)
+  .mount('#app')

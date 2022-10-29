@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {notify} from "@kyvg/vue3-notification";
+import { notify } from "@kyvg/vue3-notification";
 import baseUrl from "./urls";
 
 
@@ -46,52 +46,52 @@ instance.interceptors.response.use(
           notify({
             type: 'warn',
             title: '密码错误'
-          });break;
+          }); break;
         case 3:
           notify({
             type: 'warn',
             title: '未知错误，请联系管理员'
-          });break;
+          }); break;
         case 4:
           notify({
             type: 'warn',
             title: '登录过期，请重新登录'
-          });break;
+          }); break;
         case 5:
           notify({
             type: 'warn',
             title: '没有相应权限'
-          });break;
+          }); break;
         case 6:
           notify({
             type: 'warn',
             title: '查询页数超出范围'
-          });break;
+          }); break;
         case 7:
           notify({
             type: 'warn',
             title: '帐号已注册'
-          });break;
+          }); break;
         case 8:
           notify({
             type: 'warn',
             title: '请重新登录'
-          });break;
+          }); break;
         case 9:
           notify({
             type: 'warn',
             title: '指定ID不存在'
-          });break;
+          }); break;
         case 10:
           notify({
             type: 'warn',
             title: '该问题类型已存在'
-          });break;
+          }); break;
         case 11:
           notify({
             type: 'warn',
             title: '指定问题类型不存在'
-          });break;
+          }); break;
       }
       return Promise.resolve(response);
     } else {

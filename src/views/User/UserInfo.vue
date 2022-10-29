@@ -9,35 +9,22 @@
               <form>
                 <div class="py-2">
                   <label class="px-1 text-md text-gray-600">昵称</label>
-                  <el-input v-model="formData.user_name" placeholder="请输入昵称" maxlength="20"/>
+                  <el-input v-model="formData.user_name" placeholder="请输入昵称" maxlength="20" />
                 </div>
                 <div class="py-2">
                   <label class="px-1 text-md text-gray-600"> 联系方式 </label>
-                  <el-radio-group
-                      style="display: block"
-                      v-model="formData.radio"
-                  >
+                  <el-radio-group style="display: block" v-model="formData.radio">
                     <el-radio label="QQ">QQ</el-radio>
                     <el-radio label="WeChat">WeChat</el-radio>
                     <el-radio label="Phone">Phone</el-radio>
                   </el-radio-group>
-                  <el-input
-                      v-model="formData.contact_details"
-                      placeholder="请输入联系方式(QQ/微信/手机号)"
-                      maxlength="25"
-                  />
+                  <el-input v-model="formData.contact_details" placeholder="请输入联系方式(QQ/微信/手机号)" maxlength="25" />
                 </div>
               </form>
-              <button
-                  class="btn btn-primary mt-3 text-lg w-full"
-                  @click="updateConfirm"
-              >
+              <button class="btn btn-primary mt-3 text-lg w-full" @click="updateConfirm">
                 确认修改
               </button>
-              <button
-                  class="btn mt-3 text-lg w-full"
-                  @click="logout"
-              >
+              <button class="btn mt-3 text-lg w-full" @click="logout">
                 退出
               </button>
             </div>
@@ -90,15 +77,15 @@ const updateConfirm = () => {
   else if (!formData.contact_details) showInfo('请输入联系方式')
   else {
     userApi.userUpdateInfo(formData, user_id).then(res => {
-          console.log(res)
-          store.dispatch("updateState").then(res => {
-            router.replace('/')
-            notify({
-              type: 'success',
-              title: '已成功修改',
-            })
-          })
-        }
+      console.log(res)
+      store.dispatch("updateState").then(res => {
+        router.replace('/')
+        notify({
+          type: 'success',
+          title: '已成功修改',
+        })
+      })
+    }
     )
   }
 }

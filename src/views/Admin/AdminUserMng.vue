@@ -10,8 +10,8 @@
               <el-input placeholder="请输入帐号或用户名" v-model="queryInfo.params.search">
                 <template #append>
                   <el-button @click="handleSearch">
-                    <el-icon >
-                      <Search/>
+                    <el-icon>
+                      <Search />
                     </el-icon>
                   </el-button>
                 </template>
@@ -38,36 +38,36 @@
             <el-table-column type="index"></el-table-column>
             <el-table-column label="帐号" prop="user_id" width="180px"></el-table-column>
             <el-table-column label="姓名/昵称" prop="user_name" width="200px"></el-table-column>
-            <el-table-column label="角色" prop="level" width="120px" align="center"          >
+            <el-table-column label="角色" prop="level" width="120px" align="center">
               <template #default="scope">
                 <el-dropdown @command="handleLevelChangeCommand">
-                <span class="el-dropdown-link">
-                  <div
-                      :class="{'badge border-none':true,'bg-primary text-white':scope.row.level === '1','bg-pink-400 text-white':scope.row.level === '2'}">
-                    {{ grade(scope.row.level) }}
-                  </div>
-                  <el-icon class="el-icon--right">
-                    <arrow-down/>
-                  </el-icon>
-                </span>
+                  <span class="el-dropdown-link">
+                    <div
+                      :class="{ 'badge border-none': true, 'bg-primary text-white': scope.row.level === '1', 'bg-pink-400 text-white': scope.row.level === '2' }">
+                      {{ grade(scope.row.level) }}
+                    </div>
+                    <el-icon class="el-icon--right">
+                      <arrow-down />
+                    </el-icon>
+                  </span>
                   <template #dropdown>
                     <el-dropdown-menu>
                       <!-- 通过官方的command Api传对象给点击事件 -->
                       <el-dropdown-item :command="{
-                        level:'0',
-                        user_id:scope.row.user_id
+                        level: '0',
+                        user_id: scope.row.user_id
                       }">
                         普通用户
                       </el-dropdown-item>
                       <el-dropdown-item :command="{
-                        level:'1',
-                        user_id:scope.row.user_id
+                        level: '1',
+                        user_id: scope.row.user_id
                       }">
                         电医
                       </el-dropdown-item>
                       <el-dropdown-item :command="{
-                        level:'2',
-                        user_id:scope.row.user_id
+                        level: '2',
+                        user_id: scope.row.user_id
                       }">
                         管理员
                       </el-dropdown-item>
@@ -84,7 +84,7 @@
                   <el-dropdown trigger="click">
                     <el-button type="danger" size="small">
                       <el-icon>
-                        <Delete/>
+                        <Delete />
                       </el-icon>
                     </el-button>
                     <template #dropdown>
@@ -98,7 +98,7 @@
                   <el-dropdown trigger="click">
                     <el-button type="primary" size="small">
                       <el-icon>
-                        <Setting/>
+                        <Setting />
                       </el-icon>
                     </el-button>
                     <template #dropdown>
@@ -114,12 +114,8 @@
             </el-table-column>
           </el-table>
         </div>
-        <el-pagination class="mt-3"
-                       :current-page="queryInfo.pageNum"
-                       @current-change="handleCurrentChange"
-                       :page-size="10" layout="total, prev, pager, next, jumper"
-                       :total="total"
-        >
+        <el-pagination class="mt-3" :current-page="queryInfo.pageNum" @current-change="handleCurrentChange"
+          :page-size="10" layout="total, prev, pager, next, jumper" :total="total">
         </el-pagination>
       </div>
     </div>
@@ -127,11 +123,11 @@
 </template>
 
 <script setup>
-import {Search, Delete, Setting, ArrowDown} from '@element-plus/icons-vue';
+import { Search, Delete, Setting, ArrowDown } from '@element-plus/icons-vue';
 import adminApi from "@/api/adminApi";
-import {computed, reactive} from "vue";
-import {useStore} from "vuex";
-import {notify} from "@kyvg/vue3-notification";
+import { computed, reactive } from "vue";
+import { useStore } from "vuex";
+import { notify } from "@kyvg/vue3-notification";
 
 const store = useStore()
 
@@ -142,8 +138,8 @@ let total = computed(() => store.state.admin.userList.size)
 // 查询参数与其他信息
 const queryInfo = reactive({
   params: {
-    search:"",
-    level:-1
+    search: "",
+    level: -1
   }, // 查询参数
   pageNum: 1, // 当前页码
 },)
@@ -162,7 +158,7 @@ const grade = (level) => {
 // 重载列表
 const reloadList = () => {
   store.dispatch('getUserList', {
-    level: queryInfo.params.level !== -1 ? queryInfo.params.level:null,
+    level: queryInfo.params.level !== -1 ? queryInfo.params.level : null,
     page: queryInfo.pageNum
   })
 }
@@ -216,11 +212,11 @@ const handleSearch = () => {
   queryInfo.params.level = -1
   queryInfo.pageNum = 1
   store.dispatch('getUserList', {
-    user_id : queryInfo.params.search
+    user_id: queryInfo.params.search
   }).then((res) => {
-    if (res.data.size === 0){
+    if (res.data.size === 0) {
       store.dispatch('getUserList', {
-        user_name : queryInfo.params.search
+        user_name: queryInfo.params.search
       })
     }
   })

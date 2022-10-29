@@ -3,121 +3,96 @@
   <OrderSteps :onStep="0"></OrderSteps>
   <div class="flex items-center flex-col">
     <div class="py-5 space-y-6 w-11/12 lg:w-3/4 xl:w-1/2">
-<!--      <div>-->
-<!--        <label class="title-info"> 姓名 </label>-->
-<!--        <el-input v-model="formData.name" placeholder="请输入姓名" />-->
-<!--      </div>-->
-<!--      <div>-->
-<!--        <label class="title-info"> 联系方式 </label>-->
-<!--        <el-radio-group style="display:block" v-model="formData.radio">-->
-<!--          <el-radio label="QQ">QQ</el-radio>-->
-<!--          <el-radio label="WeChat">WeChat</el-radio>-->
-<!--          <el-radio label="Phone">Phone</el-radio>-->
-<!--        </el-radio-group>-->
-<!--        <el-input v-model="formData.contact_details" placeholder="请输入联系方式(QQ/微信/手机号)" />-->
-<!--      </div>-->
+      <!--      <div>-->
+      <!--        <label class="title-info"> 姓名 </label>-->
+      <!--        <el-input v-model="formData.name" placeholder="请输入姓名" />-->
+      <!--      </div>-->
+      <!--      <div>-->
+      <!--        <label class="title-info"> 联系方式 </label>-->
+      <!--        <el-radio-group style="display:block" v-model="formData.radio">-->
+      <!--          <el-radio label="QQ">QQ</el-radio>-->
+      <!--          <el-radio label="WeChat">WeChat</el-radio>-->
+      <!--          <el-radio label="Phone">Phone</el-radio>-->
+      <!--        </el-radio-group>-->
+      <!--        <el-input v-model="formData.contact_details" placeholder="请输入联系方式(QQ/微信/手机号)" />-->
+      <!--      </div>-->
       <div>
         <label class="title-info"> 🤔 问题描述 </label>
-        <el-input
-            v-model="formData.problem_description"
-            :rows="2"
-            type="textarea"
-            maxlength="250"
-            autosize
-            placeholder="描述你遇到的问题"
-        />
+        <el-input v-model="formData.problem_description" :rows="2" type="textarea" maxlength="250" autosize
+          placeholder="描述你遇到的问题" />
       </div>
       <div>
         <label class="title-info"> 📅 预约时间 </label>
-<!--        <el-input-->
-<!--            v-model="formData.available_time"-->
-<!--            :rows="2"-->
-<!--            type="textarea"-->
-<!--            maxlength="250"-->
-<!--            autosize-->
-<!--            placeholder="留下希望电脑医生帮助你解决问题的时间段、地点"-->
-<!--        />-->
+        <!--        <el-input-->
+        <!--            v-model="formData.available_time"-->
+        <!--            :rows="2"-->
+        <!--            type="textarea"-->
+        <!--            maxlength="250"-->
+        <!--            autosize-->
+        <!--            placeholder="留下希望电脑医生帮助你解决问题的时间段、地点"-->
+        <!--        />-->
         <el-form>
           <el-form-item label="推荐时间">
             <el-checkbox-group v-model="formData.expectedTimeForm.recommendTime">
-              <el-checkbox label="周三下午"/>
+              <el-checkbox label="周三下午" />
               <el-checkbox label="周末" />
             </el-checkbox-group>
           </el-form-item>
           <el-form-item label="其他时间">
-            <el-input
-                v-model="formData.expectedTimeForm.otherTime"
-                :rows="2"
-                maxlength="250"
-                autosize
-                placeholder="选择推荐“时间”能更快被电医接单哦~"
-            />
+            <el-input v-model="formData.expectedTimeForm.otherTime" :rows="2" maxlength="250" autosize
+              placeholder="选择推荐“时间”能更快被电医接单哦~" />
           </el-form-item>
         </el-form>
       </div>
       <div>
         <label class="title-info"> 🌏 预约地点 </label>
-<!--        <el-input-->
-<!--            v-model="formData.appointment_location"-->
-<!--            :rows="2"-->
-<!--            type="textarea"-->
-<!--            maxlength="250"-->
-<!--            autosize-->
-<!--            placeholder="留下希望电脑医生帮助你解决问题的地点"-->
-<!--        />-->
+        <!--        <el-input-->
+        <!--            v-model="formData.appointment_location"-->
+        <!--            :rows="2"-->
+        <!--            type="textarea"-->
+        <!--            maxlength="250"-->
+        <!--            autosize-->
+        <!--            placeholder="留下希望电脑医生帮助你解决问题的地点"-->
+        <!--        />-->
         <el-form>
           <el-form-item label="推荐地点">
             <el-checkbox-group v-model="formData.expectedLocationForm.recommendLocation">
-              <el-checkbox label="师生之家"/>
+              <el-checkbox label="师生之家" />
               <el-checkbox label="行云/流水外场" />
               <el-checkbox label="钱江湾29栋一楼" />
               <el-checkbox label="钱江湾39栋一楼" />
             </el-checkbox-group>
           </el-form-item>
           <el-form-item label="其他地点">
-            <el-input
-                v-model="formData.expectedLocationForm.otherLocation"
-                :rows="2"
-                maxlength="250"
-                autosize
-                placeholder="使用推荐“地点”更容易被电医接单哦~"
-            />
+            <el-input v-model="formData.expectedLocationForm.otherLocation" :rows="2" maxlength="250" autosize
+              placeholder="使用推荐“地点”更容易被电医接单哦~" />
           </el-form-item>
         </el-form>
       </div>
       <div>
         <label class="title-info"> 🏷 问题分类 </label>
-        <el-checkbox-group v-model="formData.problem_category" >
-          <el-checkbox v-for="(each,index) in cateList" :key="index" :label="each" />
+        <el-checkbox-group v-model="formData.problem_category">
+          <el-checkbox v-for="(each, index) in cateList" :key="index" :label="each" />
         </el-checkbox-group>
       </div>
       <div>
         <label class="title-info"> 🖼 图片 </label>
         <div>
-          <el-upload
-              v-model:file-list="pictureWall.fileList"
-              :accept="acceptFiletype"
-              list-type="picture-card"
-              :before-upload="beforeUploadFile"
-              :http-request="uploadFile"
-              :on-preview="handlePictureCardPreview"
-              :before-remove="handleBeforeRemove"
-              :on-exceed="handleCountExceed"
-              :limit="10"
-          >
-            <el-icon><Plus /></el-icon>
+          <el-upload v-model:file-list="pictureWall.fileList" :accept="acceptFiletype" list-type="picture-card"
+            :before-upload="beforeUploadFile" :http-request="uploadFile" :on-preview="handlePictureCardPreview"
+            :before-remove="handleBeforeRemove" :on-exceed="handleCountExceed" :limit="10">
+            <el-icon>
+              <Plus />
+            </el-icon>
           </el-upload>
-          <el-image-viewer
-            @close="pictureWall.previewVisible = false"
-            :url-list="pictureWallPreview"
-            v-if="pictureWall.previewVisible"
-            :initial-index="pictureWall.previewIndex">
+          <el-image-viewer @close="pictureWall.previewVisible = false" :url-list="pictureWallPreview"
+            v-if="pictureWall.previewVisible" :initial-index="pictureWall.previewIndex">
           </el-image-viewer>
         </div>
       </div>
     </div>
     <div class="my-5 px-4 py-3  text-right sm:px-6">
-      <label for="submitModal" class="btn  btn-primary mx-1" >提交</label>
+      <label for="submitModal" class="btn  btn-primary mx-1">提交</label>
       <button class="btn mx-1 " @click="pushRouter('/order')">取消</button>
     </div>
   </div>
@@ -147,7 +122,7 @@ import { useRouter } from "vue-router";
 
 import OrderSteps from "./OrderSteps.vue"
 
-const store  = useStore()
+const store = useStore()
 const router = useRouter()
 
 store.dispatch('getProblemCate')
@@ -161,8 +136,8 @@ let formData = reactive({
   // name:'',
   // radio:'QQ',
   // contact_details:'',
-  problem_description:'',
-  available_time:computed(() => {
+  problem_description: '',
+  available_time: computed(() => {
     let recommendList = formData.expectedTimeForm.recommendTime
     let other = formData.expectedTimeForm.otherTime
     return other === '' ? recommendList.join('/') : `${recommendList.join('/')}/${other}`
@@ -172,28 +147,28 @@ let formData = reactive({
     let other = formData.expectedLocationForm.otherLocation
     return other === '' ? recommendList.join('/') : `${recommendList.join('/')}/${other}`
   }),                         // 期望预约的地点
-  problem_category:[],
-  problem_picture:[],
-  expectedTimeForm:{          // 期望预约的时间表单，最终生成available_time
-    recommendTime:[],
-    otherTime:'',
+  problem_category: [],
+  problem_picture: [],
+  expectedTimeForm: {          // 期望预约的时间表单，最终生成available_time
+    recommendTime: [],
+    otherTime: '',
   },
-  expectedLocationForm:{      // 期望预约的地点表单，最终生成appointment_location
+  expectedLocationForm: {      // 期望预约的地点表单，最终生成appointment_location
     recommendLocation: [],
     otherLocation: '',
   },
 })
 
 // store里的类别表
-const  cateList = computed(() => store.getters.getFmtCateList)
+const cateList = computed(() => store.getters.getFmtCateList)
 // 提交预约表单方法
 const submitForm = () => {
   console.log(formData)
   // 判空处理
   const showInfo = (text) => {
     notify({
-      type:'warn',
-      title:text
+      type: 'warn',
+      title: text
     });
   }
   // if (!formData.name) showInfo('请输入姓名')
@@ -206,12 +181,12 @@ const submitForm = () => {
   else {
     // 通过非空判断，提交表单
     userApi.submitOrder(formData).then(res => {
-      store.commit('setOrderFormData',res.data.appointment)
+      store.commit('setOrderFormData', res.data.appointment)
       router.push({ path: '/orderInfo', replace: true, query: { id: res.data.appointment.id } })
       notify({
-        type:'success',
-        title:"提交成功🎉",
-        text:'已成功提交，请耐心等待'
+        type: 'success',
+        title: "提交成功🎉",
+        text: '已成功提交，请耐心等待'
       })
     }).catch(err => {
       console.log(err)
@@ -221,9 +196,9 @@ const submitForm = () => {
 
 // Element Plus 照片墙数据
 const pictureWall = reactive({
-  fileList:[],
-  previewVisible :false,
-  previewIndex : 0
+  fileList: [],
+  previewVisible: false,
+  previewIndex: 0
 })
 // 照片墙预览 urls
 const pictureWallPreview = computed(() => getOnlineImageUrl(formData.problem_picture.toString()))
@@ -232,11 +207,11 @@ const currentIndex = (file) => pictureWall.fileList.findIndex((checkItem) => che
 // 接受的文件类型
 const acceptFiletype = '.jpg,.jpeg,.png,.JPG,.JPEG,.PNG'
 // 照片墙钩子
-const handleBeforeRemove = (uploadFile,uploadFiles) => {
+const handleBeforeRemove = (uploadFile, uploadFiles) => {
   // 删除某张图片
   const deleteIndex = currentIndex(uploadFile)
-  console.log('uploadFile在fileList中的index',deleteIndex)
-  formData.problem_picture = formData.problem_picture.filter((checkItem,index) => index !== deleteIndex)
+  console.log('uploadFile在fileList中的index', deleteIndex)
+  formData.problem_picture = formData.problem_picture.filter((checkItem, index) => index !== deleteIndex)
 }
 const handlePictureCardPreview = (file) => {
   pictureWall.previewIndex = pictureWall.fileList.findIndex((checkItem) => checkItem.name === file.name)
@@ -249,9 +224,9 @@ const beforeUploadFile = (file) => {
   // 文件类型检验
   if (whiteList.indexOf(fileSuffix) === -1) {
     notify({
-      type:'warn',
+      type: 'warn',
       title: "上传失败",
-      text:"请上传jpg/jpeg/png格式的文件"
+      text: "请上传jpg/jpeg/png格式的文件"
     })
     return false;
   }
@@ -260,9 +235,9 @@ const beforeUploadFile = (file) => {
 
   if (!isLt10M) {
     notify({
-      type:'warn',
+      type: 'warn',
       title: "上传失败",
-      text:"文件大小不能超过 10MB"
+      text: "文件大小不能超过 10MB"
     })
     return false;
   }
@@ -274,13 +249,13 @@ const uploadFile = (options) => {
     }).catch(err => {
       console.log(err)
       notify({
-        type:'error',
+        type: 'error',
         title: "上传失败！",
         text: "请联系管理员解决"
       });
     })
   }).then(res => {
-    if (res.data.code === 0){
+    if (res.data.code === 0) {
       // 成功上传到服务器，向表单中添加数据
       formData.problem_picture.push(res.data.file_name);
     }
@@ -288,15 +263,15 @@ const uploadFile = (options) => {
 }
 const handleCountExceed = () => {
   notify({
-    type:'warn',
+    type: 'warn',
     title: "上传失败",
-    text:"图片上限为10张"
+    text: "图片上限为10张"
   });
 }
 </script>
 
 <style lang="scss" scoped>
-  .el-input {
-    width: 300px
-  }
+.el-input {
+  width: 300px
+}
 </style>

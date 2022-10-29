@@ -9,73 +9,44 @@
               <form>
                 <div class="py-2">
                   <label class="px-1 text-md text-gray-600">昵称</label>
-                  <el-input v-model="formData.user_name" placeholder="请输入昵称" maxlength="20"/>
+                  <el-input v-model="formData.user_name" placeholder="请输入昵称" maxlength="20" />
                 </div>
                 <div class="py-2">
                   <label class="px-1 text-md text-gray-600"> 联系方式 </label>
-                  <el-radio-group
-                      style="display: block"
-                      v-model="formData.radio"
-                  >
+                  <el-radio-group style="display: block" v-model="formData.radio">
                     <el-radio label="QQ">QQ</el-radio>
                     <el-radio label="WeChat">WeChat</el-radio>
                     <el-radio label="Phone">Phone</el-radio>
                   </el-radio-group>
-                  <el-input
-                      v-model="formData.contact_details"
-                      placeholder="请输入联系方式(QQ/微信/手机号)"
-                      maxlength="25"
-                  />
+                  <el-input v-model="formData.contact_details" placeholder="请输入联系方式(QQ/微信/手机号)" maxlength="25" />
                 </div>
                 <div class="py-2">
                   <div class="px-1 mb-1 text-md text-gray-600">帐号
-                    <div class="inline font-light text-red-500 ml-2"
-                         v-show="!checkIdValid || formData.user_id === ''">6~16位字母、数字、下划线
+                    <div class="inline font-light text-red-500 ml-2" v-show="!checkIdValid || formData.user_id === ''">
+                      6~16位字母、数字、下划线
                     </div>
                   </div>
-                  <el-input
-                      v-model="formData.user_id"
-                      type="text"
-                      placeholder="请输入帐号"
-                      size="large"
-                      maxlength="16"
-                  />
+                  <el-input v-model="formData.user_id" type="text" placeholder="请输入帐号" size="large" maxlength="16" />
                 </div>
                 <div class="py-2">
                   <div class="px-1 mb-1 text-md text-gray-600">密码
                     <div class="inline font-light text-red-500 ml-2"
-                         v-show="!checkPwdValid || formData.password === ''">10～30位的字母、数字、小数点
+                      v-show="!checkPwdValid || formData.password === ''">10～30位的字母、数字、小数点
                     </div>
                   </div>
-                  <el-input
-                      v-model="formData.password"
-                      type="password"
-                      placeholder="请输入密码"
-                      size="large"
-                      maxlength="30"
-                      show-password
-                  />
+                  <el-input v-model="formData.password" type="password" placeholder="请输入密码" size="large" maxlength="30"
+                    show-password />
                 </div>
                 <div class="py-2">
                   <div class="px-1 mb-1 text-md text-gray-600">确认密码*
-                    <div class="inline font-light text-red-500 ml-2"
-                         v-show="!checkPwdAgain">密码不一致
+                    <div class="inline font-light text-red-500 ml-2" v-show="!checkPwdAgain">密码不一致
                     </div>
                   </div>
-                  <el-input
-                      v-model="formData.repeatPassword"
-                      type="password"
-                      placeholder="请再次输入密码"
-                      size="large"
-                      show-password
-                  />
+                  <el-input v-model="formData.repeatPassword" type="password" placeholder="请再次输入密码" size="large"
+                    show-password />
                 </div>
               </form>
-              <button
-                  class="btn mt-3 text-lg w-full"
-                  type="submit"
-                  @click="submitRegister"
-              >
+              <button class="btn mt-3 text-lg w-full" type="submit" @click="submitRegister">
                 确认
               </button>
             </div>
@@ -87,10 +58,10 @@
 </template>
 
 <script setup>
-import {computed, reactive} from "vue";
-import {notify} from "@kyvg/vue3-notification";
+import { computed, reactive } from "vue";
+import { notify } from "@kyvg/vue3-notification";
 import userApi from "@/api/userApi";
-import {useRouter} from "vue-router";
+import { useRouter } from "vue-router";
 
 const router = useRouter()
 

@@ -4,25 +4,23 @@
   <div class="flex items-center flex-col">
     <div class="py-5 space-y-6 w-11/12 lg:w-3/4 xl:w-1/2">
       <!-- tip 1： 不属于自己的订单 - 仅供预览 -->
-      <div class="alert shadow-lg bg-base-200"
-           v-if="formData.status === '0' && !isMyOwnOrder && !isPCDoctor">
+      <div class="alert shadow-lg bg-base-200" v-if="formData.status === '0' && !isMyOwnOrder && !isPCDoctor">
         <div>
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-               class="stroke-current flex-shrink-0 w-6 h-6">
+            class="stroke-current flex-shrink-0 w-6 h-6">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
           </svg>
           <span>该预约不属于你哦，仅供预览</span>
         </div>
       </div>
       <!-- tip 2： 属于自己的订单 - 正在排队提示 -->
-      <div class="alert shadow-lg bg-white flex-row p-3"
-           v-if="formData.status === '0' && isMyOwnOrder">
+      <div class="alert shadow-lg bg-white flex-row p-3" v-if="formData.status === '0' && isMyOwnOrder">
         <div>
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-               class="stroke-current flex-shrink-0 w-6 h-6">
+            class="stroke-current flex-shrink-0 w-6 h-6">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
           </svg>
           <span>已创建预约</span>
         </div>
@@ -31,40 +29,36 @@
         </div>
       </div>
       <!-- tip 3： 电医 - 接单说明 -->
-      <div class="alert shadow-lg bg-base-200"
-           v-if="formData.status === '0' && isPCDoctor">
+      <div class="alert shadow-lg bg-base-200" v-if="formData.status === '0' && isPCDoctor">
         <div>
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-               class="stroke-current flex-shrink-0 w-6 h-6">
+            class="stroke-current flex-shrink-0 w-6 h-6">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
           </svg>
           <span>电脑医生请合理安排，适量接单</span>
         </div>
       </div>
       <!-- 预约已完成的提示 -->
-      <div class="flex items-center justify-center flex-col"
-           v-if="formData.status === '2'">
+      <div class="flex items-center justify-center flex-col" v-if="formData.status === '2'">
         <div class="grid items-center grid-cols-1 md:grid-cols-2">
-          <el-image style="width: 150px; height: 150px"
-                    :src="getImageUrl('icon-5.6s-250px.png')"
-                    fit="fill"/>
+          <el-image style="width: 150px; height: 150px" :src="getImageUrl('icon-5.6s-250px.png')" fit="fill" />
           <div class="text-3xl font-bold text-center">
             已完成！
           </div>
         </div>
-<!--        <div class="flex my-5">-->
-<!--          <div class="text-2xl font-bold text-center mr-1">-->
-<!--            评分-->
-<!--          </div>-->
-<!--          <div class="rating gap-1 items-center">-->
-<!--            <input type="radio" name="rating-3" class="mask mask-heart bg-red-400"/>-->
-<!--            <input type="radio" name="rating-3" class="mask mask-heart bg-red-400" checked/>-->
-<!--            <input type="radio" name="rating-3" class="mask mask-heart bg-red-400"/>-->
-<!--            <input type="radio" name="rating-3" class="mask mask-heart bg-red-400"/>-->
-<!--            <input type="radio" name="rating-3" class="mask mask-heart bg-red-400"/>-->
-<!--          </div>-->
-<!--        </div>-->
+        <!--        <div class="flex my-5">-->
+        <!--          <div class="text-2xl font-bold text-center mr-1">-->
+        <!--            评分-->
+        <!--          </div>-->
+        <!--          <div class="rating gap-1 items-center">-->
+        <!--            <input type="radio" name="rating-3" class="mask mask-heart bg-red-400"/>-->
+        <!--            <input type="radio" name="rating-3" class="mask mask-heart bg-red-400" checked/>-->
+        <!--            <input type="radio" name="rating-3" class="mask mask-heart bg-red-400"/>-->
+        <!--            <input type="radio" name="rating-3" class="mask mask-heart bg-red-400"/>-->
+        <!--            <input type="radio" name="rating-3" class="mask mask-heart bg-red-400"/>-->
+        <!--          </div>-->
+        <!--        </div>-->
       </div>
       <!-- 预约信息 -->
       <div class="flex flex-col">
@@ -73,38 +67,38 @@
           <div class="ml-2 mb-2 text-xl lg:text-2xl font-medium">{{ formData.problem_description }}</div>
           <div class="flex flex-wrap">
             <div class="ml-2 text-md font-thin lg:text-lg"> 📅 {{ formData.available_time }}</div>
-            <div class="ml-2 text-md font-thin lg:text-lg" v-if="formData.appointment_location"> 🌏 {{ formData.appointment_location }}</div>
+            <div class="ml-2 text-md font-thin lg:text-lg" v-if="formData.appointment_location"> 🌏 {{
+                formData.appointment_location
+            }}</div>
           </div>
-          <div class="ml-2 badge bg-secondary text-base-100 border-none badge-lg mx-0.5 my-3" v-for="(each,index) in cateList" :key="index">{{ each }}</div>
+          <div class="ml-2 badge bg-secondary text-base-100 border-none badge-lg mx-0.5 my-3"
+            v-for="(each, index) in cateList" :key="index">{{ each }}</div>
           <div class="flex px-1 gap-4 flex-wrap">
             <div class="flex">
               <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
-                      clip-rule="evenodd"></path>
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
+                  clip-rule="evenodd"></path>
               </svg>
               <div>{{ createTime }}</div>
             </div>
             <!-- 预约人信息仅自己与电医可见 -->
             <div v-if="isMyOwnOrder || isPCDoctor || isAdmin" class="flex gap-5 flex-wrap">
-              <div><div class="inline font-bold">预约人:</div>{{ formData.user_name }}</div>
+              <div>
+                <div class="inline font-bold">预约人:</div>{{ formData.user_name }}
+              </div>
               <div>{{ formData.contact_details }}</div>
             </div>
           </div>
         </div>
         <!-- 图片 -->
         <div class="pictures grid gap-2 grid-cols-4 lg:grid-cols-5 mt-5">
-          <el-image
-              v-for="(each,index) in imageUrls"
-              :src="each"
-              :key="each.id"
-              :preview-src-list="imageUrls"
-              :initial-index="index"
-          >
+          <el-image v-for="(each, index) in imageUrls" :src="each" :key="each.id" :preview-src-list="imageUrls"
+            :initial-index="index">
             <template #error>
               <div class="image-slot">
                 <el-icon>
-                  <icon-picture/>
+                  <icon-picture />
                 </el-icon>
               </div>
             </template>
@@ -112,46 +106,46 @@
         </div>
       </div>
       <!-- 接单电医信息 -->
-      <div class="flex flex-col"
-           v-if="formData.status > 0">
+      <div class="flex flex-col" v-if="formData.status > 0">
         <div class="title-info"> 接单电医</div>
         <div>
           <DoctorCard :doctorInfo="orderDoctor"></DoctorCard>
         </div>
       </div>
       <!-- 状态消息 -->
-<!--      <div class="flex flex-col"-->
-<!--           v-if="formData.status === '1' || statusMessage.length > 0 && formData.status === '2'">-->
-<!--        <div class="title-info"> 状态消息</div>-->
-<!--        <ul class="steps steps-vertical">-->
-<!--          <li class="step"-->
-<!--              v-for="(each,index) in statusMessage"-->
-<!--              :key="each.id">-->
-<!--            <div class="text-left">-->
-<!--              <div><span class="font-bold">{{ each.user_name }} </span> 发送于：{{ sendTime(each.time) }}</div>-->
-<!--              <div class="flex items-center">-->
-<!--                <div class="text-center">{{ each.message }}</div>-->
-<!--                <button class="btn btn-ghost border-base-200 btn-sm ml-2"-->
-<!--                        v-if="each.picture.length > 0"-->
-<!--                        @click="handleMsgPicPreview(each,index)">查看图片-->
-<!--                </button>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--          </li>-->
-<!--          <li class="step"-->
-<!--              v-if="formData.status === '1'"-->
-<!--          >-->
-<!--            <div>-->
-<!--              <label for="addMessageDialog" class="btn border-base-200 mx-1">添加消息</label>-->
-<!--            </div>-->
-<!--          </li>-->
-<!--        </ul>-->
-<!--      </div>-->
+      <!--      <div class="flex flex-col"-->
+      <!--           v-if="formData.status === '1' || statusMessage.length > 0 && formData.status === '2'">-->
+      <!--        <div class="title-info"> 状态消息</div>-->
+      <!--        <ul class="steps steps-vertical">-->
+      <!--          <li class="step"-->
+      <!--              v-for="(each,index) in statusMessage"-->
+      <!--              :key="each.id">-->
+      <!--            <div class="text-left">-->
+      <!--              <div><span class="font-bold">{{ each.user_name }} </span> 发送于：{{ sendTime(each.time) }}</div>-->
+      <!--              <div class="flex items-center">-->
+      <!--                <div class="text-center">{{ each.message }}</div>-->
+      <!--                <button class="btn btn-ghost border-base-200 btn-sm ml-2"-->
+      <!--                        v-if="each.picture.length > 0"-->
+      <!--                        @click="handleMsgPicPreview(each,index)">查看图片-->
+      <!--                </button>-->
+      <!--              </div>-->
+      <!--            </div>-->
+      <!--          </li>-->
+      <!--          <li class="step"-->
+      <!--              v-if="formData.status === '1'"-->
+      <!--          >-->
+      <!--            <div>-->
+      <!--              <label for="addMessageDialog" class="btn border-base-200 mx-1">添加消息</label>-->
+      <!--            </div>-->
+      <!--          </li>-->
+      <!--        </ul>-->
+      <!--      </div>-->
       <div class="flex justify-center gap-1.5">
         <!-- 操作按钮 接单按钮 status：排队中 电医可见 -->
         <div class="btn btn-primary" @click="takeOrder" v-if="formData.status === '0' && isPCDoctor">接单</div>
         <!-- 操作按钮 标记完成 status：正在处理 “接单的那个”电医与用户可见 -->
-        <div class="btn btn-primary" @click="finishOrder" v-if="formData.status === '1' && (isOrderPCDoctor || isMyOwnOrder)">预约完成</div>
+        <div class="btn btn-primary" @click="finishOrder"
+          v-if="formData.status === '1' && (isOrderPCDoctor || isMyOwnOrder)">预约完成</div>
         <!-- 操作按钮 删除预约 status：all -->
         <label for="deleteConfirmDialog" class="btn btn-error" v-if="isAdmin">删除</label>
         <div class="btn" @click="backRouter">返回</div>
@@ -159,40 +153,24 @@
     </div>
   </div>
   <!-- 对话框-添加消息 -->
-  <input type="checkbox" id="addMessageDialog" class="modal-toggle"/>
+  <input type="checkbox" id="addMessageDialog" class="modal-toggle" />
   <div class="modal">
     <div class="modal-box p-5">
       <div class="font-bold text-2xl">添加消息</div>
       <div class="my-3">
-        <el-input
-            v-model="sendingStatusMessage.message"
-            :rows="2"
-            type="textarea"
-            autosize
-            placeholder="请输入要发送的消息"
-        />
+        <el-input v-model="sendingStatusMessage.message" :rows="2" type="textarea" autosize placeholder="请输入要发送的消息" />
       </div>
       <div>
-        <el-upload
-            v-model:file-list="pictureWall.fileList"
-            :accept="acceptFiletype"
-            list-type="picture-card"
-            :before-upload="beforeUploadFile"
-            :http-request="uploadFile"
-            :on-preview="handlePictureCardPreview"
-            :before-remove="handleBeforeRemove"
-            :on-exceed="handleCountExceed"
-            :limit="10"
-        >
+        <el-upload v-model:file-list="pictureWall.fileList" :accept="acceptFiletype" list-type="picture-card"
+          :before-upload="beforeUploadFile" :http-request="uploadFile" :on-preview="handlePictureCardPreview"
+          :before-remove="handleBeforeRemove" :on-exceed="handleCountExceed" :limit="10">
           <el-icon>
-            <Plus/>
+            <Plus />
           </el-icon>
         </el-upload>
       </div>
       <div class="modal-action">
-        <label for="addMessageDialog"
-               class="btn"
-               @click="addMessageConfirm">
+        <label for="addMessageDialog" class="btn" @click="addMessageConfirm">
           确认
         </label>
         <label for="addMessageDialog" class="btn">取消</label>
@@ -200,15 +178,13 @@
     </div>
   </div>
   <!-- 对话框-管理员删除确认 -->
-  <input type="checkbox" id="deleteConfirmDialog" class="modal-toggle"/>
+  <input type="checkbox" id="deleteConfirmDialog" class="modal-toggle" />
   <label for="deleteConfirmDialog" class="modal cursor-pointer">
     <div class="modal-box p-5">
       <div class="font-bold text-2xl">确认删除？</div>
       <div class="font-light text-md mt-3">确认删除该预约？操作将不可反悔</div>
       <div class="modal-action">
-        <label for="deleteConfirmDialog"
-               class="btn btn-error"
-               @click="confirmDeleteOrder">
+        <label for="deleteConfirmDialog" class="btn btn-error" @click="confirmDeleteOrder">
           确认
         </label>
         <label for="deleteConfirmDialog" class="btn">取消</label>
@@ -216,15 +192,13 @@
     </div>
   </label>
   <!-- 对话框-确认撤销 -->
-  <input type="checkbox" id="withdrewConfirmDialog" class="modal-toggle"/>
+  <input type="checkbox" id="withdrewConfirmDialog" class="modal-toggle" />
   <label for="withdrewConfirmDialog" class="modal cursor-pointer">
     <div class="modal-box p-5">
       <div class="font-bold text-2xl">确认撤销？</div>
       <div class="font-light text-md mt-3">确认撤销该预约？操作将不可反悔</div>
       <div class="modal-action">
-        <label for="deleteConfirmDialog"
-               class="btn btn-error"
-               @click="withdrawThisOrder">
+        <label for="deleteConfirmDialog" class="btn btn-error" @click="withdrawThisOrder">
           确认撤销
         </label>
         <label for="deleteConfirmDialog" class="btn">取消</label>
@@ -232,11 +206,8 @@
     </div>
   </label>
   <!-- 图片预览 -->
-  <el-image-viewer
-      @close="handleViewerClose"
-      :url-list="pictureWallPreview"
-      v-if="pictureWall.previewVisible"
-      :initial-index="pictureWall.previewIndex">
+  <el-image-viewer @close="handleViewerClose" :url-list="pictureWallPreview" v-if="pictureWall.previewVisible"
+    :initial-index="pictureWall.previewIndex">
   </el-image-viewer>
 </template>
 
@@ -250,10 +221,10 @@ import { Plus } from '@element-plus/icons-vue'
 import fileApi from "@/api/file"
 import userApi from "@/api/userApi"
 import adminApi from "@/api/adminApi"
-import {getOnlineImageUrl, timeFormatter, getImageUrl} from "@/utils"
+import { getOnlineImageUrl, timeFormatter, getImageUrl } from "@/utils"
 import OrderSteps from "./OrderSteps.vue"
-import {useStore} from "vuex";
-import {onBeforeRouteUpdate, useRoute, useRouter} from "vue-router";
+import { useStore } from "vuex";
+import { onBeforeRouteUpdate, useRoute, useRouter } from "vue-router";
 import DoctorCard from "../../components/DoctorCard.vue";
 
 const store = useStore()
@@ -274,20 +245,20 @@ function backRouter() {
 let formData = computed(() => store.state.order.orderFormData)
 let orderDoctor = computed(() => store.state.order.orderDoctorInfo)
 const cateList = computed(() => {
-  if (formData.value.problem_category)  return formData.value.problem_category.split(',')
+  if (formData.value.problem_category) return formData.value.problem_category.split(',')
   else return []
 })
 const createTime = computed(() => timeFormatter(formData.value.create_time))
 const imageUrls = computed(() => store.getters.getOrderFormDataImagesUrls)
 // 检验是否是属于用户的订单
-const isMyOwnOrder = computed(() => formData.value.user_id ===  store.state.user.user_id)
+const isMyOwnOrder = computed(() => formData.value.user_id === store.state.user.user_id)
 // 检验是否是电医
 const isPCDoctor = computed(() => store.state.user.level === "1")
 // 检验是否是管理员
 const isAdmin = computed(() => store.state.user.level === "2")
 // 检验是否是“接单的那个”电医
 const isOrderPCDoctor = computed(() =>
-    store.state.user.level === "1" && store.state.user.user_id === store.state.order.orderFormData.doctor_id
+  store.state.user.level === "1" && store.state.user.user_id === store.state.order.orderFormData.doctor_id
 )
 // 步骤条状态码计算属性
 const statusToNum = computed(() => parseInt(formData.value.status) + 1)
@@ -455,7 +426,7 @@ const confirmDeleteOrder = () => {
 const takeOrder = () => {
   userApi.takeOrder(formData.value.id, store.state.user.user_id).then(res => {
     if (res.data.code === 0) {
-      store.dispatch('getOrderFormData',formData.value.id)
+      store.dispatch('getOrderFormData', formData.value.id)
       notify({
         type: 'success',
         title: "已成功接单",
@@ -473,7 +444,7 @@ const takeOrder = () => {
 const finishOrder = () => {
   userApi.finishOrder(formData.value.id).then(res => {
     if (res.data.code === 0) {
-      store.dispatch('getOrderFormData',formData.value.id)
+      store.dispatch('getOrderFormData', formData.value.id)
       notify({
         type: 'success',
         title: "预约订单完成",
