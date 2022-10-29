@@ -19,38 +19,32 @@
           预约记录
         </h1>
         <div class="tabs tabs-boxed bg-base-100 text-2xl items-start mt-5">
-          <a v-for="(each,index) in cateList"
-             :key="index"
-             :class="{'tab transition duration-500 rounded-md':true,'tab-active':index === filterParams.cate} "
-             @click="changeState(index)">
+          <a v-for="(each, index) in cateList" :key="index"
+            :class="{ 'tab transition duration-500 rounded-md': true, 'tab-active': index === filterParams.cate }"
+            @click="changeState(index)">
             {{ each }}
           </a>
         </div>
         <!-- 是否只显示与我相关 -->
-        <div class="form-control mt-1 ml-3 w-fit" >
+        <div class="form-control mt-1 ml-3 w-fit">
           <label class="label cursor-pointer justify-start  gap-2 ">
             <span class="label-text text-gray-500">仅查看我的记录</span>
-            <input @click="changeBelong" v-model="filterParams.isOnlyShowMine" type="checkbox" class="toggle toggle-sm"/>
+            <input @click="changeBelong" v-model="filterParams.isOnlyShowMine" type="checkbox"
+              class="toggle toggle-sm" />
           </label>
         </div>
       </div>
-      <div
-           v-if="isOrderListLoaded">
+      <div v-if="isOrderListLoaded">
         <!-- 使用grid布局卡片  -->
-        <div class="grid grid-cols-1 my-2 lg:grid-cols-2 2xl:grid-cols-3"
-             v-if="cardList.length > 0">
+        <div class="grid grid-cols-1 my-2 lg:grid-cols-2 2xl:grid-cols-3" v-if="cardList.length > 0">
           <!-- 信息卡片： -->
-          <OrderCard
-              v-for="(cardInfo) of cardList"
-              :key="cardInfo.id"
-              :cardInfo="cardInfo">
+          <OrderCard v-for="(cardInfo) of cardList" :key="cardInfo.id" :cardInfo="cardInfo">
           </OrderCard>
         </div>
         <div class="flex justify-center">
           <div class="btn btn-link" v-if="isCardListEnds" @click="queryMoreOrder">🔎加载更多...</div>
         </div>
-        <div v-if="cardList.length === 0"
-             class="flex items-center justify-center h-96">
+        <div v-if="cardList.length === 0" class="flex items-center justify-center h-96">
           <div class="text-xl">暂无相关预约条目😊</div>
         </div>
       </div>
@@ -60,9 +54,9 @@
 
 <script setup>
 import OrderCard from '../../components/OrderCard.vue'
-import {useStore} from 'vuex'
-import {useRouter} from 'vue-router'
-import {computed, onBeforeMount, reactive} from "vue";
+import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
+import { computed, onBeforeMount, reactive } from "vue";
 
 const store = useStore()
 const router = useRouter()
@@ -86,17 +80,17 @@ const cateList = ['全部', '排队中', '正在处理', '已完成',]
 // })
 const filterParams = computed(() => store.state.user.filterParams)
 const changeState = (index) => {
-  store.commit('setFilterParams',{
+  store.commit('setFilterParams', {
     cate: index,
     page: 1,
-    isOnlyShowMine:false
+    isOnlyShowMine: false
   })
   store.state.order.isOrderListLoaded = false
   store.dispatch('getUserOrderList', getQueryParams())
 }
 // 仅显示与我提交的订单
 const changeBelong = () => {
-  store.commit('setFilterParams',{
+  store.commit('setFilterParams', {
     cate: filterParams.value.cate,
     page: 1,
     isOnlyShowMine: !filterParams.value.isOnlyShowMine
@@ -113,8 +107,8 @@ const queryMoreOrder = () => {
 const getQueryParams = () => {
   return {
     page: filterParams.value.page,
-    status: filterParams.value.cate > 0?filterParams.value.cate - 1 : null,
-    user_id:filterParams.value.isOnlyShowMine ? user_id.value : null
+    status: filterParams.value.cate > 0 ? filterParams.value.cate - 1 : null,
+    user_id: filterParams.value.isOnlyShowMine ? user_id.value : null
   }
 }
 
@@ -131,7 +125,7 @@ const clickHistory = () => {
 
 
 const imgUrlList = [
-  'https://w.wallhaven.cc/full/dp/wallhaven-dpo38l.jpg',
+  'http://116.62.129.37:8080/file/doc_pic/1667046908713.jpg',
   // 'https://w.wallhaven.cc/full/pk/wallhaven-pkogdp.jpg',
 ]
 
@@ -142,11 +136,15 @@ const imgUrl = computed(() => {
 
 onBeforeMount(() => {
   // 默认查询状态为 0 (正在排队/待受理) 的记录
-  store.dispatch('getUserOrderList' , getQueryParams())
+  console.log(cardList.value)
+  if (cardList.value.length === 0) {
+    store.commit('setFilterParamsFirstPage')
+    store.dispatch('getUserOrderList', getQueryParams())
+  }
 })
 
 let height = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-console.log('height',height)
+console.log('height', height)
 </script>
 
 
