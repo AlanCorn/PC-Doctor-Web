@@ -90,6 +90,6 @@ const smoothScrollTo = (id) => {
 
 <style scoped>
 .title-about {
-  @apply text-3xl text-primary lg: text-5xl font-bold mt-20
+  @apply text-3xl text-primary lg:text-5xl font-bold mt-20
 }
 </style>
