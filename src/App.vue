@@ -3,7 +3,8 @@
     <router-view></router-view>
   </div>
   <notifications position="top center" classes="customNotify" />
-  <div class="h-16">
+  <!-- 底部导航栏 -->
+  <div :class="{ 'h-16, md:hidden': isInGroup }">
     <div v-if="isInGroup" class="btm-nav md:hidden">
       <a :class="{ 'btn-nav-default transition duration-500': true, 'btm-nav-active': pageInfo.group === 'Order' }"
         @click="handleBtmNavClick('Order')">
