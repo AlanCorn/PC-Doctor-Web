@@ -50,6 +50,11 @@
       </div>
     </div>
   </div>
+  <div class="footer footer-center p-4 text-base-content">
+    <div>
+      <p>Copyright © 2022 - <a href="http://beian.miit.gov.cn/" class="link">浙ICP备2022031774号</a></p>
+    </div>
+  </div>
 </template>
 
 <script setup>
