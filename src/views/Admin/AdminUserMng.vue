@@ -205,6 +205,15 @@ const handleDeleteUser = (user_id) => {
 // 重置用户密码为123456 handleResetPwd
 const handleResetPwd = (user_id) => {
   alert(`重置用户:${user_id} 密码为：123456`)
+  adminApi.userResetPwd(user_id).then(res => {
+    if (res.data.code === 0) {
+      reloadList()
+      notify({
+        type: 'success',
+        title: '操作成功'
+      });
+    }
+  })
 }
 
 // 4. 搜索 (优先查找帐号，帐号没找到再调用接口模糊查询用户名)

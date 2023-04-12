@@ -30,16 +30,16 @@ const admin = {
     userUpdateLevel(params) {
         const form = new FormData();
         form.append('user_id', params.user_id);
-        form.append('pwd_md5', md5("123456").toUpperCase());
+        form.append('level', params.level);
         return request.post("/update_user", form, {
             headers
         })
     },
-    // 管理员修改用户身份接口
-    userResetPwd(params) {
+    // 管理员重置用户密码
+    userResetPwd(user_id) {
         const form = new FormData();
-        form.append('user_id', params.user_id);
-        form.append('level', params.level);
+        form.append('user_id', user_id);
+        form.append('pwd_md5', md5("123456").toUpperCase());
         return request.post("/update_user", form, {
             headers
         })
