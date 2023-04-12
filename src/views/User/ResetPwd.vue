@@ -64,7 +64,7 @@ const pageInfo = reactive({
   repeatBrandPwd: ''
 })
 
-// 提交注册请求
+// 提交重设密码请求
 const confirmResetPwd = () => {
   const showInfo = (text) => {
     notify({
@@ -90,8 +90,8 @@ const confirmResetPwd = () => {
       }
     }).catch(err => {
       notify({
-        type: 'error',
-        title: '失败，请联系管理员解决',
+        type: 'info',
+        title: '密码不符合要求或与原密码相同',
       });
     })
   }
