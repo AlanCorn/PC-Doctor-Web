@@ -1,4 +1,5 @@
 import request from './request'
+import md5 from "md5"
 
 const headers = {
     'Content-Type': 'multipart/form-data'
@@ -27,6 +28,15 @@ const admin = {
     },
     // 管理员修改用户身份接口
     userUpdateLevel(params) {
+        const form = new FormData();
+        form.append('user_id', params.user_id);
+        form.append('pwd_md5', md5("123456").toUpperCase());
+        return request.post("/update_user", form, {
+            headers
+        })
+    },
+    // 管理员修改用户身份接口
+    userResetPwd(params) {
         const form = new FormData();
         form.append('user_id', params.user_id);
         form.append('level', params.level);
